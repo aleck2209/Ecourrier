@@ -1,0 +1,333 @@
+/* DEBUT INITIALISATION */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+/* FIN INITIALISATION */
+
+/*DEBUT AJOUTER LES POLICES */
+@font-face {
+    font-family: "Poppins";
+    src: url("../fonts/poppins/Poppins-Regular.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "Inter";
+    src: url('../fonts/inter/Inter-VariableFont_opsz\,wght.ttf') format("truetype");
+}
+
+@font-face {
+    font-family: "Roboto";
+    src: url("../fonts/roboto/Roboto-Regular.ttf") format("truetype");
+}
+/* FIN AJOUTER LES POLICES */
+
+/* DEBUT VARIABLE */
+:root {
+    /* DEBUT FONT */
+    --LOGO-FF: "Poppins";
+    --SIDEBAR-FF: "Inter";
+    --INTER-FF: "Inter";
+    --ROBOTO-FF: "Roboto";
+    --LABEL-FS: 0.875rem;
+    --LOGO-FS: 1.25rem;
+    --TITRE-PAGE-FS: 1.25rem;
+    --TITRE-FORM-FS: 1.125rem;
+    --SIDEBAR-FS: 0.9rem;
+    --NAME-SITE-FS: 2rem;
+    --NAME-USER-FS: 1.25rem;
+    --NAV-FS: 0.75rem;
+    --FIELD-FS: 1rem;
+    --TITRE-PAGE-FW: 400;
+    --TITRE-FORM-FW: 400;
+    --LOGO-FW: 700;
+    --SIDEBAR-FW: 500;
+    --NAME-SITE-FW: 500;
+    --NAME-USER-FW: 500;
+    --NAV-FW: 500;
+    --LABEL-FW: 500;
+    --FIELD-FW: 400;
+    --BTN-FW: 500;
+    /* FIN FONT */
+
+    /* DEBUT COULEUR */
+    --GOLD: rgba(152, 126, 60, 1);
+    --BLACK: rgba(67, 72, 75, 1);
+    --GOLD-LIGHT: rgba(152, 126, 60, 0.25);
+    --GREY: rgba(249, 250, 251, 1);
+    --DARK-GREY: rgba(201, 202, 207, 1);
+    --WHITE: rgba(255, 255, 255, 1);
+    --DARK: rgba(0, 0, 0, 1);
+    /* FIN COULEUR */
+
+    /* DEBUT DISTANCE */
+    --LOGO-PG-TOP-BT: 2rem;
+    --SIDEBAR-PG: 1rem;
+    --DROPDOWN-PG-LT: 2rem;
+    --CONTENT-PG-LT-RT: 2.5rem;
+    --HEADER-PG-TOP-BT: 1rem;
+    --MAIN-PG-TOP: 2rem;
+    --NAV-PG-TOP-BT: 0.5rem;
+    --NAV-PG-LT-RT: 1rem;
+    --FIELD-PG: 0.8rem;
+    --LINK-MG-RT: 1rem;
+    --SECTION-MG-TP: 1.5rem;
+    --FORM-MG-TP: 1.5rem;
+    --FORM-GAP: 1.5rem;
+    --FIELDS-GAP: 1rem;
+    --FIELD-GAP: 0.5rem;
+    --FIELDS-WD: 30%;
+    --FIELD-WD: 100%;
+    --BTN-WD: 25%;
+
+    /* FIN DISTANCE */
+
+    /* DEBUT BORDURE */
+    --BORDER-BT: 2px solid var(--GREY);
+    --BORDER-FIELD: 1px solid var(--DARK-GREY);
+    --BORDER-BTN: 1px solid var(--GOLD);
+    --BORDER-RADIUS: 5px;
+}
+
+/* DEBUT STYLES GENERALS */
+body {
+    display: flex;
+    height: 100vh;
+}
+
+img {
+    width: 100%;
+}
+
+    /* DEBUT HEADER */
+header {
+    align-items: center;
+    border-bottom: var(--BORDER-BT);
+    color: var(--DARK);
+    display: flex;
+    font-family: var(--INTER-FF);
+    justify-content: space-between;
+    padding: var(--HEADER-PG-TOP-BT) var(--CONTENT-PG-LT-RT);   
+}
+
+header h1 {
+    font-size: var(--NAME-SITE-FS);
+    font-weight: var(--NAME-SITE-FW);
+}
+
+header p {
+    font-size: var(--NAME-USER-FS);
+    font-weight: var(--NAME-USER-FW);
+}
+    /* FIN HEADER */
+
+    /* DEBUT MAIN */
+main {
+    padding: var(--MAIN-PG-TOP) var(--CONTENT-PG-LT-RT) 0 var(--CONTENT-PG-LT-RT);
+}
+        /* DEBUT NAVIGATION */
+.nav-bar {
+    background-color: var(--BLACK);
+    border-radius: var(--BORDER-RADIUS);
+    padding: var(--NAV-PG-TOP-BT) var(--NAV-PG-LT-RT);
+}
+
+.nav-bar__link {
+    color: var(--WHITE);
+    display: inline-block;
+    font-family: var(--INTER-FF);
+    font-size: var(--NAV-FS);
+    font-weight: var(--NAV-FW);
+    margin-right: var(--LINK-MG-RT);
+    padding: var(--NAV-PG-TOP-BT) var(--NAV-PG-LT-RT);
+    text-decoration: none;
+}
+
+.nav-bar__link:last-child {
+    margin-right: 0;
+}
+
+.nav-bar__link:hover {
+    background-color: var(--WHITE);
+    border-radius: var(--BORDER-RADIUS);
+    color: var(--BLACK);
+}
+        /* FIN NAVIGATION */
+        /* DEBUT FORMULAIRE */
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--FIELD-GAP);
+    width: var(--FIELDS-WD);
+}
+
+label {
+    font-family: var(--ROBOTO-FF);
+    font-size: var(--LABEL-FS);
+    font-weight: var(--LABEL-FW);
+}
+
+input, select {
+    border: var(--BORDER-FIELD);
+    border-radius: var(--BORDER-RADIUS);
+    font-family: var(--ROBOTO-FF);
+    font-size: var(--FIELD-FS);
+    font-weight: var(--FIELD-FW);
+    outline: none;
+    padding: var(--FIELD-PG);
+    width: var(--FIELD-WD);
+}
+
+input {
+ background-color: var(--GREY);
+}
+
+select {
+    background-color: var(--WHITE);
+}
+            /* DEBUT BTN*/
+input[type="submit"],
+input[type="reset"] {
+    border: var(--BORDER-BTN);
+    font-family: var(--INTER-FF);
+    font-weight: var(--BTN-FW);
+    width: var(--BTN-WD);
+}
+
+input[type="submit"] {
+    background-color: var(--GOLD);
+    color: var(--WHITE);
+}
+
+input[type="reset"] {
+    background-color: var(--WHITE);
+    color: var(--GOLD);
+    position: st;
+}
+
+input[type="submit"]:hover,
+input[type="reset"]:hover {
+    background-color: var(--GOLD-LIGHT);
+    color: var(--GOLD);
+}
+            /* FIN BTN */
+        /* FIN FORMULAIRE */
+    /* FIN MAIN */
+.content {
+    /* margin-left: 250px; */
+    flex-grow: 1; 
+}
+/* FIN STYLES GENERALS */
+
+/* DEBUT SIDE-BAR */
+.side-bar {
+    background-color: var(--GREY);
+    display: flex;
+    flex-flow: column nowrap;
+    height: 100%;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    width: 250px;
+}
+
+    /* DEBUT LOGO */
+.logo {
+    align-items: center;
+    color: var(--GOLD);
+    display: flex;
+    justify-content: center;
+    padding: var(--LOGO-PG-TOP-BT) 0;
+}
+
+.logo figcaption {
+    width: 57px;
+}
+
+.logo p {
+    font-family: var(--LOGO-FF);
+    font-size: var(--LOGO-FS);
+    font-weight: var(--LOGO-FW);
+    margin-left: 0.5rem;
+}
+    /* FIN LOGO */
+
+    /* DEBUT GESTION-COURRIER, GESTION-UTILISATEUR */
+.gestion-courrier ul,
+.gestion-utilisateur ul {
+    list-style: none;
+}
+
+.gestion-courrier li a,
+.gestion-utilisateur li a {
+    color: var(--BLACK);
+    display: block;
+    font-family: var(--SIDEBAR-FF);
+    font-size: var(--SIDEBAR-FS);
+    font-weight: var(--SIDEBAR-FW);
+    padding: var(--SIDEBAR-PG);
+    text-decoration: none;
+}
+
+.gestion-courrier ul li a:hover,
+.gestion-utilisateur ul li a:hover {
+    background-color: var(--GOLD-LIGHT);
+    color: var(--GOLD);
+}
+    /* FIN GESTION-COURRIER, GESTION-UTILISATEUR */
+
+    /* DEBUT DROPDOWN */
+.gestion-courrier__dropdown {
+    display: none;
+}
+.gestion-courrier__dropdown li a {
+    padding-left: var(--DROPDOWN-PG-LT);
+}
+
+.gestion-courrier ul li:hover .gestion-courrier__dropdown {
+    display: block;
+}
+    /* FIN DROPDOWN */
+
+/* FIN SIDE-BAR */
+
+/* DEBUT PAGE AJOUTER PROFIL*/
+.page-content-add-profil {
+    margin-top: var(--SECTION-MG-TP);
+}
+
+.page-content-add-profil h2 {
+    color: var(--DARK);
+    font-family: var(--ROBOTO-FF);
+    font-size: var(--TITRE-PAGE-FS);
+    font-weight: var(--TITRE-PAGE-FW);
+}
+    /* DEBUT FORMULAIRE AJOUTER PROFIL */
+.form-add-profil {
+    display: flex;
+    flex-flow: column nowrap;
+    font-family: var(--ROBOTO-FF);
+    gap: var(--FORM-GAP);
+    margin-top: var(--FORM-MG-TP);
+}
+
+.form-add-profil h3 {
+    font-size: var(--TITRE-FORM-FS);
+    font-weight: var(--TITRE-FORM-FW);
+}
+        /* DEBUT CHAMPS FORMULAIRE AJOUTER PROFIL */
+.fields-add-profil {
+    display: flex;
+    flex-flow: row wrap;
+    gap: var(--FIELDS-GAP);
+}
+        /* FIN CHAMPS FORMULAIRE AJOUTER PROFIL */
+        /* DEBUT BTN AJOUTER PROFIL */
+.btn-add-profil {
+    display: flex;
+    gap: var(--FIELDS-GAP);
+}
+        /* FIN BTN AJOUTER PROFIL */
+    /* FIN FORMULAIRE AJOUTER PROFIL*/
+/* FIN PAGE AJOUTER PROFIL */
