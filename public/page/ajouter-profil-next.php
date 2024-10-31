@@ -24,9 +24,9 @@
             <!-- DEBUT DE LA BARRE DE NAVIGATION -->
             <nav class="nav-bar">
                 <a class="nav-bar__link" href="#">Liste des utilisateurs</a>
-                <a class="nav-bar__link" href="#">Ajouter un utilisateur</a>
+                <a class="nav-bar__link" href="ajouter-utilisateur.php">Ajouter un utilisateur</a>
                 <a class="nav-bar__link" href="#">Liste des profils</a>
-                <a class="nav-bar__link" href="#">Ajouer un profil</a>
+                <a class="nav-bar__link" href="#">Ajouter un profil</a>
                 <a class="nav-bar__link" href="#">Utilisateurs supprimés</a>
             </nav>
             <!-- FIN DE LA BARRE DE NAVIGATION -->
