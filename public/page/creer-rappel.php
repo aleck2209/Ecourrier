@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/style.css">
-    <title>Ajouter Profil</title>
+    <title>Envoyer Notification</title>
 </head>
 <body>
     <?php
@@ -12,10 +12,11 @@
         require('../include/side-bar.php');
     ?>
 
-    <!-- DEBUT DE LA PAGE AJOUTER PROFIL -->
+    <!-- DEBUT DE LA PAGE ENVOYER NOTIFICATION -->
     <div class="content">
         <!-- DEBUT DU HEADER -->
-        <?php 
+        <?php
+        // APPEL DU HEADER
             include('../include/header.php');
         ?>
         <!-- FIN DU HEADER -->
@@ -25,40 +26,38 @@
                 include('../include/nav-bar.php');
             ?>
             <!-- FIN DE LA BARRE DE NAVIGATION -->
-            <section class="page-content-add-profil">
-                <h2>Ajouter un profil</h2>
+            <section class="page-content-reminder">
+                <h2>Créer un rappel</h2>
                 <!-- DEBUT DU FORMULAIRE -->
-                <form action="" method="post" class="form-add-profil">
-                    <h3>Informations profil</h3>
-                    <div class="fields-add-profil">
+                <form action="" method="post" class="form-reminder">
+                    <div class="fields-reminder">
                         <div class="field">
-                            <label for="nom">Nom</label>
+                            <label for="nom">Objet du rappel</label>
                             <input type="text" name="" id="Nom">
                         </div>
                         <div class="field">
-                            <label for="accès">Accès Total</label>
-                            <select name="" id="">
-                                <option value="">Non</option>
-                                <option value="">Oui</option>
-                            </select>
-                        </div>
-                        <div class="field">
-                            <label for="niveau">Niveau d'accès</label>
-                            <select name="" id="">
-                                <option value="">Courrier du service</option>
-                                <option value="">Autres</option>
-                            </select>
-                        </div>
-                        <div class="field">
-                            <label for="service">Service</label>
-                            <select name="" id="">
-                                <option value="">Tous les services</option>
-                                <option value="">Autres</option>
-                            </select>
+                            <label for="nom">Identifiant/Reference du courrier</label>
+                            <input type="text" name="" id="Nom">
                         </div>
                     </div>
-                    <div class="btn-add-profil">
-                        <input type="submit" value="Enregistrer">
+                    <!-- DEBUT DE LA PROGRAMMATION DE L'ENVOI -->
+                    <h3>Rappel</h3>
+                    <div class="fields-reminder">
+                        <div class="field">
+                            <label for="">Fréquence de rappel</label>
+                            <select name="" id="">
+                                <option value="Non">Une seule fois</option>
+                                <option value="Oui">Oui</option>
+                            </select>
+                        </div>
+                        <div class="field">
+                            <label for="">Date envoi</label>
+                            <input type="date" name="" id="Nom">
+                        </div>
+                    </div>
+                    <!-- FIN DE LA PROGRAMMATION DE L'ENVOI -->
+                    <div class="btn-reminder">
+                        <input type="submit" value="Envoyer">
                         <input type="reset" value="Annuler">
                     </div>
                 </form>
@@ -66,6 +65,6 @@
             </section>
         </main>
     </div>
-    <!-- FIN DE LA PAGE AJOUTER PROFIL -->
+    <!-- FIN DE LA PAGE ENVOYER NOTIFICATION -->
 </body>
 </html>

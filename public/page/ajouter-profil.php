@@ -9,26 +9,20 @@
 <body>
     <?php
         // APPEL DE LA SIDE-BAR
-        require('../include/side-bar.html');
+        require('../include/side-bar.php');
     ?>
-
     <!-- DEBUT DE LA PAGE AJOUTER PROFIL -->
     <div class="content">
         <!-- DEBUT DU HEADER -->
-        <header class="header">
-            <h1>E-COURRIER</h1>
-            <p>Administateur</p>
-        </header>
+        <?php 
+            include('../include/header.php');
+        ?>
         <!-- FIN DU HEADER -->
         <main class="main">
             <!-- DEBUT DE LA BARRE DE NAVIGATION -->
-            <nav class="nav-bar">
-                <a class="nav-bar__link" href="#">Liste des utilisateurs</a>
-                <a class="nav-bar__link" href="ajouter-utilisateur.php">Ajouter un utilisateur</a>
-                <a class="nav-bar__link" href="#">Liste des profils</a>
-                <a class="nav-bar__link" href="#">Ajouter un profil</a>
-                <a class="nav-bar__link" href="#">Utilisateurs supprimés</a>
-            </nav>
+            <?php
+                include('../include/nav-bar.php');
+            ?>
             <!-- FIN DE LA BARRE DE NAVIGATION -->
             <section class="page-content-add-profil">
                 <h2>Ajouter un profil</h2>

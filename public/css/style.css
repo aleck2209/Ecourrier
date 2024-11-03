@@ -91,13 +91,21 @@
     --GAP-FIELD: 0.5rem;
     --GAP-FIELDS: 1rem;
     --GAP-FORM: 1rem;
+    --GAP-USER-ICON: 2rem;
     /* FIN GAP */
 
     /* DEBUT WIDTH */
     --WD-BTN: 25%;
     --WD-FIELD: 100%;
     --WD-FIELDS: 30%;
+    --WD-ICON-RAPPEL: 2rem;
+    --WD-IMG: 100%;
+    --WD-LOGO: 3rem;
     /* FIN WIDTH */
+
+    /* DEBUT HEIGHT */
+    --HT-BODY: 100vh;
+    /* FIN HEIGHT */
     /* FIN DISTANCE */
 
     /* DEBUT BORDURE */
@@ -110,11 +118,11 @@
 /* DEBUT STYLES GENERALS */
 body {
     display: flex;
-    height: 100vh;
+    height: var(--HT-BODY);
 }
 
 img {
-    width: 100%;
+    width: var(--WD-IMG);
 }
 
     /* DEBUT HEADER */
@@ -137,6 +145,26 @@ header p {
     font-size: var(--FS-NAME-USER);
     font-weight: var(--FW-NAME-USER);
 }
+    /* DEBUT CAS UTILISATEUR SE CONNECTE */
+.user-case-header {
+    align-items: center;
+    display: flex;
+    gap: var(--GAP-USER-ICON);
+    justify-content: space-between;
+}
+
+.user-case-header__card-icon-rappel {
+    width: var(--WD-ICON-RAPPEL);
+}
+
+.user-case-header__link-icon-rappel {
+    text-decoration: none;
+}
+
+.user-case-header__icon-rappel:hover {
+    transform: scale(1.2);
+}
+    /* FIN CAS UTILISATEUR SE CONNECTE */
     /* FIN HEADER */
 
     /* DEBUT MAIN */
@@ -260,7 +288,7 @@ input[type="reset"]:hover {
 }
 
 .logo figcaption {
-    width: 57px;
+    width: var(--WD-LOGO);
 }
 
 .logo p {
@@ -281,7 +309,7 @@ input[type="reset"]:hover {
 .gestion-utilisateur li a {
     color: var(--BLACK);
     display: block;
-    font-family: var(--SIDEBAR-FF);
+    font-family: var(--FF-INTER);
     font-size: var(--FS-SIDEBAR);
     font-weight: var(--FW-SIDEBAR);
     padding: var(--PG-SIDEBAR);
@@ -310,19 +338,28 @@ input[type="reset"]:hover {
 
 /* FIN SIDE-BAR */
 
-/* DEBUT PAGE AJOUTER PROFIL*/
-.page-content-add-profil {
+/* DEBUT PAGE AJOUTER PROFIL ET UTILISATEUR ET AJOUTER UTILISATEUR*/
+.page-content-add-profil,
+.page-content-add-user,
+.page-content-send-notif,
+.page-content-reminder {
     margin-top: var(--MG-TOP-SECTION);
 }
 
-.page-content-add-profil h2 {
+.page-content-add-profil h2,
+.page-content-add-user h2,
+.page-content-send-notif h2,
+.page-content-reminder h2 {
     color: var(--DARK);
     font-family: var(--FF-ROBOTO);
     font-size: var(--FS-TITRE-PAGE);
     font-weight: var(--FW-TITRE-PAGE);
 }
-    /* DEBUT FORMULAIRE AJOUTER PROFIL */
-.form-add-profil {
+    /* DEBUT FORMULAIRE AJOUTER PROFIL ET UTILISATEUR */
+.form-add-profil,
+.form-add-user,
+.form-send-notif,
+.form-reminder {
     display: flex;
     flex-flow: column nowrap;
     font-family: var(--FF-ROBOTO);
@@ -330,26 +367,35 @@ input[type="reset"]:hover {
     margin-top: var(--MG-TOP-FORM);
 }
 
-.form-add-profil h3 {
+.form-add-profil h3,
+.form-add-user h3,
+.form-send-notif h3,
+.form-reminder h3 {
     font-size: var(--FS-TITRE-FORM);
     font-weight: var(--FW-TITRE-FORM);
 }
-        /* DEBUT CHAMPS FORMULAIRE AJOUTER PROFIL */
-.fields-add-profil {
+        /* DEBUT CHAMPS FORMULAIRE AJOUTER PROFIL ET USER */
+.fields-add-profil,
+.fields-add-user,
+.fields-send-notif,
+.fields-reminder {
     display: flex;
     flex-flow: row wrap;
     gap: var(--GAP-FIELDS);
 }
-        /* FIN CHAMPS FORMULAIRE AJOUTER PROFIL */
-        /* DEBUT BTN AJOUTER PROFIL */
-.btn-add-profil, .btn-add-user {
+        /* FIN CHAMPS FORMULAIRE AJOUTER PROFIL ET USER */
+        /* DEBUT BTN AJOUTER PROFIL ET USER */
+.btn-add-profil,
+.btn-add-user,
+.btn-send-notif,
+.btn-reminder {
     display: flex;
     gap: var(--GAP-FIELDS);
 }
-        /* FIN BTN AJOUTER PROFIL */
-    /* FIN FORMULAIRE AJOUTER PROFIL*/
-/* FIN PAGE AJOUTER PROFIL */
+        /* FIN BTN AJOUTER PROFIL ET USER */
+    /* FIN FORMULAIRE AJOUTER PROFIL ET USER */
+/* FIN PAGE AJOUTER PROFIL ET USER */
 
 /* DEBUT PAGE AJOUTER UTILISATEUR */
 
-/* FIN PAGE AJOUTER PROFIL */
+/* FIN PAGE AJOUTER PROFIL ET USER*/

@@ -50,7 +50,7 @@
                 <li>
                     <a href="#">Déconnexion</a>
                 </li>
-                <li>
+                <li style="display: none">
                     <a href="#">Administration</a>
                 </li>
             </ul>

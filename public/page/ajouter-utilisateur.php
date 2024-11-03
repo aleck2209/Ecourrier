@@ -4,45 +4,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/style.css">
-    <title>Ajouter Profil</title>
+    <title>Ajouter Utilisateur</title>
 </head>
 <body>
     <?php
         // APPEL DE LA SIDE-BAR
-        require('../include/side-bar.html');
+        require('../include/side-bar.php');
     ?>
 
     <!-- DEBUT DE LA PAGE AJOUTER PROFIL -->
     <div class="content">
         <!-- DEBUT DU HEADER -->
-        <header class="header">
-            <h1>E-COURRIER</h1>
-            <p>Administateur</p>
-        </header>
+        <?php
+        // APPEL DU HEADER
+            include('../include/header.php');
+        ?>
         <!-- FIN DU HEADER -->
         <main class="main">
             <!-- DEBUT DE LA BARRE DE NAVIGATION -->
-            <nav class="nav-bar">
-                <a class="nav-bar__link" href="#">Liste des utilisateurs</a>
-                <a class="nav-bar__link" href="#">Ajouter un utilisateur</a>
-                <a class="nav-bar__link" href="#">Liste des profils</a>
-                <a class="nav-bar__link" href="ajouter-profil.php">Ajouter un profil</a>
-                <a class="nav-bar__link" href="#">Utilisateurs supprimés</a>
-            </nav>
+            <?php
+                include('../include/nav-bar.php');
+            ?>
             <!-- FIN DE LA BARRE DE NAVIGATION -->
-            <section class="page-content-add-profil">
+            <section class="page-content-add-user">
                 <h2>Ajouter un utilisateur</h2>
                 <!-- DEBUT DU FORMULAIRE -->
-                <form action="" method="post" class="form-add-profil">
+                <form action="" method="post" class="form-add-user">
                     <!-- DEBUT INFORMATION LOGIN -->
                     <h3>Informations Login</h3>
-                    <div class="fields-add-profil">
+                    <div class="fields-add-user">
                         <div class="field">
                             <label for="nom">Login</label>
                             <input type="text" name="" id="Nom">
                         </div>
                         <div class="field">
-                            <label for="accès">Civiliter</label>
+                            <label for="acces">Civiliter</label>
                             <select name="" id="">
                                 <option value="M">Masculin</option>
                                 <option value="F">Feminin</option>
@@ -71,7 +67,7 @@
 
                     <!-- DEBUT INFORMATION UTILISATEUR -->
                     <h3>Informations utilisateur</h3>
-                    <div class="fields-add-profil">
+                    <div class="fields-add-user">
                         <div class="field">
                             <label for="nom">Nom</label>
                             <input type="text" name="" id="Nom">
@@ -89,7 +85,7 @@
 
                     <!-- DEBUT INFORMATION POST  -->
                     <h3>Informations post</h3>
-                    <div class="fields-add-profil">
+                    <div class="fields-add-user">
                         <div class="field">
                             <label for="">Occupation</label>
                             <input type="text" name="" id="Nom">
