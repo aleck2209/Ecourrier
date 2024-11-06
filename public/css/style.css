@@ -200,11 +200,19 @@ main {
 }
         /* FIN NAVIGATION */
         /* DEBUT FORMULAIRE */
-.field {
+.field,
+.package-description {
     display: flex;
     flex-direction: column;
     gap: var(--GAP-FIELD);
+}
+
+.field {
     width: var(--WD-FIELDS);
+}
+
+.package-description {
+    width: 100%;
 }
 
 label {
@@ -213,7 +221,9 @@ label {
     font-weight: var(--FW-LABEL);
 }
 
-input, select {
+input,
+select,
+textarea {
     border: var(--BORDER-FIELD);
     border-radius: var(--BORDER-RADIUS);
     font-family: var(--FF-ROBOTO);
@@ -221,11 +231,16 @@ input, select {
     font-weight: var(--FW-FIELD);
     padding: var(--PG-FIELD);
     outline: none;
-    width: var(--WD-FIELD);
 }
 
-input {
- background-color: var(--GREY);
+input,
+textarea {
+    background-color: var(--GREY);
+}
+
+input,
+select {
+    width: var(--WD-FIELD);
 }
 
 select {
@@ -338,28 +353,34 @@ input[type="reset"]:hover {
 
 /* FIN SIDE-BAR */
 
-/* DEBUT PAGE AJOUTER PROFIL ET UTILISATEUR ET AJOUTER UTILISATEUR*/
+/* DEBUT PAGE AVEC FORMULAIRE*/
 .page-content-add-profil,
 .page-content-add-user,
 .page-content-send-notif,
-.page-content-reminder {
+.page-content-reminder,
+.page-content-file-case,
+.page-content-package-case {
     margin-top: var(--MG-TOP-SECTION);
 }
 
 .page-content-add-profil h2,
 .page-content-add-user h2,
 .page-content-send-notif h2,
-.page-content-reminder h2 {
+.page-content-reminder h2,
+.page-content-file-case h2,
+.page-content-package-case h2 {
     color: var(--DARK);
     font-family: var(--FF-ROBOTO);
     font-size: var(--FS-TITRE-PAGE);
     font-weight: var(--FW-TITRE-PAGE);
 }
-    /* DEBUT FORMULAIRE AJOUTER PROFIL ET UTILISATEUR */
+    /* DEBUT FORMULAIRE */
 .form-add-profil,
 .form-add-user,
 .form-send-notif,
-.form-reminder {
+.form-reminder,
+.form-file-case,
+.form-package-case {
     display: flex;
     flex-flow: column nowrap;
     font-family: var(--FF-ROBOTO);
@@ -370,32 +391,36 @@ input[type="reset"]:hover {
 .form-add-profil h3,
 .form-add-user h3,
 .form-send-notif h3,
-.form-reminder h3 {
+.form-reminder h3,
+.form-file-case h3,
+.form-package-case h3 {
     font-size: var(--FS-TITRE-FORM);
     font-weight: var(--FW-TITRE-FORM);
 }
-        /* DEBUT CHAMPS FORMULAIRE AJOUTER PROFIL ET USER */
+        /* DEBUT */
 .fields-add-profil,
 .fields-add-user,
 .fields-send-notif,
-.fields-reminder {
+.fields-reminder,
+.fields-file-case,
+.fields-package-case {
     display: flex;
     flex-flow: row wrap;
     gap: var(--GAP-FIELDS);
 }
-        /* FIN CHAMPS FORMULAIRE AJOUTER PROFIL ET USER */
-        /* DEBUT BTN AJOUTER PROFIL ET USER */
+
+        /*  */
+        /* FIN CHAMPS */
+        /* DEBUT BOUTON */
 .btn-add-profil,
 .btn-add-user,
 .btn-send-notif,
-.btn-reminder {
+.btn-reminder,
+.btn-file-case,
+.btn-package-case {
     display: flex;
     gap: var(--GAP-FIELDS);
 }
-        /* FIN BTN AJOUTER PROFIL ET USER */
-    /* FIN FORMULAIRE AJOUTER PROFIL ET USER */
-/* FIN PAGE AJOUTER PROFIL ET USER */
-
-/* DEBUT PAGE AJOUTER UTILISATEUR */
-
-/* FIN PAGE AJOUTER PROFIL ET USER*/
+        /* FIN BOUTON */
+    /* FIN FORMULAIRE */
+/* FIN PAGE AVEC FORMULAIRE */

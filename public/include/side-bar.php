@@ -21,7 +21,7 @@
                         <a href="#">Tableau de Bord</a>
                     </li>
                     <li>
-                        <a href="#">Enregistrer Courrier</a>
+                        <a href="cas-fichier.php">Enregistrer Courrier</a>
                     </li>
                     <li>
                         <a href="#">Courrier Enregistrer</a>
