@@ -37,7 +37,7 @@
                         <!-- FIN DROPDOWN -->
                     </li>
                     <li>
-                        <a href="#">Notifications</a>
+                        <a href="notification-recu.php">Notifications</a>
                     </li>
                 </ul>
             </div>
@@ -45,13 +45,13 @@
         <div class="gestion-utilisateur">
             <ul>
                 <li>
-                    <a href="#">Compte</a>
+                    <a href="compte.php">Compte</a>
                 </li>
                 <li>
                     <a href="#">Déconnexion</a>
                 </li>
                 <li>
-                    <a href="#">Administration</a>
+                    <a href="liste-utilisateur.php">Administration</a>
                 </li>
             </ul>
         </div>

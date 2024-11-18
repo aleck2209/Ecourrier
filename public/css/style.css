@@ -80,14 +80,17 @@
     --PG-TOP-BT-HEADER: 0.5rem;
     --PG-TOP-BT-NAV: 0.5rem;
     --PG-TOP-MAIN: 1rem;
+    --PG-FORM: 0.6rem;
+    --PG-BTN-OPERATION: 0.2rem;
     /* FIN PADDING */
 
     /* DEBUT MARGIN */
     --MG-RT-LINK: 1rem;
     --MG-TOP-FORM: 1rem;
+    --MG-BT-FORM: 0.5rem;
     --MG-TOP-SECTION: 1rem;
     --MG-BT-BLOCK-NOTIF: 1rem;
-    --MG-BT-LIST-NOTIF: 2rem;
+    --MG-BT-LIST-NOTIF: 1rem;
     --MG-BT-HEADER-LIST: 1rem;
     /* FIN MARGIN */
 
@@ -106,6 +109,7 @@
     --WD-IMG: 100%;
     --WD-LOGO: 3rem;
     --WD-BTN-SEARCH: 2.93rem;
+    --WD-BTN-OPERATION: 1.7rem;
     /* FIN WIDTH */
 
     /* DEBUT HEIGHT */
@@ -118,6 +122,8 @@
     --BORDER-BT-DOTTED: 2px dotted var(--DARK-GREY);
     --BORDER-BTN: 1px solid var(--GOLD);
     --BORDER-FIELD: 1px solid var(--DARK-GREY);
+    --BORDER-FORM: 1px solid var(--DARK-GREY);
+    --BORDER-DASHBOARD: 2px solid var(--DARK-GREY);
     --BORDER-RADIUS: 5px;
 }
 
@@ -232,6 +238,7 @@ select,
 textarea {
     border: var(--BORDER-FIELD);
     border-radius: var(--BORDER-RADIUS);
+    color: var(--BLACK);
     font-family: var(--FF-ROBOTO);
     font-size: var(--FS-FIELD);
     font-weight: var(--FW-FIELD);
@@ -275,7 +282,9 @@ input[type="submit"] {
     padding: 0;
 }
 
-.form-search__btn-search {
+.form-search__btn-search,
+.form-search-key-word__btn-search,
+.form-search-date__btn-search {
     width: var(--WD-BTN-SEARCH);
     padding: var(--PG-BTN-SEARCH);
 }
@@ -290,14 +299,18 @@ input[type="reset"],
 .element-deleted-user__btn-select[type="image"]:hover,
 .element-list-profil__btn-select[type="image"]:hover,
 .element-list-user__btn-select[type="image"]:hover,
-.form-search__btn-search:hover {
-    transform: scale(0.9);
+.form-search__btn-search:hover,
+.form-search-key-word__btn-search:hover,
+.form-search-date__btn-search:hover,
+.dashboard-action input[type="image"]:hover {
+    transform: scale(0.8);
 }
 
 input[type="submit"]:hover,
 input[type="reset"]:hover {
     background-color: var(--GOLD-LIGHT);
     color: var(--GOLD);
+    cursor: pointer;
 }
 
 /* FIN BTN */
@@ -393,7 +406,8 @@ input[type="reset"]:hover {
 .page-content-received-notif,
 .page-content-deleted-user,
 .page-content-list-profil,
-.page-content-list-user {
+.page-content-list-user,
+.page-content-account {
     margin-top: var(--MG-TOP-SECTION);
 }
 /* FIN CONTENT PAGE */
@@ -406,7 +420,8 @@ input[type="reset"]:hover {
 .page-content-file-case h2,
 .page-content-package-case h2,
 .page-content-list-profil h2,
-.page-content-list-user h2 {
+.page-content-list-user h2,
+.page-content-account h2 {
     color: var(--DARK);
     font-family: var(--FF-ROBOTO);
     font-size: var(--FS-TITRE-PAGE);
@@ -418,7 +433,8 @@ input[type="reset"]:hover {
 .form-send-notif,
 .form-reminder,
 .form-file-case,
-.form-package-case {
+.form-package-case,
+.form-account {
     display: flex;
     flex-flow: column nowrap;
     font-family: var(--FF-ROBOTO);
@@ -431,7 +447,12 @@ input[type="reset"]:hover {
 .form-send-notif h3,
 .form-reminder h3,
 .form-file-case h3,
-.form-package-case h3 {
+.form-package-case h3,
+.form-account h3,
+.form-search-key-word h3,
+.form-search-date h3,
+.form-sort h3,
+.form-filter h3 {
     font-size: var(--FS-TITRE-FORM);
     font-weight: var(--FW-TITRE-FORM);
 }
@@ -441,7 +462,8 @@ input[type="reset"]:hover {
 .fields-send-notif,
 .fields-reminder,
 .fields-file-case,
-.fields-package-case {
+.fields-package-case,
+.fields-account {
     display: flex;
     flex-flow: row wrap;
     gap: var(--GAP-FIELDS);
@@ -485,7 +507,8 @@ input[type="reset"]:hover {
 .title-received-notif,
 .title-deleted-user,
 .title-list-profil,
-.title-list-user {
+.title-list-user,
+.title-dashboard-mail {
     align-items: center;
     color: var(--DARK);
     display: flex;
@@ -493,7 +516,7 @@ input[type="reset"]:hover {
     font-size: var(--FS-NAME-USER);
     font-weight: var(--FW-FIELD);
     justify-content: space-between;
-    margin-bottom: var(--MG-BT-BLOCK-NOTIF);
+    margin-bottom: 0.5rem;
 }
 
 .element-notif,
@@ -501,7 +524,8 @@ input[type="reset"]:hover {
 .element-receveid-notif,
 .element-deleted-user,
 .element-list-profil,
-.element-list-user {
+.element-list-user,
+.element-dashboard-mail {
     align-items: center;
     color: var(--BLACK);
     display: flex;
@@ -515,10 +539,17 @@ input[type="reset"]:hover {
 .element-receveid-notif,
 .element-deleted-user,
 .element-list-profil,
-.element-list-user {
+.element-list-user,
+.element-dashboard-mail,
+.element-notif,
+.element-reminder {
     border-bottom: var(--BORDER-BT-DOTTED);
 }
 
+.list-notif p,
+.list-reminder p {
+    width: 20%;
+}
 /* FIN PAGE LISTE NOTIFICATION, NOTIFICATION RECUE */
 
 /* DEBUT ENTÊTE PAGE LISTE UTILISATEUR, PROFIL */
@@ -530,10 +561,68 @@ input[type="reset"]:hover {
     margin-bottom: var(--MG-BT-HEADER-LIST);
 }
 
-.form-search {
+.form-search,
+.fields-key-word,
+.fields-date,
+.fields-filter,
+.fields-sort {
     align-items: center;
     display: flex;
     gap: 0.1rem
 }
 
 /* FIN ENTÊTE PAGE LISTE UTILISATEUR, PROFIL */
+
+/* DEBUT TABLEAU DE BORD */
+.filter-block {
+    display: flex;
+    justify-content: space-between;
+}
+
+.sort-filter-block {
+    width: 50%;
+}
+
+.search-block {
+    width: 45%;
+}
+
+.form-search-key-word,
+.form-search-date,
+.form-sort,
+.form-filter {
+    border: var(--BORDER-FORM);
+    border-radius: var(--BORDER-RADIUS);
+    display: flex;
+    flex-flow: column nowrap;
+    font-family: var(--FF-ROBOTO);
+    gap: var(--GAP-FORM);
+    margin-bottom: var(--MG-BT-FORM);
+    padding: var(--PG-FORM);
+}
+
+.fields-key-word input[type="search"] {
+    width: 50%;
+}
+
+.list-mail {
+    margin-top: 0.5rem; 
+}
+
+.title-dashboard-mail p,
+.element-dashboard-mail output,
+.dashboard-action {
+    width: 12%;
+}
+
+.dashboard-date {
+    text-align: center;
+}
+
+.dashboard-action input[type="image"] {
+    background-color: transparent;
+    padding: var(--PG-BTN-OPERATION);
+    width: var(--WD-BTN-OPERATION);
+}
+
+/* FIN PAGE TABLEAU DE BORD */
