@@ -26,7 +26,7 @@
                 include('../include/nav-bar.php');
             ?>
             <!-- FIN DE LA BARRE DE NAVIGATION -->
-            <section class="page-content-reminder">
+            <section class="page-content-reminder" id="page-notification">
                 <h2>Créer un rappel</h2>
                 <!-- DEBUT DU FORMULAIRE -->
                 <form action="" method="post" class="form-reminder">
@@ -66,5 +66,10 @@
         </main>
     </div>
     <!-- FIN DE LA PAGE ENVOYER NOTIFICATION -->
+    
+    <!-- DEBUT SCRIPT JS -->
+    <script src="../js/afficher-nav.js"></script>
+    <script src="../js/afficher-header.js"></script>
+    <!-- FIN SCRIPT JS -->
 </body>
 </html>

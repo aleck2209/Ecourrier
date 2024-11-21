@@ -26,7 +26,7 @@
                 include('../include/nav-bar.php');
             ?>
             <!-- FIN DE LA BARRE DE NAVIGATION -->
-            <section class="page-content-send-notif">
+            <section class="page-content-send-notif" id="page-notification">
                 <h2>Envoyer une notification</h2>
                 <!-- DEBUT DU FORMULAIRE -->
                 <form action="" method="post" class="form-send-notif">
@@ -66,5 +66,9 @@
         </main>
     </div>
     <!-- FIN DE LA PAGE ENVOYER NOTIFICATION -->
+    <!-- DEBUT SCRIPT JS -->
+    <script src="../js/afficher-nav.js"></script>
+    <script src="../js/afficher-header.js"></script>
+    <!-- FIN SCRIPT JS -->
 </body>
 </html>

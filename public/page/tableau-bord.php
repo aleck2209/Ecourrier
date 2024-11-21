@@ -21,7 +21,7 @@
         ?>
         <!-- FIN DU HEADER -->
         <main class="main">
-            <section class="page-content-dashboard">
+            <section class="page-content-dashboard" id="page-user">
                 <div class="filter-block">
                     <div class="search-block">
                         <form action="" method="post" class="form-search-key-word">
@@ -110,5 +110,8 @@
         </main>
     </div>
     <!-- FIN DE LA PAGE TABLEAU DE BORD  -->
+     <!-- DEBUT SCRIPT JS -->
+    <script src="../js/afficher-header.js"></script>
+    <!-- FIN SCRIPT JS -->
 </body>
 </html>

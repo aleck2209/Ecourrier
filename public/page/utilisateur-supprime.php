@@ -27,7 +27,7 @@
                 include('../include/nav-bar.php');
             ?>
             <!-- FIN DE LA BARRE DE NAVIGATION -->
-            <section class="page-content-deleted-user">
+            <section class="page-content-deleted-user" id="page-admin">
                 <div class="block-user">
                     <div class="deleted-user">
                         <div class="title-deleted-user">
@@ -48,5 +48,9 @@
         </main>
     </div>
     <!-- FIN DE LA PAGE LISTE NOTIFICATION -->
+    <!-- DEBUT SCRIPT JS -->
+    <script src="../js/afficher-nav.js"></script>
+    <script src="../js/afficher-header.js"></script>
+    <!-- FIN SCRIPT JS -->
 </body>
 </html>

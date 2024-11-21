@@ -27,7 +27,7 @@
                 include('../include/nav-bar.php');
             ?>
             <!-- FIN DE LA BARRE DE NAVIGATION -->
-            <section class="page-content-list-profil">
+            <section class="page-content-list-profil" id="page-admin">
                 <div class="block-profil">
                     <div class="header-list-profil">
                         <h2>Liste des profils</h2>
@@ -55,5 +55,9 @@
         </main>
     </div>
     <!-- FIN DE LA PAGE LISTE PROFIL -->
+    <!-- DEBUT SCRIPT JS -->
+    <script src="../js/afficher-nav.js"></script>
+    <script src="../js/afficher-header.js"></script>
+    <!-- FIN SCRIPT JS -->
 </body>
 </html>

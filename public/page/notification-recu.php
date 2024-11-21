@@ -27,7 +27,7 @@
                 include('../include/nav-bar.php');
             ?>
             <!-- FIN DE LA BARRE DE NAVIGATION -->
-            <section class="page-content-received-notif">
+            <section class="page-content-received-notif" id="page-notification">
                 <div class="block-notif ">
                     <h2>Notifications reçues</h2>
                     <div class="received-notif">
@@ -52,5 +52,9 @@
         </main>
     </div>
     <!-- FIN DE LA PAGE LISTE NOTIFICATION -->
+    <!-- DEBUT SCRIPT JS -->
+    <script src="../js/afficher-nav.js"></script>
+    <script src="../js/afficher-header.js"></script>
+    <!-- FIN SCRIPT JS -->
 </body>
 </html>

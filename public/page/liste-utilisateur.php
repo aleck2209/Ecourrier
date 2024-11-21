@@ -27,7 +27,7 @@
                 include('../include/nav-bar.php');
             ?>
             <!-- FIN DE LA BARRE DE NAVIGATION -->
-            <section class="page-content-list-user">
+            <section class="page-content-list-user" id="page-admin">
                 <div class="header-list-user">
                     <h2>Liste des utilisateurs</h2>
                     <form action="" method="post" class="form-search">
@@ -57,5 +57,9 @@
         </main>
     </div>
     <!-- FIN DE LA PAGE LISTE PROFIL -->
+    <!-- DEBUT SCRIPT JS -->
+    <script src="../js/afficher-nav.js"></script>
+    <script src="../js/afficher-header.js"></script>
+    <!-- FIN SCRIPT JS -->
 </body>
 </html>

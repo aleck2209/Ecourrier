@@ -21,7 +21,7 @@
         ?>
         <!-- FIN DU HEADER -->
         <main class="main">
-            <section class="page-content-account">
+            <section class="page-content-account" id="page user">
                 <h2>Informations Compte</h2>
                 <!-- DEBUT DU FORMULAIRE -->
                 <form action="" method="post" class="form-account">
@@ -68,6 +68,9 @@
             </section>
         </main>
     </div>
-    <!-- FIN DE LA PAGE ENVOYER NOTIFICATION -->
+    <!-- FIN DE LA PAGE COMPTE -->
+    <!-- DEBUT SCRIPT JS -->
+    <script src="../js/afficher-header.js"></script>
+    <!-- FIN SCRIPT JS -->
 </body>
 </html>

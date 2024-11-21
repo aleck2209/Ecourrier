@@ -12,7 +12,7 @@
         require('../include/side-bar.php');
     ?>
 
-    <!-- DEBUT DE LA PAGE ENVOYER NOTIFICATION -->
+    <!-- DEBUT DE LA PAGE ENREGISTRER COURRIER -->
     <div class="content">
         <!-- DEBUT DU HEADER -->
         <?php
@@ -26,7 +26,7 @@
                 include('../include/nav-bar.php');
             ?>
             <!-- FIN DE LA BARRE DE NAVIGATION -->
-            <section class="page-content-file-case">
+            <section class="page-content-file-case" id="page-save-mail">
                 <h2>Importer fichier scanné</h2>
                 <!-- DEBUT DU FORMULAIRE -->
                 <form action="" method="post" class="form-file-case">
@@ -63,7 +63,7 @@
                         </div>
                         <div class="field">
                             <label for="">Date d'arrivée</label>
-                            <input type="date" name="" id="">
+                            <input type="datetime-local" name="" id="">
                         </div>
                     </div>
                     <!-- FIN EXPEDITEUR/DESTINATAIRE -->
@@ -107,5 +107,10 @@
             </section>
         </main>
     </div>
+    <!-- FIN PAGE ENREGISTRER COURRIER -->
+    <!-- DEBUT SCRIPT JS -->
+    <script src="../js/afficher-nav.js"></script>
+    <script src="../js/afficher-header.js"></script>
+    <!-- FIN SCRIPT JS -->
 </body>
 </html>

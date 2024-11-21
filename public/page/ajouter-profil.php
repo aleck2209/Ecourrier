@@ -24,7 +24,7 @@
                 include('../include/nav-bar.php');
             ?>
             <!-- FIN DE LA BARRE DE NAVIGATION -->
-            <section class="page-content-add-profil">
+            <section class="page-content-add-profil" id="page-admin">
                 <h2>Ajouter un profil</h2>
                 <!-- DEBUT DU FORMULAIRE -->
                 <form action="" method="post" class="form-add-profil">
@@ -49,5 +49,9 @@
         </main>
     </div>
     <!-- FIN DE LA PAGE AJOUTER PROFIL -->
+    <!-- DEBUT SCRIPT JS -->
+    <script src="../js/afficher-nav.js"></script>
+    <script src="../js/afficher-header.js"></script>
+    <!-- FIN SCRIPT JS -->
 </body>
 </html>
