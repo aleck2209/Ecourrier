@@ -64,6 +64,7 @@
     --GOLD: rgba(152, 126, 60, 1);
     --GOLD-LIGHT: rgba(152, 126, 60, 0.25);
     --GREY: rgba(249, 250, 251, 1);
+    --RED: rgb(185, 6, 6);
     --WHITE: rgba(255, 255, 255, 1);
     /* FIN COULEUR */
 
@@ -107,6 +108,7 @@
     --WD-FIELDS: 30%;
     --WD-ICON-RAPPEL: 2rem;
     --WD-IMG: 100%;
+    --WD-HALF-SPACE: 49%;
     --WD-LOGO: 3rem;
     --WD-BTN-SEARCH: 2.93rem;
     --WD-BTN-OPERATION: 1.7rem;
@@ -212,8 +214,7 @@ main {
 }
         /* FIN NAVIGATION */
         /* DEBUT FORMULAIRE */
-.field,
-.package-description {
+.field {
     display: flex;
     flex-direction: column;
     gap: var(--GAP-FIELD);
@@ -223,8 +224,8 @@ main {
     width: var(--WD-FIELDS);
 }
 
-.package-description {
-    width: 100%;
+.half-space {
+    width: var(--WD-HALF-SPACE);
 }
 
 label {
@@ -400,7 +401,7 @@ input[type="reset"]:hover {
 .page-content-add-user,
 .page-content-send-notif,
 .page-content-reminder,
-.page-content-file-case,
+.page-content-save-mail,
 .page-content-package-case,
 .page-content-list-notif,
 .page-content-received-notif,
@@ -417,7 +418,7 @@ input[type="reset"]:hover {
 .page-content-add-user h2,
 .page-content-send-notif h2,
 .page-content-reminder h2,
-.page-content-file-case h2,
+.page-content-save-mail h2,
 .page-content-package-case h2,
 .page-content-list-profil h2,
 .page-content-list-user h2,
@@ -432,7 +433,7 @@ input[type="reset"]:hover {
 .form-add-user,
 .form-send-notif,
 .form-reminder,
-.form-file-case,
+.form-save-mail,
 .form-package-case,
 .form-account {
     display: flex;
@@ -446,27 +447,43 @@ input[type="reset"]:hover {
 .form-add-user h3,
 .form-send-notif h3,
 .form-reminder h3,
-.form-file-case h3,
+.form-save-mail h3,
 .form-package-case h3,
 .form-account h3,
 .form-search-key-word h3,
 .form-search-date h3,
 .form-sort h3,
 .form-filter h3 {
+    color: var(--GOLD);
     font-size: var(--FS-TITRE-FORM);
     font-weight: var(--FW-TITRE-FORM);
+}
+
+.form-save-mail span {
+    color: var(--RED);
+    font-weight: 900;
 }
         /* DEBUT */
 .fields-add-profil,
 .fields-add-user,
 .fields-send-notif,
 .fields-reminder,
-.fields-file-case,
+.fields-save-mail,
 .fields-package-case,
 .fields-account {
     display: flex;
     flex-flow: row wrap;
     gap: var(--GAP-FIELDS);
+}
+
+.closed-folds select {
+    border: var(--BORDER-BTN);
+}
+
+.closed-folds label,
+.closed-folds select {
+    color: var(--GOLD);
+    font-weight: 900; 
 }
 
         /*  */
@@ -476,7 +493,7 @@ input[type="reset"]:hover {
 .btn-add-user,
 .btn-send-notif,
 .btn-reminder,
-.btn-file-case,
+.btn-save-mail,
 .btn-package-case {
     display: flex;
     gap: var(--GAP-FIELDS);

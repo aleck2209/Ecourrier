@@ -26,80 +26,70 @@
                 include('../include/nav-bar.php');
             ?>
             <!-- FIN DE LA BARRE DE NAVIGATION -->
-            <section class="page-content-file-case" id="page-save-mail">
-                <h2>Importer fichier scanné</h2>
+            <section class="page-content-save-mail" id="page-save-mail">
+                <h2>Informations Courrier</h2>
                 <!-- DEBUT DU FORMULAIRE -->
-                <form action="" method="post" class="form-file-case">
+                <form action="" method="post" class="form-save-mail">
+                    <input type="hidden" name="" value="interne">
                     <!-- DEBUT INFORMATION COURRIER -->
-                    <h3>Information courrier</h3>
-                    <div class="fields-file-case">
-                        <div class="field">
-                            <label for="">Choisi le fichier scanné</label>
-                            <input type="file" name="" id="">
+                    <div class="fields-save-mail">
+                        <div class="field half-space">
+                            <label for="objet">Objet du courrier<span> *</span></label>
+                            <textarea name="" id="objet" rows="2" required></textarea>
+                        </div>
+                        <div class="field half-space">
+                            <label for="reference">Réference du courrier</label>
+                            <textarea name="" id="reference" rows="2"></textarea>
                         </div>
                         <div class="field">
-                            <label for="">Objet du courrier</label>
-                            <input type="text" name="" id="">
+                            <label for="numeroOrdre">Numéro d'ordre <span>*</span></label>
+                            <input type="text" name="" id="numeroOrdre" required>
                         </div>
                         <div class="field">
-                            <label for="">Type du document</label>
-                            <select name="" id="">
-                                <option value="lettre">lettre</option>
-                                <option value="autres">autres</option>
+                            <label for="dateEnregistrement">Date d'enregistrement <span>*</span></label>
+                            <input type="datetime-local" name="" id="dateEnregistrement" required>
+                        </div>
+                        <div class="field">
+                            <label for="categorie">Catégorie</label>
+                            <select name="" id="categorie">
+                                <option value="normal">Normal</option>
+                                <option value="urgent">Urgent</option>
                             </select>
                         </div>
                     </div>
                     <!-- FIN INFORMATION COURRIER -->
-                    <!-- DEBUT EXPEDITEUR/DESTINATAIRES -->
-                    <h3>Expéditeur/Destinataires</h3>
-                    <div class="fields-file-case">
+                    <!-- DEBUT CORRESPONDANT -->
+                    <div class="fields-save-mail">
                         <div class="field">
-                            <label for="">Expéditeur</label>
-                            <input type="text" name="" id="">
+                            <label for="destinataire">Destinataire <span>*</span></label>
+                            <input type="text" name="" id="destinataire">
                         </div>
                         <div class="field">
-                            <label for="">Destinataires</label>
-                            <input type="text" name="" id="">
+                            <label for="copie">En copie(cc)</label>
+                            <input type="text" name="" id="copie">
                         </div>
-                        <div class="field">
-                            <label for="">Date d'arrivée</label>
-                            <input type="datetime-local" name="" id="">
-                        </div>
-                    </div>
-                    <!-- FIN EXPEDITEUR/DESTINATAIRE -->
-                    <!-- DEBUT INFORMATIONS SUPPLEMENTAIRES -->
-                    <h3>Pièce jointe</h3>
-                    <div class="fields-file-case">
-                        <div class="field">
-                            <label for="">Pièces jointes</label>
-                            <input type="file" name="" id="">
-                        </div>
-                        <div class="field">
-                            <label for="">Reference</label>
-                            <select name="" id="">
-                                <option value="lettre">Arrivée</option>
-                                <option value="autres">Départ</option>
+                        <div class="field closed-folds">
+                            <label for="plisFerme">Plis fermé</label>
+                            <select name="" id="plisFerme" onchange="afficherPlis()">
+                                <option value="0">Non</option>
+                                <option value="1">Oui</option>
                             </select>
                         </div>
+                    </div>
+                    <!-- FIN CORRESPONDANT -->
+                    <!-- DEBUT INFORMATIONS SUPPLEMENTAIRES -->
+                    <div class="fields-save-mail" id="infoSupp">
+                    <div class="field">
+                            <label for="typeDocument">Type de document <span>*</span></label>
+                            <input type="text" name="" id="typeDocument" required>
+                        </div>
+                        <div class="field">
+                            <label for="">importer fichier scanné</label>
+                            <input type="file" name="" id="">
+                        </div>   
                     </div>
                     <!-- FIN INFORMATION SUPPLEMENTAIRE -->
-                    <!-- DEBUT METADONNEES -->
-                    <h3>Metadonnées</h3>
-                    <div class="fields-file-case">
-                        <div class="field">
-                            <label for="">Mots clés</label>
-                            <input type="text" name="" id="">
-                        </div>
-                        <div class="field">
-                            <label for="">Catégorie</label>
-                            <select name="" id="">
-                                <option value="lettre">Urgence</option>
-                                <option value="autres">Départ</option>
-                            </select>
-                        </div>
-                    </div>
-                    <!-- FIN METADONNEES -->
-                    <div class="btn-file-case">
+                    <div class="btn-save-mail">
                         <input type="submit" value="Envoyer">
                         <input type="reset" value="Annuler">
                     </div>
@@ -111,6 +101,8 @@
     <!-- DEBUT SCRIPT JS -->
     <script src="../js/afficher-nav.js"></script>
     <script src="../js/afficher-header.js"></script>
+    <script src="../js/gestion-form.js"></script>
     <!-- FIN SCRIPT JS -->
+
 </body>
 </html>
