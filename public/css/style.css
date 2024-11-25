@@ -60,6 +60,7 @@
     /* DEBUT COULEUR */
     --BLACK: rgba(67, 72, 75, 1);
     --DARK: rgba(0, 0, 0, 1);
+    --DARK-LIGHT: rgba(0, 0, 0, 0.5);
     --DARK-GREY: rgba(201, 202, 207, 1);
     --GOLD: rgba(152, 126, 60, 1);
     --GOLD-LIGHT: rgba(152, 126, 60, 0.25);
@@ -236,7 +237,8 @@ label {
 
 input,
 select,
-textarea {
+textarea,
+button {
     border: var(--BORDER-FIELD);
     border-radius: var(--BORDER-RADIUS);
     color: var(--BLACK);
@@ -262,14 +264,16 @@ select {
 }
             /* DEBUT BTN*/
 input[type="submit"],
-input[type="reset"] {
+input[type="reset"],
+.alert-btn button {
     border: var(--BORDER-BTN);
     font-family: var(--FF-INTER);
     font-weight: var(--FW-BTN);
     width: var(--WD-BTN);
 }
 
-input[type="submit"] {
+input[type="submit"],
+.alert-btn__btn-cancel {
     background-color: var(--GOLD);
     color: var(--WHITE);
 }
@@ -291,7 +295,8 @@ input[type="submit"] {
 }
 
 input[type="reset"],
-.btn-add-user__key-generator[type="submit"] {
+.btn-add-user__key-generator[type="submit"],
+.alert-btn__btn-confirm {
     background-color: var(--WHITE);
     color: var(--GOLD);
 }
@@ -308,7 +313,8 @@ input[type="reset"],
 }
 
 input[type="submit"]:hover,
-input[type="reset"]:hover {
+input[type="reset"]:hover,
+.alert-btn button:hover {
     background-color: var(--GOLD-LIGHT);
     color: var(--GOLD);
     cursor: pointer;
@@ -643,3 +649,44 @@ input[type="reset"]:hover {
 }
 
 /* FIN PAGE TABLEAU DE BORD */
+
+/* DEBUT ALERTE */
+.alert-overlay {
+    align-items: center;
+    background-color: var(--DARK-LIGHT);
+    display: flex;
+    justify-content: center;
+    height: 100%;
+    left: 0;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 9999;
+}
+
+.alert-hidden {
+    display: none;
+}
+
+.alert-content {
+    background-color: var(--WHITE);
+    border-radius: var(--BORDER-RADIUS);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    max-width: 400px;
+    padding: 1rem;
+    width: 80%;  
+}
+
+.alert-content p {
+    font-family: var(--FF-ROBOTO);
+    margin-bottom: var(--MG-BT-LIST-NOTIF);
+}
+
+.alert-btn {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    gap: var(--GAP-FIELDS);
+}
+
+/* FIN ALERTE */

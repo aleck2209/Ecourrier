@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/style.css">
-    <title>Cas d'un fichier</title>
+    <title>Courrier Interne</title>
 </head>
 <body>
     <?php
@@ -29,7 +29,7 @@
             <section class="page-content-save-mail" id="page-save-mail">
                 <h2>Informations Courrier</h2>
                 <!-- DEBUT DU FORMULAIRE -->
-                <form action="" method="post" class="form-save-mail">
+                <form action="" method="post" class="form-save-mail" id="form-save-mail">
                     <input type="hidden" name="" value="interne">
                     <!-- DEBUT INFORMATION COURRIER -->
                     <div class="fields-save-mail">
@@ -97,12 +97,17 @@
             </section>
         </main>
     </div>
+
+    <?php
+        // APPEL DE L'ALERTE
+        require('../include/alerte.php');
+    ?>
     <!-- FIN PAGE ENREGISTRER COURRIER -->
     <!-- DEBUT SCRIPT JS -->
     <script src="../js/afficher-nav.js"></script>
     <script src="../js/afficher-header.js"></script>
-    <script src="../js/gestion-form.js"></script>
-    <!-- FIN SCRIPT JS -->
-
+    <script src="../js/alert-save.js"></script>
+    <script src="../js/afficherPlis.js"></script>
+    <!-- FIN SCRIPT JS -->  
 </body>
 </html>

@@ -27,8 +27,8 @@
 
     <!-- DEBUT CAS DES PAGES ENREGISTRER FICHIER -->
     <nav class="nav-bar" id="nav-save-mail">
-        <a class="nav-bar__link" href="cas-fichier.php">Courrier interne</a>
-        <a class="nav-bar__link" href="cas-fichier.php">Courrier externe</a>
+        <a class="nav-bar__link" href="courrier-interne.php">Courrier interne</a>
+        <a class="nav-bar__link" href="courrier-externe.php">Courrier externe</a>
     </nav>
     <!-- FIN CAS DES PAGES ENREFISTRER FICHIER -->
 </body>
