@@ -4,7 +4,7 @@ function courrierExterneArrive() {
     // RECUPERATION DES VARIABLE
     const courrierDepart = document.querySelector('.page-content-save-mail-depart');
     const courrierArrive = document.querySelector('.page-content-save-mail-arrive');
-    const bureauOrdre = document.getElementById('bureau-ordre');
+    const bureauOrdre = document.getElementById('bureauOrdre');
     if(bureauOrdre.value == "BO") {
         courrierDepart.style.display = 'none'
         courrierArrive.style.display = 'block'

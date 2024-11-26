@@ -84,9 +84,13 @@
                             <input type="text" name="" id="typeDocument" required>
                         </div>
                         <div class="field">
-                            <label for="">importer fichier scanné</label>
+                            <label for="">importer courrier scanné</label>
                             <input type="file" name="" id="">
                         </div>   
+                        <div class="field">
+                            <label for="">importer pièces jointe</label>
+                            <input type="file" name="" id="" multiple>
+                        </div>    
                     </div>
                     <!-- FIN INFORMATION SUPPLEMENTAIRE -->
                     <div class="btn-save-mail">
@@ -107,7 +111,8 @@
     <script src="../js/afficher-nav.js"></script>
     <script src="../js/afficher-header.js"></script>
     <script src="../js/alert-save.js"></script>
-    <script src="../js/afficherPlis.js"></script>
+    <script src="../js/afficher-plis.js"></script>
+    <script src="../js/reg-num-ordre-interne.js"></script>
     <!-- FIN SCRIPT JS -->  
 </body>
 </html>

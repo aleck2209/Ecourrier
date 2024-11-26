@@ -12,7 +12,7 @@
         require('../include/side-bar.php');
 
         // VARIABLE BUREAU D'ORDRE
-        $bureauOrdre = "B";
+        $bureauOrdre = "BO";
     ?>
 
     <!-- DEBUT DE LA PAGE ENREGISTRER COURRIER -->
@@ -110,28 +110,28 @@
                     <input type="hidden" name="" value="<?php
                     // PARAMETRE POUR RECONNAITRE QUE C'EST UN AGENT DU BUREAU D'ORDRE 
                     echo $bureauOrdre 
-                    ?>" id="bureau-ordre">
+                    ?>" id="bureauOrdre">
                     <!-- DEBUT INFORMATION COURRIER -->
                     <div class="fields-save-mail">
                         <div class="field half-space">
-                            <label for="objet">Objet du courrier<span> *</span></label>
-                            <textarea name="" id="objet" rows="2" required></textarea>
+                            <label for="objetArrive">Objet du courrier<span> *</span></label>
+                            <textarea name="" id="objetArrive" rows="2" required></textarea>
                         </div>
                         <div class="field half-space">
-                            <label for="reference">Réference du courrier</label>
-                            <textarea name="" id="reference" rows="2"></textarea>
+                            <label for="referenceArrive">Réference du courrier</label>
+                            <textarea name="" id="referenceArrive" rows="2"></textarea>
                         </div>
                         <div class="field">
-                            <label for="numeroOrdre">Numéro d'ordre <span>*</span></label>
-                            <input type="text" name="" id="numeroOrdre" required>
+                            <label for="numeroOrdreArrive">Numéro d'ordre <span>*</span></label>
+                            <input type="text" name="" id="numeroOrdreArrive" required>
                         </div>
                         <div class="field">
-                            <label for="dateEnregistrement">Date d'enregistrement <span>*</span></label>
-                            <input type="datetime-local" name="" id="dateEnregistrement" required>
+                            <label for="dateEnregistrementArrive">Date d'enregistrement <span>*</span></label>
+                            <input type="datetime-local" name="" id="dateEnregistrementArrive" required>
                         </div>
                         <div class="field">
-                            <label for="categorie">Catégorie</label>
-                            <select name="" id="categorie">
+                            <label for="categorieArrive">Catégorie</label>
+                            <select name="" id="categorieArrive">
                                 <option value="normal">Normal</option>
                                 <option value="urgent">Urgent</option>
                             </select>
@@ -141,12 +141,12 @@
                     <!-- DEBUT CORRESPONDANT -->
                     <div class="fields-save-mail">
                         <div class="field">
-                            <label for="expediteur">Expéditeur <span>*</span></label>
-                            <input type="text" name="" id="expediteur">
+                            <label for="expediteurArrive">Expéditeur <span>*</span></label>
+                            <input type="text" name="" id="expediteurArrive">
                         </div>
                         <div class="field">
-                            <label for="destinataire">Destinataire <span>*</span></label>
-                            <input type="text" name="" id="destinataire">
+                            <label for="destinataireArrive">Destinataire <span>*</span></label>
+                            <input type="text" name="" id="destinataireArrive">
                         </div>
                         <div class="field closed-folds">
                             <label for="plisFermeArrive">Plis fermé</label>
@@ -160,8 +160,8 @@
                     <!-- DEBUT INFORMATIONS SUPPLEMENTAIRES -->
                     <div class="fields-save-mail" id="infoSuppArrive">
                     <div class="field">
-                            <label for="typeDocument">Type de document <span>*</span></label>
-                            <input type="text" name="" id="typeDocument" required>
+                            <label for="typeDocumentArrive">Type de document <span>*</span></label>
+                            <input type="text" name="" id="typeDocumentArrive" required>
                         </div>
                         <div class="field">
                             <label for="">importer courrier scanné</label>
@@ -190,8 +190,9 @@
     <!-- DEBUT SCRIPT JS -->
     <script src="../js/afficher-nav.js"></script>
     <script src="../js/afficher-header.js"></script>
-    <script src="../js/afficherPlis.js"></script>
+    <script src="../js/afficher-plis.js"></script>
     <script src="../js/alert-save.js"></script>
+    <script src="../js/reg-num-ordre-externe.js"></script>
     <script src="../js/cas-bo.js"></script>
     <!-- FIN SCRIPT JS -->  
 </body>

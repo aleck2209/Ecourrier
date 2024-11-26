@@ -102,7 +102,7 @@
                             <input type="image" src="../images/details.png" alt="">
                             <input type="image" src="../images/modifier.png" alt="">
                             <input type="image" src="../images/historique.png" alt="">
-                            <input type="image" src="../images/supprimer.png" alt="">
+                            <input type="image" src="../images/supprimer.png" alt="" title="supprimer">
                         </div>
                     </form>
                 </div>
