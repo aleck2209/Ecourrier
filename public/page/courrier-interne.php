@@ -62,11 +62,13 @@
                     <div class="fields-save-mail">
                         <div class="field">
                             <label for="destinataire">Destinataire <span>*</span></label>
-                            <input type="text" name="" id="destinataire">
+                            <input type="text" name="" id="destinataire" oninput="completion()">
+                            <div class="autocomplete-list" id="listAutocompleteDestinataire"></div>
                         </div>
                         <div class="field">
                             <label for="copie">En copie(cc)</label>
-                            <input type="text" name="" id="copie">
+                            <input type="text" name="" id="copie" oninput="completionCopie()">
+                            <div class="autocomplete-list" id="listAutocompleteCopie"></div>
                         </div>
                         <div class="field closed-folds">
                             <label for="plisFerme">Plis fermé</label>
@@ -88,13 +90,17 @@
                             <input type="file" name="" id="">
                         </div>   
                         <div class="field">
+                            <label for="numPieceJointe">nombre de pièce jointe</label>
+                            <input type="number" name="" id="numPieceJointe" min="0" max="10">
+                        </div>   
+                        <div class="field">
                             <label for="">importer pièces jointe</label>
                             <input type="file" name="" id="" multiple>
                         </div>    
                     </div>
                     <!-- FIN INFORMATION SUPPLEMENTAIRE -->
                     <div class="btn-save-mail">
-                        <input type="submit" value="Envoyer">
+                        <input type="submit" value="Enregistrer">
                         <input type="reset" value="Annuler">
                     </div>
                 </form>
@@ -110,9 +116,7 @@
     <!-- DEBUT SCRIPT JS -->
     <script src="../js/afficher-nav.js"></script>
     <script src="../js/afficher-header.js"></script>
-    <script src="../js/alert-save.js"></script>
-    <script src="../js/afficher-plis.js"></script>
-    <script src="../js/reg-num-ordre-interne.js"></script>
+    <script src="../js/gestion-form-interne.js"></script>
     <!-- FIN SCRIPT JS -->  
 </body>
 </html>

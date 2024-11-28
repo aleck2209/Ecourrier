@@ -1,5 +1,7 @@
 /* DEBUT INITIALISATION */
-* {
+*,
+::before,
+::after {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -97,7 +99,7 @@
     /* FIN MARGIN */
 
     /* DEBUT GAP */
-    --GAP-FIELD: 0.5rem;
+    --GAP-FIELD: 0.1rem;
     --GAP-FIELDS: 1rem;
     --GAP-FORM: 1rem;
     --GAP-USER-ICON: 2rem;
@@ -690,3 +692,29 @@ input[type="reset"]:hover,
 }
 
 /* FIN ALERTE */
+
+/* DEBUT AUTO-COMPLETION */
+.autocomplete-list {
+    position: absolute;
+    top: 426px;
+    background-color: var(--GREY);
+    z-index: 9999;
+    max-height: 100px;
+    overflow-y: auto;
+    width: 306px;
+    font-family: var(--FF-INTER);
+    font-size: var(--FS-SIDEBAR);
+    font-weight: var(--FW-SIDEBAR);
+    color: var(--BLACK);
+}
+
+.autocomplete-list__item {
+    padding: 0.2rem 0.4rem;
+    cursor: pointer;
+}
+
+.autocomplete-list__item:hover {
+    background-color: var(--GOLD-LIGHT);
+    color: var(--GOLD);
+}
+/* FIN AUTO-COMPLETION */
