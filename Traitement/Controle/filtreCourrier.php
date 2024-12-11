@@ -6,7 +6,7 @@ $requete = " select e.id_entite, e.nom_entite
 from entite_banque e inner join utilisateur u on 
 e.id_entite = u.id_entite
 where u.Matricule = ?;";
-$matricule = 'user02';
+$matricule = 'user01';
 
 $nom_entite = recupererNomEntiteParIdUtilisateur($requete,$matricule);
 
@@ -92,21 +92,6 @@ if (isset($_POST['form_type4'])) {
 
 
 
- 
-// echo count($courriers);
-//   var_dump($courriers);
-
-
-// foreach ($courriers as $courrier) {
-//     echo "<div class='element-dashboard-mail'>";
-//     echo "<output name=''>{$courrier['numero_ordre']}</output>";
-//     echo "<output name=''>{$courrier['objet_du_courrier']}</output>";
-//     echo "<output name=''>{$courrier['lien_courrier']}</output>";
-//     echo "<output name=''>{$courrier['destinataire']}</output>";
-//     echo "<output name=''>{$courrier['dateEnregistrement']}</output>";
-//     echo "<output name=''>{$courrier['etat_courrier']}</output>";
-//     echo "</div>";
-// }
 
 
 

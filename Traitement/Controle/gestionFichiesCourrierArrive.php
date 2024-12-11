@@ -1,5 +1,5 @@
 <?php
-function creerDossier($emplacement, $nomDossier) {
+function creerDossierCourrierArrive($emplacement, $nomDossier) {
     // Chemin complet du dossier à créer
     $cheminComplet = $emplacement . '/' . $nomDossier;
 
@@ -19,7 +19,7 @@ function creerDossier($emplacement, $nomDossier) {
 
 function creerListeDossiersCourrierArrive($etat_inter_externe, $destinataire) {
     // Définir le chemin de base
-    $basePath = '../../../../DossiersCouriers/courrierArrive';  // À ajuster selon ton emplacement de base
+    $basePath = '../../..DossiersCouriers/courrierArrive';  // À ajuster selon ton emplacement de base
 
     // Créer le dossier "courrierdepart" s'il n'existe pas
     if (!file_exists($basePath)) {
@@ -48,7 +48,7 @@ function creerListeDossiersCourrierArrive($etat_inter_externe, $destinataire) {
 }
 
 
-function deposerFichierDansDossier($dossier, $fichier) {
+function deposerFichierDansDossierCourrierArrive($dossier, $fichier) {
     try {
         // Vérifier si le fichier a bien été téléchargé
         if ($fichier['error'] === UPLOAD_ERR_OK) {
@@ -87,7 +87,7 @@ function deposerFichierDansDossier($dossier, $fichier) {
 
 //Cette fonction permet de récupérer le chemin de plusieurs fichiers et de déplacer ces fichiers dans un dossier
 
-function get_uploaded_files_paths($chemin,$param){
+function get_uploaded_files_pathsarrive($chemin,$param){
     $liens = [];
     
      //Création du repertoire s'il n'existe pas encore
@@ -112,7 +112,4 @@ function get_uploaded_files_paths($chemin,$param){
  
  
  }
-
-
-
 ?>

@@ -69,12 +69,12 @@ if (isset($Liste_pole_destinataire)) {
 
 
 $liendossier = creerListeDossiersCourrierArrive($etat_inter_exter,$destinataire);
-$liencourrier = deposerFichierDansDossier($liendossier,$fichier);
+$liencourrier =deposerFichierDansDossierCourrierArrive($liendossier,$fichier);
 $nom_balise_fichiers_join ="fichiers_joints"; //Cette variable récupère la valeur de l'attribut name spécifié dans la balise html qui envoi les fichiers annexes
    
 $chemin_fichiers_joins = $liendossier."/FichierAnnexes";//Cette variable repésente le lien du dossier où on doit stocker les fichiers annexes
 
-$liens_fichiers_joins = get_uploaded_files_paths($chemin_fichiers_joins,$nom_balise_fichiers_join);
+$liens_fichiers_joins = get_uploaded_files_pathsarrive($chemin_fichiers_joins,$nom_balise_fichiers_join);
 
 print_r($liens_fichiers_joins);
 
@@ -210,11 +210,6 @@ $liencourrier,$formatCourrier,$objet,$matricule,$idReponse,$expediteur,$destinat
 $nombre_fichiers_joins
 );
 
-// //Insertion des copies de courriers dans la base de données 
-// if (!in_array(null,$TableauNomDestinataireCopie)) {
-//      entrerLesCopies($TableauNomDestinataireCopie,$liencourrier,null,$idcourrierArrive); 
-    
-// }
 
 
 //---------------------------------------------Insérer les fichiers joins - ----------------------------------------

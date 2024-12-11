@@ -143,6 +143,7 @@ function regNumOrdre() {
         const regex = /^\d{1,4}(?:\/[A-Z]{1,10})+\/\d{4}$/
         if (regex.test(input.value)) {
             form.submit();
+            alert('Donnés soumis')
         } else {
             alert("veuillez respecter le format attendu, exemple: 25/DGE/DSI/2024.")
         }

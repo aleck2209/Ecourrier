@@ -19,7 +19,7 @@ function creerDossier($emplacement, $nomDossier) {
 
 function creerListeDossiersCourrierDepart($etat_inter_externe, $destinataire) {
     // Définir le chemin de base
-    $basePath = '../../../../DossiersCouriers/courrierDepart';  // À ajuster selon ton emplacement de base
+    $basePath = '../../../DossiersCouriers/courrierDepart';  // À ajuster selon ton emplacement de base
 
     // Créer le dossier "courrierdepart" s'il n'existe pas
     if (!file_exists($basePath)) {

@@ -29,7 +29,7 @@
             <section class="page-content-save-mail" id="page-save-mail">
                 <h2>Informations Courrier</h2>
                 <!-- DEBUT DU FORMULAIRE -->
-                <form action="../../Traitement/Controle/insertionCourrier.php" method="post" enctype="multipart/form-data" class="form-save-mail" id="form-save-mail">
+                <form action="../../Traitement/Controle/insertionCourrierdepart-interne.php" method="post" class="form-save-mail" id="form-save-mail" enctype="multipart/form-data">
                     <input type="hidden" name="etat_interne_externe" value="interne">
                     <!-- DEBUT INFORMATION COURRIER -->
                     <div class="fields-save-mail">
@@ -95,7 +95,7 @@
                         </div>   
                         <div class="field">
                             <label for="">importer pièces jointe</label>
-                            <input type="file" name="fichier_joints[]" id="" multiple>
+                            <input type="file" name="fichiers_joints[]" id="" multiple>
                         </div>    
                     </div>
                     <!-- FIN INFORMATION SUPPLEMENTAIRE -->

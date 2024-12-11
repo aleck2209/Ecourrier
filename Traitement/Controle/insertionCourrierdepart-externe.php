@@ -91,6 +91,7 @@ from entite_banque e inner join utilisateur u on
 e.id_entite = u.id_entite
 where u.Matricule = ?;";
 $nom_entite = recupererNomEntiteParIdUtilisateur($requete,$matricule);
+$expediteur = $nom_entite;
 
 #On récupère le numéro d'ordre qu'on doit entré en fonction de l'entité
 $num_a_entrer = verifierNumeoOrdreParEntiteV2($nom_entite);
@@ -125,7 +126,6 @@ if (is_null($destinataire)) {
     }
     
 }
-
 
 
 

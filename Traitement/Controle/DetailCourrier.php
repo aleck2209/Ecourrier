@@ -48,15 +48,23 @@ if ($typeCourrier ==="courrier arrivé") {
     $T3 = getInfosForCourrier($sql3,$idCourrier);
 
     //Récupération du tableau contenant les liens des fichiers courriers 
-    if (count($T3)==0) {
+    if (count($T3)>0) {
         foreach ($T3 as $lien) {
             // Ajout du lien dans le tableau des liens
             $tableau_lien []= $lien['lien_fichier_annexe'];
         }
     }
     
+    $sql4 = "SELECT lienFichierReponse, dateReponse
+    FROM fichierreponse
+    WHERE idCourrierDepart = :idCourrier;";
+
+    $T4 = getInfosForCourrier($sql4,$idCourrier);
+
     print_r($T3);
     print_r($tableau_lien);
+    print_r($T4);
+
 
 }
 
@@ -71,7 +79,7 @@ elseif ($typeCourrier ==="courrier départ") {
     $sql1 = "SELECT Type_document,Etat_interne_externe as origine_courrier,etat_courrier,
              etat_plis_ferme as plis_ferme,dateEnregistrement,Reference,lien_courrier,Objet_du_courrier,Matricule,destinataire,
              nom_utilisateur as nom_enregistreur,prenom_utilisateur as prenom_enregistreur,nombre_fichiers_joins as nombre_de_fichiers_joins,
-             'courrier départ' AS type_courrier
+             'courrier départ' AS type_courrier,expediteur
              from courrierdepart inner join  utilisateur
              on  courrierdepart.Matricule_initiateur = utilisateur.Matricule
              where idCourrier =:idCourrier";
@@ -112,6 +120,16 @@ elseif ($typeCourrier ==="courrier départ") {
     print_r($T3);
     
     print_r($tableau_lien);
+    
+    $sql4 = "SELECT lienFichierReponse, dateReponse
+    FROM fichierreponse
+    WHERE idCourrierDepart = :idCourrier;";
+
+    $T4 = getInfosForCourrier($sql4,$idCourrier);
+    print_r($T4);
+
+
+
 }
 
 

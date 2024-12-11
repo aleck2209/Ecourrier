@@ -6,6 +6,7 @@ require('../../Traitement/Controle/insertionCopieCourrier.php');
 require('../../Traitement/Verification/VerifierNumeroOrdreParEntite.php');
 require('../../Traitement/Verification/verifierFormat.php');
 require('../../Traitement/Verification/verifierValeurEnum.php');
+require('../../Traitement/Controle/gestionFichiesCourrierArrive.php');
 
 
 // On commence par désactiver l'affichage des erreurs PHP en production
@@ -101,6 +102,7 @@ $liens_fichiers_joins = get_uploaded_files_paths($chemin_fichiers_joins,$nom_bal
 
 // print_r($liens_fichiers_joins);
 
+$liens_fichiers_joins_arrives = get_uploaded_files_pathsarrive($chemin_fichiers_joins,$nom_balise_fichiers_join);
 
 $formatCourrier = pathinfo($fichier['name'],PATHINFO_EXTENSION);
 
@@ -113,7 +115,7 @@ from entite_banque e inner join utilisateur u on
 e.id_entite = u.id_entite
 where u.Matricule = ?;";
 $nom_entite = recupererNomEntiteParIdUtilisateur($requete,$matricule);
-
+$expediteur = $nom_entite;
 #On récupère le numéro d'ordre qu'on doit entré en fonction de l'entité
 $num_a_entrer = verifierNumeoOrdreParEntiteV2($nom_entite);
 $numeroOrdrePrefix = explode('/', $numeroOrdre)[0];  // On récupère juste la partie avant le "/"
@@ -220,16 +222,6 @@ if (strlen($objet)==0) {
 }elseif (strlen($TypeDoc)==0) {
     die("Vous n'avez pas renseigné un type de document pour votre courrier");
 }
-// elseif (strlen($reference)==0) { 
-//     die( '<script>
-//             alert("Votre action a été effectuée avec succès.");
-//             setTimeout(function(){
-//                 window.location.href = "../../public/page/courrier-interne.php";
-//             }, 500); 
-//         </script>'
-//     );
-    
-// }
 
 
 
@@ -240,8 +232,7 @@ if (strlen($objet)==0) {
 
 
 
-
-// //----------------------------------------------Fin controle-----------------------------------------------
+//----------------------------------------------Fin controle-----------------------------------------------
 
 $idcourrierdepart = insererCourrierDepart($numeroOrdre,$TypeDoc,$etat_inter_exter,
 $etat_plis_ferme,$categorie,$dateEnreg,null,$reference,
@@ -249,7 +240,8 @@ $liencourrier,$formatCourrier,$objet,$matricule,$idReponse,$etatExpedition,$expe
 $nombre_fichiers_joins
 );
 
-//Insertion des copies de courriers dans la base de données 
+//---------------------------------------------Insertion des copies de courriers dans la base de données----------------------------- 
+
 if (!in_array(null,$TableauNomDestinataireCopie)) {
      entrerLesCopies($TableauNomDestinataireCopie,$liencourrier,$idcourrierdepart,null); 
     
@@ -264,6 +256,31 @@ if ($nombre_fichiers_joins ===count($liens_fichiers_joins)) {
     }
     
 }
+
+
+
+
+
+
+//--------------------------------------------insertion automatique du courrier arrivé de ce destinataire----------------------------
+$idcourrierArrive = insererCourrierArriveV2($numeroOrdre,$TypeDoc,$etat_inter_exter,
+$etat_plis_ferme,$categorie,$dateEnreg,null,$reference,
+$liencourrier,$formatCourrier,$objet,$matricule,$idReponse,$expediteur,$destinataire,$identite_dest,$idpole_dest,
+$nombre_fichiers_joins
+);
+
+//--------------------------------------------insertion automatique du courrier arrivé de ce destinataire----------------------------
+
+if ($nombre_fichiers_joins ===count($liens_fichiers_joins_arrives )) {
+    foreach ($liens_fichiers_joins_arrives  as $lien) {
+        insererFichierJoin($lien,null,$idcourrierArrive);
+    }
+    
+}
+
+
+
+
 
 
 die( '<script>
