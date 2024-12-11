@@ -119,7 +119,7 @@ function afficherPlis() {
     const typeDocument = document.getElementById('typeDocument');
 
     // CONDITION D'AFFICHAGE
-    if(pli.value == 1) {
+    if(pli.value == "oui") {
         infoSupp.style.display = 'none';
         typeDocument.removeAttribute('required');
     } else {
@@ -138,13 +138,11 @@ function regNumOrdre() {
     // AJOUT DU PLACEHOLDER
     input.setAttribute('placeholder', `Ex: 152/DGE/DSI/${currentYear}`);
     
-    
     form.addEventListener('submit', (e) => {
         e.preventDefault();
         const regex = /^\d{1,4}(?:\/[A-Z]{1,10})+\/\d{4}$/
         if (regex.test(input.value)) {
             form.submit();
-            alert('Donnés soumis')
         } else {
             alert("veuillez respecter le format attendu, exemple: 25/DGE/DSI/2024.")
         }

@@ -75,8 +75,8 @@
                         <div class="field closed-folds">
                             <label for="plisFerme">Plis fermé</label>
                             <select name="" id="plisFerme" onchange="afficherPlis()">
-                                <option value="0">Non</option>
-                                <option value="1">Oui</option>
+                                <option value="non">Non</option>
+                                <option value="oui">Oui</option>
                             </select>
                         </div>
                     </div>
@@ -157,8 +157,8 @@
                         <div class="field closed-folds">
                             <label for="plisFermeArrive">Plis fermé</label>
                             <select name="" id="plisFermeArrive" onchange="afficherPlisArrive()">
-                                <option value="0">Non</option>
-                                <option value="1">Oui</option>
+                                <option value="non">Non</option>
+                                <option value="oui">Oui</option>
                             </select>
                         </div>
                     </div>

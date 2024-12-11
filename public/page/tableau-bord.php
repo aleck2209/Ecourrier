@@ -10,6 +10,9 @@
     <?php
         // APPEL DE LA SIDE-BAR
         require('../include/side-bar.php');
+
+        // APPEL DU TABLEAUX POUR LES TESTS
+        require('../include/tableau.php')
     ?>
 
     <!-- DEBUT DE LA PAGE TABLEAU DE BORD -->
@@ -90,21 +93,23 @@
                         <p class="dashboard-status">Statut</p>
                         <p class="dashboard-action">Opérations</p>
                     </div>
-                    <form action="" method="post" class="element-dashboard-mail">
-                        <output name="" class="dashboard-number">Numéro</output>
-                        <output name="" class="dasboard-object">Objet</output>
-                        <output name="" class="dashboard-file">Fichier</output>
-                        <output name="" class="dashboard-service">Service</output>
-                        <output name="" class="dashboard-correspondant">Correspondant</output>
-                        <output name="" class="dashboard-date">Date</output>
-                        <output name="" class="dashboard-status">Statut</output>
-                        <div class="dashboard-action">
-                            <input type="image" src="../images/details.png" alt="">
-                            <input type="image" src="../images/modifier.png" alt="">
-                            <input type="image" src="../images/historique.png" alt="">
-                            <input type="image" src="../images/supprimer.png" alt="" title="supprimer">
-                        </div>
-                    </form>
+                    <?php foreach($courriers as $courrier) { ?>
+                        <div  class="element-dashboard-mail" id="element-dashboard-mail">
+                            <output name="numero" class="dashboard-number"><?php echo $courrier['numéro']?></output>
+                            <output name="" class="dasboard-object"><?php echo $courrier['objet']?></output>
+                            <output name="" class="dashboard-file"><a href="<?php echo($courrier['fichiers'])?>" target="_blank"><img src="../../public/images/pdf.png" alt=""></a></output>
+                            <output name="" class="dashboard-service"><?php echo $courrier['Service']?></output>
+                            <output name="service" class="dashboard-correspondant"><?php echo $courrier['Correspondant']?></output>
+                            <output name="correspondant" class="dashboard-date"><?php echo $courrier['Date']?></output>
+                            <output name="status" class="dashboard-status"><?php echo $courrier['Statut']?></output>
+                            <div class="dashboard-action">
+                                <input type="image" src="../images/details.png" alt="" title="détails" name="details">
+                                <input type="image" src="../images/modifier.png" alt="" title="modifier" name="modifier">
+                                <input type="image" src="../images/historique.png" alt="" title="historique" name ="historique">
+                                <input type="image" src="../images/supprimer.png" alt="" title="supprimer" name="supprimer">
+                            </div>
+                    </div>
+                    <?php } ?>
                 </div>
             </section>
         </main>
