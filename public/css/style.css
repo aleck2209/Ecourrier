@@ -35,7 +35,7 @@
     /* FIN FONT-FAMILY*/
     
     /* DEBUT FONT-SIZE */
-    --FS-FIELD: 1rem;
+    --FS-FIELD: 0.85rem;
     --FS-LABEL: 0.875rem;
     --FS-LOGO: 1.25rem;
     --FS-NAME-SITE: 2rem;
@@ -92,7 +92,7 @@
     --MG-RT-LINK: 1rem;
     --MG-TOP-FORM: 1rem;
     --MG-BT-FORM: 0.5rem;
-    --MG-TOP-SECTION: 1rem;
+    --MG-TOP-SECTION: 0.6rem;
     --MG-BT-BLOCK-NOTIF: 1rem;
     --MG-BT-LIST-NOTIF: 1rem;
     --MG-BT-HEADER-LIST: 1rem;
@@ -124,6 +124,7 @@
 
     /* DEBUT BORDURE */
     --BORDER-BT: 2px solid var(--GREY);
+    --BORDER-BT-DETAIL: 2px dotted var(--BLACK);
     --BORDER-BT-DOTTED: 2px dotted var(--DARK-GREY);
     --BORDER-BTN: 1px solid var(--GOLD);
     --BORDER-FIELD: 1px solid var(--DARK-GREY);
@@ -243,7 +244,7 @@ textarea,
 button {
     border: var(--BORDER-FIELD);
     border-radius: var(--BORDER-RADIUS);
-    color: var(--BLACK);
+    color: var(--DARK);
     font-family: var(--FF-ROBOTO);
     font-size: var(--FS-FIELD);
     font-weight: var(--FW-FIELD);
@@ -327,7 +328,7 @@ input[type="reset"]:hover,
     /* FIN MAIN */
 .content {
     flex-grow: 1; 
-    margin-left: 250px; /* PERMET DE DEPLACER LE CONTENT DE LA SIDE-BAR  */
+    margin-left: 260px; /* PERMET DE DEPLACER LE CONTENT DE LA SIDE-BAR  */
 }
 /* FIN STYLES GENERALS */
 
@@ -341,7 +342,7 @@ input[type="reset"]:hover,
     left: 0;
     position: fixed; /* position: sticky */
     top: 0;
-    width: 250px;
+    width: 270px;
 }
 
 /* DEBUT LOGO */
@@ -416,7 +417,8 @@ input[type="reset"]:hover,
 .page-content-deleted-user,
 .page-content-list-profil,
 .page-content-list-user,
-.page-content-account {
+.page-content-account,
+.page-content-detail {
     margin-top: var(--MG-TOP-SECTION);
 }
 /* FIN CONTENT PAGE */
@@ -722,3 +724,55 @@ input[type="reset"]:hover,
     color: var(--GOLD);
 }
 /* FIN AUTO-COMPLETION */
+
+/* DEBUT PAGE DETAILS */
+.page-content-detail {
+    font-family: var(--FF-ROBOTO);
+}
+
+.page-content-detail h2 {
+    color: var(--DARK);
+    font-family: var(--FF-ROBOTO);
+    font-size: var(--FS-TITRE-PAGE);
+    font-weight: var(--FW-TITRE-PAGE);
+    margin-bottom: 0.5rem;
+}
+
+.page-content-detail h3 {
+    color: var(--GOLD);
+    font-size: var(--FS-TITRE-FORM);
+    font-weight: var(--FW-TITRE-FORM);
+}
+
+.information-mail,
+.correspondence-mail,
+.property {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    border-bottom: var(--BORDER-BT-DETAIL);
+    padding-bottom: 1rem;
+    padding-top: 1rem;
+}
+
+.container-detail {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem 4rem;   
+}
+
+
+.detail-element__title {
+    font-weight: 600;
+    margin-bottom: 0.2rem;
+    text-decoration: underline;
+}
+
+.detail-element__content {
+    font-size: 0.9rem;
+}
+
+.file img {
+    width: 2rem;
+}
+/* FIN PAGE DETAILS */

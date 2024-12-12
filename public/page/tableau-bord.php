@@ -34,22 +34,22 @@
             <section class="page-content-dashboard" id="page-user">
                 <div class="filter-block">
                     <div class="search-block">
-                        <form action="" method="post" class="form-search-key-word" id="">
-                        <input type="hidden" name="form_type4" value="form1">  
-                        <h3 for="">Mot clé</h3>
+                        <form action="" method="post" class="form-search-key-word">
+                        <input type="hidden" name="form_type4">  
+                        <h3 for="motCle">Mot clé</h3>
                             <div class="fields-key-word">
-                                <input type="search" name="searchKeyword" id="" placeholder="Objet, Destinataire...">
-                                <input type="image" src="../images/recherche.png" alt="bouton rechercher" class="form-search-key-word__btn-search" name="">
+                                <input type="search" name="searchKeyword" id="motCle" placeholder="Objet, Destinataire...">
+                                <input type="image" src="../images/recherche.png" alt="bouton rechercher" class="form-search-key-word__btn-search">
                             </div>
                         </form>
                         <form action="" method="post" class="form-search-date">
-                        <input type="hidden" name="form_type3" value="form1">
+                        <input type="hidden" name="form_type3">
                             <h3>Période de recherche</h3>
                             <div class="fields-date">
-                                <input type="date" name="startDate" id="">
-                                <span>À</span>
-                                <input type="date" name="endDate" id="">
-                                <input type="image" src="../images/recherche.png" alt="bouton rechercher" class="form-search-date__btn-search" name="">
+                                <input type="date" name="startDate">
+                                <span> À </span>
+                                <input type="date" name="endDate">
+                                <input type="image" src="../images/recherche.png" alt="bouton rechercher" class="form-search-date__btn-search">
                             </div>
                         </form>
                     </div>
@@ -58,13 +58,13 @@
                             <h3>Option de tri</h3>
                             <input type="hidden" name="form_type1" value="form1">
                             <div class="fields-sort">
-                                <select name="sortType" id="" onchange="submitSort()">
+                                <select name="sortType" onchange="submitSort()">
                                     <option value="">[type de tri]</option>
                                     <option value="date">Date</option> 
                                     <option value="objet">Objet</option>
                                     <option value="Numéro">Numéro</option>
                                 </select>
-                                <select name="sortOrder" id="">
+                                <select name="sortOrder">
                                     <option value="decroissant">Décroissant</option>
                                     <option value="croissant">Croissant</option>   
                                 </select>
@@ -79,12 +79,12 @@
                                     <option value="courrier externe">Externe</option>
                                     <option value="courrier interne">Interne</option>
                                 </select>
-                                <select name="priority" id="" onchange="submitFilter()">
+                                <select name="priority" onchange="submitFilter()">
                                     <option value="">[Niveau priorité]</option>
                                     <option value="urgent">Urgent</option>
                                     <option value="normal">Non urgent</option>
                                 </select>
-                                <select name="typeCourrier" id="" onchange="submitFilter()">
+                                <select name="typeCourrier" onchange="submitFilter()">
                                     <option value="">[type courrier]</option>
                                     <option value="courrier arrive">Arrivé</option>
                                     <option value="courrier départ">Départ</option>
@@ -115,7 +115,7 @@
                             <output name="" class="dashboard-status"><?php echo $courrier['etat_courrier'] ?></output>
                             <div class="dashboard-action">
                                 <a href="../../Traitement/Controle/DetailCourrier.php?$idCourrier=<?=$courrier['idCourrier']?>&& $typeCourrier=<?=$courrier['type_courrier']?>">
-                                <input type="image" src="../images/details.png" alt="">
+                                    <input type="image" src="../images/details.png" alt="" title="détails">
                                 </a>
                                 <input type="image" src="../images/modifier.png" alt="">
                                 <input type="image" src="../images/historique.png" alt="">

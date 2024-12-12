@@ -119,7 +119,7 @@ function afficherPlis() {
     const typeDocument = document.getElementById('typeDocument');
 
     // CONDITION D'AFFICHAGE
-    if(pli.value == 1) {
+    if(pli.value == "oui") {
         infoSupp.style.display = 'none';
         typeDocument.removeAttribute('required');
     } else {
@@ -137,7 +137,6 @@ function regNumOrdre() {
     
     // AJOUT DU PLACEHOLDER
     input.setAttribute('placeholder', `Ex: 152/DGE/DSI/${currentYear}`);
-    
     
     form.addEventListener('submit', (e) => {
         e.preventDefault();

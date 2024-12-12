@@ -112,28 +112,4 @@ function get_uploaded_files_pathsarrive($chemin,$param){
  
  
  }
-
-
-
 ?>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

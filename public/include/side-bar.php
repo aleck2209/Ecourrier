@@ -24,7 +24,7 @@
                         <a href="courrier-interne.php">Enregistrer Courrier</a>
                     </li>
                     <li>
-                        <a href="#">Courrier Enregistré</a>
+                        <a href="#">Courrier Enregistrer</a>
                         <!-- DEBUT DROPDOWN -->
                         <ul class="gestion-courrier__dropdown">
                             <li>

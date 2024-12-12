@@ -1,0 +1,205 @@
+/* DEBUT INITIALISATION */
+*,
+::before,
+::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+/* FIN INITIALISATION */
+
+/*DEBUT AJOUTER LES POLICES */
+@font-face {
+    font-family: "Poppins";
+    src: url("../fonts/poppins/Poppins-Regular.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "Inter";
+    src: url('../fonts/inter/Inter-VariableFont_opsz\,wght.ttf') format("truetype");
+}
+
+@font-face {
+    font-family: "Roboto";
+    src: url("../fonts/roboto/Roboto-Regular.ttf") format("truetype");
+}
+/* FIN AJOUTER LES POLICES */
+
+/* DEBUT VARIABLE */
+:root {
+    /* DEBUT FONT */
+    /* DEBUT FONT-FAMILY */
+    --FF-INTER: "Inter", sans-serif;
+    --FF-POPPINS: "Poppins", sans-serif;
+    --FF-ROBOTO: "Roboto", sans-serif;
+    /* FIN FONT-FAMILY*/
+    
+    /* DEBUT FONT-SIZE */
+    --FS-FIELD: 1rem;
+    --FS-LABEL: 0.875rem;
+    --FS-LOGO: 1.25rem;
+    --FS-NAME-SITE: 2rem;
+    --FS-NAME-USER: 1.25rem;
+    --FS-NAV: 0.75rem;
+    --FS-SIDEBAR: 0.9rem;
+    --FS-TITRE-FORM: 1.125rem; /*18px*/
+    --FS-TITRE-PAGE: 1.25rem;
+    /* FIN FONT-SIZE */
+
+    /* DEBUT FONT-WEIGHT */
+    --FW-BTN: 500;
+    --FW-FIELD: 400;
+    --FW-LABEL: 500;
+    --FW-LOGO: 700;
+    --FW-NAME-SITE: 500;
+    --FW-NAME-USER: 500;
+    --FW-NAV: 500;
+    --FW-SIDEBAR: 500;
+    --FW-TITRE-PAGE: 400;
+    --FW-TITRE-FORM: 400;
+    /* FIN FONT */
+
+    /* DEBUT COULEUR */
+    --BLACK: rgba(67, 72, 75, 1);
+    --DARK: rgba(0, 0, 0, 1);
+    --DARK-LIGHT: rgba(0, 0, 0, 0.5);
+    --DARK-GREY: rgba(201, 202, 207, 1);
+    --GOLD: rgba(152, 126, 60, 1);
+    --GOLD-LIGHT: rgba(152, 126, 60, 0.25);
+    --GREY: rgba(249, 250, 251, 1);
+    --RED: rgb(185, 6, 6);
+    --WHITE: rgba(255, 255, 255, 1);
+    /* FIN COULEUR */
+
+    /* DEBUT DISTANCE */
+    /* DEBUT PADDING */
+    --PG-BT-MAIN: 9rem;
+    --PG-BTN-SEARCH: 0.5rem;
+    --PG-FIELD: 0.8rem;
+    --PG-LT-DROPDOWN: 2rem;
+    --PG-LT-RT-CONTENT: 2.5rem;
+    --PG-LT-RT-NAV: 1rem;
+    --PG-SIDEBAR: 1rem;
+    --PG-TOP-BT-LOGO: 2rem;
+    --PG-TOP-BT-HEADER: 0.5rem;
+    --PG-TOP-BT-NAV: 0.5rem;
+    --PG-TOP-MAIN: 1rem;
+    --PG-FORM: 0.6rem;
+    --PG-BTN-OPERATION: 0.2rem;
+    /* FIN PADDING */
+
+    /* DEBUT MARGIN */
+    --MG-RT-LINK: 1rem;
+    --MG-TOP-FORM: 1rem;
+    --MG-BT-FORM: 0.5rem;
+    --MG-TOP-SECTION: 1rem;
+    --MG-BT-BLOCK-NOTIF: 1rem;
+    --MG-BT-LIST-NOTIF: 1rem;
+    --MG-BT-HEADER-LIST: 1rem;
+    /* FIN MARGIN */
+
+    /* DEBUT GAP */
+    --GAP-FIELD: 0.1rem;
+    --GAP-FIELDS: 1rem;
+    --GAP-FORM: 1rem;
+    --GAP-USER-ICON: 2rem;
+    /* FIN GAP */
+
+    /* DEBUT WIDTH */
+    --WD-BTN: 25%;
+    --WD-FIELD: 100%;
+    --WD-FIELDS: 30%;
+    --WD-ICON-RAPPEL: 2rem;
+    --WD-IMG: 100%;
+    --WD-HALF-SPACE: 49%;
+    --WD-LOGO: 3rem;
+    --WD-BTN-SEARCH: 2.93rem;
+    --WD-BTN-OPERATION: 1.7rem;
+    /* FIN WIDTH */
+
+    /* DEBUT HEIGHT */
+    --HT-BODY: 100vh;
+    /* FIN HEIGHT */
+    /* FIN DISTANCE */
+
+    /* DEBUT BORDURE */
+    --BORDER-BT: 2px solid var(--GREY);
+    --BORDER-BT-DOTTED: 2px dotted var(--DARK-GREY);
+    --BORDER-BTN: 1px solid var(--GOLD);
+    --BORDER-FIELD: 1px solid var(--DARK-GREY);
+    --BORDER-FORM: 1px solid var(--DARK-GREY);
+    --BORDER-DASHBOARD: 2px solid var(--DARK-GREY);
+    --BORDER-RADIUS: 5px;
+}
+
+body{
+    height: var(--HT-BODY);
+    font-family: var(--FF-INTER);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* DEBUT PAGE CONNEXION */
+.form-login {
+    border-radius: var(--BORDER-RADIUS);
+    width: 450px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-flow: column nowrap;
+    padding: 4rem 4rem;
+    box-shadow: 0px 3px 3px 0px var(--DARK-GREY);
+}
+
+.form-login h1 {
+    font-weight: 500;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.field-login {
+    display: flex;
+    flex-flow: column nowrap;
+    margin-bottom: 2rem;
+    width: 100%;
+}
+
+.field-login label {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.field-login input {
+    width: 100%;
+    padding: 0.8rem;
+    outline: none;
+    border: none;
+    color: var(--BLACK);
+    background-color: var(--GREY);
+    border: solid 1px var(--DARK-GREY);
+    border-radius: 4px;
+}
+
+.btn-login {
+    width: 100%;    
+}
+
+.btn-login input {
+    width: 100%;
+    padding: 0.6rem;
+    outline: none;
+    color: var(--WHITE);
+    background-color: var(--GOLD);
+    border: none;
+    font-weight: 500;
+    font-size: 18px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-login input:hover {
+    background-color: var(--GOLD-LIGHT);
+    color: var(--GOLD);
+}
+/* FIN PAGE CONNEXION */

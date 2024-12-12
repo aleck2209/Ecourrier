@@ -120,7 +120,7 @@ function afficherPlis() {
     const typeDocument = document.getElementById('typeDocument');
 
     // CONDITION D'AFFICHAGE
-    if(pli.value == 1) {
+    if(pli.value == "oui") {
         infoSupp.style.display = 'none';
         typeDocument.removeAttribute('required');
     } else {
@@ -136,7 +136,7 @@ function afficherPlisArrive() {
     const typeDocument = document.getElementById('typeDocumentArrive');
 
     // CONDITION D'AFFICHAGE
-    if(pli.value == 1) {
+    if(pli.value == "oui") {
         infoSupp.style.display = 'none';
         typeDocument.removeAttribute('required');
     } else {

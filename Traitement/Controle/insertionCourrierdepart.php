@@ -1,7 +1,8 @@
 <?php
 require('../../Traitement/Base_de_donnee/insertion.php');
 require('../../Traitement/Verification/verifierValeursNullesCourrier.php');
-require('../../Traitement/Controle/gestionFichiesCourrierArrive.php');
+require('../../Traitement/Controle/gestionFichierCourrierDepart.php');
+require('../../Traitement/Controle/insertionCopieCourrier.php');
 require('../../Traitement/Verification/VerifierNumeroOrdreParEntite.php');
 require('../../Traitement/Verification/verifierFormat.php');
 require('../../Traitement/Verification/verifierValeurEnum.php');
@@ -17,11 +18,11 @@ $dateEnreg =verifierValeurNulle(trim($_POST['dateEnregistrement']));
 $reference =verifierValeurNulle(trim($_POST['Reference']));
 $fichier = gererFormat($_FILES['fichier']);
 $objet = verifierValeurNulle(trim($_POST['Objet_du_courrier']));
-$matricule ='user03' ;
-$etatExpedition = null;
-$expediteur = verifierValeurNulle(trim($_POST['expediteur'])) ; ;
+$matricule ='user01' ;
+$etatExpedition =  verifierValeurNulle(trim($_POST['etat_expedition'])) ;
+$expediteur = verifierValeurNulle(trim($_POST['expediteur'])) ;
 $destinataire  = verifierValeurNulle($_POST['destinataire']) ;
-// $liste_copie_courrier = verifierValeurNulle(trim($_POST['copie_courrier'])) ;
+$liste_copie_courrier = verifierValeurNulle(trim($_POST['copie_courrier'])) ;
 $test_etat_interne_externe =trim($_POST['etat_interne_externe']);
 $etat_inter_exter;
 
@@ -30,22 +31,15 @@ $idpole_dest;
 $idReponse = null;
 
 
-//-----------------------------------------Test des valeurs de l'état interne externe et de l'état expédition
+$etat_inter_exter = ($test_etat_interne_externe =="interne") ? "courrier interne": "courrier externe" ;
 
-$etat_inter_exter = ($test_etat_interne_externe =="externe") ? "courrier externe": "courrier interne" ;
 
-$etatExpedition = null;
 //récupération du tableau des entite destinataires ayant le nom entré 
-
-// var_dump($_POST);
-// var_dump($_FILES);
-
-
 //---------------------------------------Controle des nom destinataires----------------------------------
 $Liste_entite_destinataire = recupererLigneSpecifique('entite_banque','nom_entite',$destinataire);
 $Liste_pole_destinataire = recupererLigneSpecifique('pole','nom_pole',$destinataire);
 //on récupère le nom et le format du fichier dans un tableau
-// $TableauNomDestinataireCopie = explode(",",$liste_copie_courrier) ;
+$TableauNomDestinataireCopie = explode(",",$liste_copie_courrier) ;
 if (isset($Liste_entite_destinataire)) {
     $objet_entite_banque = $Liste_entite_destinataire[0];
     $identite_dest = $objet_entite_banque->id_entite;
@@ -68,13 +62,13 @@ if (isset($Liste_pole_destinataire)) {
 
 
 
-$liendossier = creerListeDossiersCourrierArrive($etat_inter_exter,$destinataire);
-$liencourrier =deposerFichierDansDossierCourrierArrive($liendossier,$fichier);
+$liendossier = creerListeDossiersCourrierDepart($etat_inter_exter,$destinataire);
+$liencourrier = deposerFichierDansDossier($liendossier,$fichier);
 $nom_balise_fichiers_join ="fichiers_joints"; //Cette variable récupère la valeur de l'attribut name spécifié dans la balise html qui envoi les fichiers annexes
    
 $chemin_fichiers_joins = $liendossier."/FichierAnnexes";//Cette variable repésente le lien du dossier où on doit stocker les fichiers annexes
 
-$liens_fichiers_joins = get_uploaded_files_pathsarrive($chemin_fichiers_joins,$nom_balise_fichiers_join);
+$liens_fichiers_joins = get_uploaded_files_paths($chemin_fichiers_joins,$nom_balise_fichiers_join);
 
 print_r($liens_fichiers_joins);
 
@@ -92,7 +86,7 @@ where u.Matricule = ?;";
 $nom_entite = recupererNomEntiteParIdUtilisateur($requete,$matricule);
 
 #On récupère le numéro d'ordre qu'on doit entré en fonction de l'entité
-$num_a_entrer = verifierNumeoOrdreParEntiteCourrierArv($nom_entite);
+$num_a_entrer = verifierNumeoOrdreParEntiteV2($nom_entite);
 $numeroOrdrePrefix = explode('/', $numeroOrdre)[0];  // On récupère juste la partie avant le "/"
 
 // On compare le numéro d'ordre entré à celui qui est attendu en fonction de l'entité
@@ -107,23 +101,23 @@ if ($numeroOrdrePrefix != $num_a_entrer) {
 
 //---------------------------------------Controle des destinataires internes--------------------------------
 
-// if (is_null($destinataire)) {
-//     echo 'destinataire nul';
-//     die("Vous n'avez pas saisi de destinataire");
-// }else{
-//     if ($etat_inter_exter==="courrier interne") {
-//         if (is_null($identite_dest) && is_null($idpole_dest)) {
-//             # Si on entre ici cela veut dire qu'il n'a pas entrer un destinataire interne à la banque
-//             die("Vous n'avez pas entré comme destinataire un service de la banque");
-//         }
+if (is_null($destinataire)) {
+    echo 'destinataire nul';
+    die("Vous n'avez pas saisi de destinataire");
+}else{
+    if ($etat_inter_exter==="courrier interne") {
+        if (is_null($identite_dest) && is_null($idpole_dest)) {
+            # Si on entre ici cela veut dire qu'il n'a pas entrer un destinataire interne à la banque
+            die("Vous n'avez pas entré comme destinataire un service de la banque");
+        }
         
-//     }elseif ($etat_inter_exter==="courrier externe") {
-//         if (!is_null($identite_dest) || !is_null($idpole_dest)) {
-//             die("Vous avez défini une entité interieure à la banque comme destinataire d'un courrier externe ");
-//         }
-//     }
+    }elseif ($etat_inter_exter==="courrier externe") {
+        if (!is_null($identite_dest) || !is_null($idpole_dest)) {
+            die("Vous avez défini une entité interieure à la banque comme destinataire d'un courrier externe ");
+        }
+    }
     
-// }
+}
 
 
 
@@ -137,7 +131,7 @@ if ($numeroOrdrePrefix != $num_a_entrer) {
 #Ici on vérifie si une valeure entrée correspond à celle attendue dans la base de données
 $etat_inter_exter = verifierValeurEnum($etat_inter_exter,['courrier interne','courrier externe'],'etat interne externe');
 $etat_plis_ferme = verifierValeurEnum($etat_plis_ferme,['oui','non'],'etat plis fermé');
-//$etatExpedition = verifierValeurEnum($etatExpedition,['oui','non'],'etat expédition');
+$etatExpedition = verifierValeurEnum($etatExpedition,['oui','non'],'etat expédition');
 $categorie = verifierValeurEnum($categorie,['urgent','normal'],'catégorie');
 
 
@@ -185,17 +179,9 @@ try {
 }
 
 
-if (is_null($objet)) {
-    die("Vous n'avez pas renseigné un objet pour votre courrier");
-} elseif (is_null($numeroOrdre)) {
-    die("Vous n'avez pas renseigné un numéro d'ordre pour votre courrier");
-} elseif (is_null($dateEnreg)) {
-    die("Vous n'avez pas renseigné une date d'enregistrement d'ordre pour votre courrier");
-}elseif (is_null($TypeDoc)) {
-    die("Vous n'avez pas renseigné un type de document pour votre courrier");
-} elseif (is_null($expediteur)) {
-    die("Vous n'avez pas renseigné un expéditeur pour votre courrier");
-}
+
+
+
 
 
 
@@ -203,25 +189,31 @@ if (is_null($objet)) {
 
 
 //----------------------------------------------Fin controle-----------------------------------------------
-$etatCourrier = 'reçu';
 
-
-$idcourrierArrive = insererCourrierArriveV2($numeroOrdre,$TypeDoc,$etat_inter_exter,
+$idcourrierdepart = insererCourrierDepart($numeroOrdre,$TypeDoc,$etat_inter_exter,
 $etat_plis_ferme,$categorie,$dateEnreg,null,$reference,
-$liencourrier,$formatCourrier,$objet,$matricule,$idReponse,$expediteur,$destinataire,$identite_dest,$idpole_dest,
-$nombre_fichiers_joins,$etatCourrier
+$liencourrier,$formatCourrier,$objet,$matricule,$idReponse,$etatExpedition,$expediteur,$destinataire,$identite_dest,$idpole_dest,
+$nombre_fichiers_joins
 );
 
+//Insertion des copies de courriers dans la base de données 
+if (!in_array(null,$TableauNomDestinataireCopie)) {
+     entrerLesCopies($TableauNomDestinataireCopie,$liencourrier,$idcourrierdepart,null); 
+    
+}
 
 
 //---------------------------------------------Insérer les fichiers joins - ----------------------------------------
-
+$idcourrierdepart =2;
 if ($nombre_fichiers_joins ===count($liens_fichiers_joins)) {
     foreach ($liens_fichiers_joins as $lien) {
-        insererFichierJoin($lien,null,$idcourrierArrive);
+        insererFichierJoin($lien,$idcourrierdepart,null);
     }
     
 }
+
+
+
 
 
 
