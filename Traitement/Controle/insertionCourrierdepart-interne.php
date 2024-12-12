@@ -23,13 +23,14 @@ $dateEnreg =verifierValeurNulle(trim($_POST['dateEnregistrement']));
 $reference =verifierValeurNulle(trim($_POST['Reference']));
 $fichier = gererFormat($_FILES['fichier']);
 $objet = verifierValeurNulle(trim($_POST['Objet_du_courrier']));
-$matricule ='user01' ;
+$matricule ='user02' ;
 $etatExpedition =  NULL ;
 $expediteur = null ;
 $destinataire  = verifierValeurNulle($_POST['destinataire']) ;
 $liste_copie_courrier = verifierValeurNulle(trim($_POST['copie_courrier'])) ;
 $test_etat_interne_externe =trim($_POST['etat_interne_externe']);
 $etat_inter_exter;
+
 
 $identite_dest ;
 $idpole_dest;
@@ -85,6 +86,7 @@ if (isset($Liste_pole_destinataire)) {
 
 
 //------------------------------------fin controle des nom destinataires---------------------------------------
+
 
 
 
@@ -233,11 +235,11 @@ if (strlen($objet)==0) {
 
 
 //----------------------------------------------Fin controle-----------------------------------------------
-
+$etatCourrier = 'envoyé';
 $idcourrierdepart = insererCourrierDepart($numeroOrdre,$TypeDoc,$etat_inter_exter,
 $etat_plis_ferme,$categorie,$dateEnreg,null,$reference,
 $liencourrier,$formatCourrier,$objet,$matricule,$idReponse,$etatExpedition,$expediteur,$destinataire,$identite_dest,$idpole_dest,
-$nombre_fichiers_joins
+$nombre_fichiers_joins,$etatCourrier
 );
 
 //---------------------------------------------Insertion des copies de courriers dans la base de données----------------------------- 
@@ -263,10 +265,11 @@ if ($nombre_fichiers_joins ===count($liens_fichiers_joins)) {
 
 
 //--------------------------------------------insertion automatique du courrier arrivé de ce destinataire----------------------------
+$etatCourrier = 'reçu';
 $idcourrierArrive = insererCourrierArriveV2($numeroOrdre,$TypeDoc,$etat_inter_exter,
 $etat_plis_ferme,$categorie,$dateEnreg,null,$reference,
 $liencourrier,$formatCourrier,$objet,$matricule,$idReponse,$expediteur,$destinataire,$identite_dest,$idpole_dest,
-$nombre_fichiers_joins
+$nombre_fichiers_joins,$etatCourrier
 );
 
 //--------------------------------------------insertion automatique du courrier arrivé de ce destinataire----------------------------

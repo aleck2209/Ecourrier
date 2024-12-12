@@ -694,6 +694,44 @@ function getInfosForCourrier($requete,$idCourrier){
 
 
 
+function verifierCourrierDansModification($idCourrier) {
+    // Requête pour vérifier si l'idCourrier existe dans main_modification_courrier
+    $objet_connexion = connectToDb('localhost','ecourrierdb2','Dba','EcourrierDba');
+    $sql = "SELECT COUNT(*) FROM main_modification_courrier WHERE idCourrier = :idCourrier";
+    
+    // Préparer la requête
+    $stmt = $objet_connexion->prepare($sql);
+    
+    // Lier le paramètre
+    $stmt->bindParam(':idCourrier', $idCourrier, PDO::PARAM_INT);
+    
+    // Exécution de la requête
+    $stmt->execute();
+    
+    // Récupérer le résultat
+    $result = $stmt->fetchColumn();
+    
+    // Si le résultat est supérieur à 0, l'idCourrier existe
+    return $result > 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ?>
 

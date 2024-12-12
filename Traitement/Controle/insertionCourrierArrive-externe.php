@@ -203,11 +203,13 @@ if (is_null($objet)) {
 
 
 //----------------------------------------------Fin controle-----------------------------------------------
+$etatCourrier = 'reçu';
+
 
 $idcourrierArrive = insererCourrierArriveV2($numeroOrdre,$TypeDoc,$etat_inter_exter,
 $etat_plis_ferme,$categorie,$dateEnreg,null,$reference,
 $liencourrier,$formatCourrier,$objet,$matricule,$idReponse,$expediteur,$destinataire,$identite_dest,$idpole_dest,
-$nombre_fichiers_joins
+$nombre_fichiers_joins,$etatCourrier
 );
 
 

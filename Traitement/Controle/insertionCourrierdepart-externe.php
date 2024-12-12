@@ -189,11 +189,11 @@ try {
 
 
 
-if (!is_null($objet)) {
+if (is_null($objet)) {
     die("Vous n'avez pas renseigné un objet pour votre courrier");
-} elseif (!is_null($numeroOrdre)) {
+} elseif (is_null($numeroOrdre)) {
     die("Vous n'avez pas renseigné un numéro d'ordre pour votre courrier");
-} elseif (!is_null($dateEnreg)) {
+} elseif (is_null($dateEnreg)) {
     die("Vous n'avez pas renseigné une date d'enregistrement d'ordre pour votre courrier");
 }elseif (is_null($TypeDoc)) {
     die("Vous n'avez pas renseigné un type de document pour votre courrier");
@@ -210,11 +210,11 @@ if (!is_null($objet)) {
 
 
 //----------------------------------------------Fin controle-----------------------------------------------
-
+$etatCourrier = 'envoyé';
 $idcourrierdepart = insererCourrierDepart($numeroOrdre,$TypeDoc,$etat_inter_exter,
 $etat_plis_ferme,$categorie,$dateEnreg,null,$reference,
 $liencourrier,$formatCourrier,$objet,$matricule,$idReponse,$etatExpedition,$expediteur,$destinataire,$identite_dest,$idpole_dest,
-$nombre_fichiers_joins
+$nombre_fichiers_joins,$etatCourrier
 );
 
 //Insertion des copies de courriers dans la base de données 
