@@ -117,10 +117,8 @@
                                 <a href="../../Traitement/Controle/DetailCourrier.php?$idCourrier=<?=$courrier['idCourrier']?>&& $typeCourrier=<?=$courrier['type_courrier']?>">
                                     <input type="image" src="../images/details.png" alt="" title="détails">
                                 </a>
-                                <a href="../../Publique2/page/formulaireUpdate.php$idCourrier=<?=$courrier['idCourrier']?>&& $typeCourrier=<?=$courrier['type_courrier']?>">
-                                    <input type="image" src="../images/modifier.png" alt="" title="modifier">
-                                </a>
-                                <input type="image" src="../images/historique.png" alt="" title="historique">
+                                <input type="image" src="../images/modifier.png" alt="">
+                                <input type="image" src="../images/historique.png" alt="">
                                 <input type="image" src="../images/supprimer.png" alt="" title="supprimer">
                             </div>
                     </div>

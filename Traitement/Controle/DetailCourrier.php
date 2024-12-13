@@ -11,10 +11,10 @@ $tableau_lien = [];
 // Récupération des détails pour un courrier départ et un courrier arrivé
 if ($typeCourrier ==="courrier arrivé") {
 
-    $sql1 = " SELECT Type_document,Etat_interne_externe,etat_courrier,
+    $sql1 = " SELECT Type_document,Etat_interne_externe as origine_courrier,etat_courrier,
               etat_plis_ferme as plis_ferme,dateEnregistrement,date_mise_circulation,Reference,lien_courrier,Objet_du_courrier,
               numero_ordre,categorie,nombre_fichiers_joins as nombre_de_fichiers_joins,expediteur,destinataire,Matricule,
-              nom_utilisateur as nom_enregistreur,prenom_utilisateur as prenom_enregistreur,
+              nom_utilisateur as nom_enregistreur,prenom_utilisateur as prenom_enregistreur, categorie, date_derniere_modification,signature_gouverneur,
               'courrier arrivé' AS type_courrier
               from courrierarrive inner join utilisateur
               on  courrierarrive.Matricule_initiateur = utilisateur.Matricule
@@ -31,16 +31,16 @@ if ($typeCourrier ==="courrier arrivé") {
 
     // Parcours du tableau pour extraire les noms
     foreach ($T2 as $destinataire) {
-        echo$destinataire['nom_destinataire'];
+        
         // Ajout du nom à la chaîne, en vérifiant si la chaîne n'est pas vide pour éviter une virgule en début de chaîne
-        $noms_destinataires .= ($noms_destinataires != "" ? ", " : "") . $destinataire['nom_destinataire'];
+        $noms_copies .= ($noms_copies != "" ? ", " : "") . $destinataire['nom_destinataire'];
     }
 
     // Affichage du résultat
     // Affichera : DGE, DSI
     print_r($T1);
     print_r($T2);
-    echo $noms_destinataires;
+    echo $noms_copies;
     $sql3= "SELECT lien_fichier_annexe
             FROM fichier_annexe
             WHERE idCourrierArv = :idCourrier";
@@ -79,7 +79,7 @@ elseif ($typeCourrier ==="courrier départ") {
     $sql1 = "SELECT Type_document,Etat_interne_externe as origine_courrier,etat_courrier,
              etat_plis_ferme as plis_ferme,dateEnregistrement,Reference,lien_courrier,Objet_du_courrier,Matricule,destinataire,
              nom_utilisateur as nom_enregistreur,prenom_utilisateur as prenom_enregistreur,nombre_fichiers_joins as nombre_de_fichiers_joins,
-             'courrier départ' AS type_courrier,expediteur
+             'courrier départ' AS type_courrier,expediteur,numero_ordre, categorie, date_derniere_modification , signature_gouverneur
              from courrierdepart inner join  utilisateur
              on  courrierdepart.Matricule_initiateur = utilisateur.Matricule
              where idCourrier =:idCourrier";

@@ -5,7 +5,7 @@ require('../../Traitement/Base_de_donnee/Recuperation.php');
 function insererCourrierDepart($numeroOrdre,$TypeDoc,$etat_inter_exter,
 $etat_plis_ferme,$categorie,$dateEnreg,$datemiseCirculation,$reference,
 $liencourrier,$formatCourrier,$objet,$matricule,$idReponse,$etatExpedition,$expediteur,$destinataire,$identite_dest,$pole_dest,
-$nbre_fichiers_joins
+$nbre_fichiers_joins,$etatCourrier
 ){
     $test = false;
     try {
@@ -14,12 +14,15 @@ $nbre_fichiers_joins
     $objet_connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $idCourrier = incrementerClePrimaireNumerique('courrierdepart');
 
-    $etatCourrier = 'envoyé';
+    
+    $date_derniere_modification=null;
+    $signature_gouverneur = "non";
+
     $sql = "INSERT into courrierdepart(`idCourrier`,`Type_document`,`Etat_interne_externe`,`etat_courrier`,`etat_plis_ferme`, `dateEnregistrement`,`date_mise_circulation`,`Reference`,
     `lien_courrier`,`format_fichier_courrier`,`Objet_du_courrier`,`Matricule_initiateur`,`idFichierReponse`,`etat_expedition`,`expediteur`,`destinataire`,`entite_dest`,`pole_destinataire`,`categorie`,
-    `numero_ordre`,`nombre_fichiers_joins`) values (:idCourrier,:Type_document,:Etat_interne_externe,:etat_courrier,:etat_plis_ferme,
+    `numero_ordre`,`nombre_fichiers_joins`,`date_derniere_modification`,`signature_gouverneur`) values (:idCourrier,:Type_document,:Etat_interne_externe,:etat_courrier,:etat_plis_ferme,
     :dateEnregistrement,:date_mise_circulation,:Reference,:lien_courrier,:format_fichier_courrier,:Objet_du_courrier,:Matricule_initiateur,:idFichierReponse,:etat_expedition,:expediteur,
-    :destinataire,:entite_dest,:pole_destinataire,:categorie,:numero_ordre,:nombre_fichiers_joins);
+    :destinataire,:entite_dest,:pole_destinataire,:categorie,:numero_ordre,:nombre_fichiers_joins,:date_derniere_modification, :signature_gouverneur);
       ";
           
     $resulats = $objet_connection->prepare($sql);
@@ -45,6 +48,9 @@ $nbre_fichiers_joins
     $resulats->bindValue(":categorie",$categorie);
     $resulats->bindValue(":numero_ordre",$numeroOrdre);
     $resulats->bindValue(":nombre_fichiers_joins",$nbre_fichiers_joins);
+    $resulats->bindValue(":date_derniere_modification",$date_derniere_modification);
+    $resulats->bindValue(":signature_gouverneur",$signature_gouverneur);
+    
     // Tableau associatif avec les noms des colonnes comme clés
     $tableauAssociatif = [
         'idCourrier' => $idCourrier,
@@ -67,20 +73,21 @@ $nbre_fichiers_joins
         'Identite_dest' => $identite_dest,
         'Pole_dest' => $pole_dest,
         'Categorie' => $categorie,
-        'nombre fichiers joins'=> $nbre_fichiers_joins
+        'nombre fichiers joins'=> $nbre_fichiers_joins,
+        'date_derniere_modification'=> $date_derniere_modification
     ];
 
     // Afficher le tableau associatif
     // print_r($tableauAssociatif);
     $resulats->execute();
-    
     $test = true;
-    
     return $idCourrier;
     } catch (PDOException $e) {
-        die('erreur de connexion'.$e->getMessage());
-    }
-    
+        // Afficher la requête SQL et les erreurs détaillées
+    echo "Erreur SQL: " . $e->getMessage();
+    //print_r($tableauAssociatif); // Afficher les valeurs bindées
+    die('Erreur de connexion');
+    }    
 }
 
 
@@ -232,7 +239,7 @@ $nbre_fichiers_joins){
 function insererCourrierArriveV2($numeroOrdre,$TypeDoc,$etat_inter_exter,
 $etat_plis_ferme,$categorie,$dateEnreg,$datemiseCirculation,$reference,
 $liencourrier,$formatCourrier,$objet,$matricule,$idReponse,$expediteur,$destinataire,$identite_dest,$pole_dest,
-$nbre_fichiers_joins){
+$nbre_fichiers_joins,$etatCourrier){
 
     $test = false;
     try {
@@ -241,13 +248,17 @@ $objet_connection = connectToDb('localhost', 'ecourrierdb2', 'Dba', 'EcourrierDb
 $objet_connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 $idCourrier = incrementerClePrimaireNumerique('courrierarrive');
 
-$etatCourrier = 'reçu';
+
+$date_derniere_modification=null;
+$signature_gouverneur = "non";
+
 $sql = "INSERT into courrierarrive  
 values 
 (?,?,?,?,?,
  ?,?,?,?,?,
  ?,?,?,?,?,
-?,?,?,?,?);
+?,?,?,?,?,
+?,?);
   ";
 $resulats = $objet_connection->prepare($sql);
 
@@ -271,7 +282,8 @@ $resulats->bindValue(17,$pole_dest);
 $resulats->bindValue(18,$nbre_fichiers_joins);
 $resulats->bindValue(19,$expediteur);
 $resulats->bindValue(20,$destinataire);
-
+$resulats->bindValue(21,$date_derniere_modification);
+$resulats->bindValue(22,$signature_gouverneur);
 
 
 
@@ -297,7 +309,9 @@ $tableauAssociatif = [
     'Identite_dest' => $identite_dest,
     'Pole_dest' => $pole_dest,
     'Categorie' => $categorie,
-    'nombre fichiers joins'=> $nbre_fichiers_joins
+    'nombre fichiers joins'=> $nbre_fichiers_joins,
+    'date_derniere_modification'=> $date_derniere_modification,
+    'signature_gouverneur' =>  $signature_gouverneur
 ];
 
 // Afficher le tableau associatif
@@ -312,13 +326,36 @@ return $idCourrier;
 }
 
 
-
-
 }
 
 
 
 
+// Fonction pour insérer un idCourrier dans main_modification_courrier avec la date actuelle
+function insererCourrierDansModification($idCourrier) {
+    // La date et l'heure actuelles
+
+    $objet_connection = connectToDb('localhost', 'ecourrierdb2', 'Dba', 'EcourrierDba');
+    $date_autorisation = date('Y-m-d H:i:s');
+
+    // Préparation de la requête SQL
+    $sql = "INSERT INTO main_modification_courrier (idCourrier, date_autorisation) 
+            VALUES (:idCourrier, :date_autorisation)";
+    
+    // Préparer la requête
+    $stmt = $objet_connection->prepare($sql);
+    
+    // Lier les paramètres
+    $stmt->bindParam(':idCourrier', $idCourrier, PDO::PARAM_INT);
+    $stmt->bindParam(':date_autorisation', $date_autorisation, PDO::PARAM_STR);
+    
+    // Exécution de la requête
+    if ($stmt->execute()) {
+        return true;  // L'insertion a réussi
+    } else {
+        return false; // L'insertion a échoué
+    }
+}
 
 
 
