@@ -777,7 +777,6 @@ input[type="reset"]:hover,
 .detail-element__title {
     font-weight: 600;
     margin-bottom: 0.2rem;
-    text-decoration: underline;
 }
 
 .detail-element__content {

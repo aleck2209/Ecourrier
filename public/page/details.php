@@ -8,6 +8,9 @@
 </head>
 <body>
     <?php
+        // APPEL DE LA PAGE D'AFFICHAGE DES DETAILS DU COURRIER
+        require('../../Traitement/Controle/DetailCourrier.php');
+
         // APPEL DE LA SIDE-BAR
         require('../include/side-bar.php');
     ?>
@@ -28,43 +31,74 @@
                     <div class="container-detail">
                         <div class="detail-element">
                             <p class="detail-element__title">Objet</p>
-                            <p class="detail-element__content">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptate fugit, ea quo eveniet magni similique ipsa facilis voluptatem totam nemo, .</p>
+                            <p class="detail-element__content"><?php echo $T1[0]['Objet_du_courrier'] ?></p>
                         </div>
                         <div class="detail-element not-required">
                             <p class="detail-element__title">Référence</p>
-                            <p class="detail-element__content"></p>
+                            <p class="detail-element__content"><?php echo $T1[0]['Reference'] ?></p>
                         </div>
                         <div class="detail-element">
                             <p class="detail-element__title">Numéro d'ordre</p>
-                            <p class="detail-element__content">Lorem ipsum dolo</p>
+                            <p class="detail-element__content"><?php echo $T1[0]['numero_ordre'] ?></p>
                         </div>
                         <div class="detail-element">
                             <p class="detail-element__title">Date d'enregistrement</p>
-                            <p class="detail-element__content">Lorem ipsum dolo</p>
+                            <p class="detail-element__content"><?php echo $T1[0]['dateEnregistrement'] ?></p>
                         </div>
                         <div class="detail-element not-required">
                             <p class="detail-element__title">Date d'émission</p>
-                            <p class="detail-element__content">Lorem ipsum dolo</p>
+                            <p class="detail-element__content"><?php echo $T1[0]['date_mise_circulation'] ?></p>
+                        </div>
+                        <div class="detail-element not-required">
+                            <p class="detail-element__title">Date dernière modification</p>
+                            <p class="detail-element__content"><?php echo $T1[0]['date_derniere_modification'] ?></p>
                         </div>
                         <div class="detail-element not-required">
                             <p class="detail-element__title">Type de document</p>
-                            <p class="detail-element__content">Lorem ipsum dolo</p>
+                            <p class="detail-element__content"><?php echo $T1[0]['Type_document'] ?></p>
                         </div>
                         <div class="detail-element not-required">
                             <p class="detail-element__title">fichier du courrier</p>
-                            <a href="" target="_blank" class="file"><img src="../../public/images/pdf.png" alt="fichier du courrier" title=""></a>
+                            <a href="<?php echo $T1[0]['lien_courrier'] ?>" target="_blank" class="file"><img src="../../public/images/pdf.png" alt="fichier du courrier" title=""></a>
                         </div>
                         <div class="detail-element not-required">
                             <p class="detail-element__title">Nombre de pièce jointe</p>
-                            <p class="detail-element__content">Lorem ipsum dolo</p>
+                            <p class="detail-element__content">
+                            <?php 
+                                if ($T1[0]['nombre_de_fichiers_joins']) {
+                                    echo $T1[0]['nombre_de_fichiers_joins'];
+                                } else {
+                                    echo '';
+                                }
+                            ?>
+                            </p>
                         </div>
                         <div class="detail-element not-required">
                             <p class="detail-element__title">Pièce(s) Jointe(s)</p>
-                            <a href=" f" target="_blank" class="file"><img src="../../public/images/pdf.png" alt="pièce(s) jointe(s)" title=""></a>
+                            <!-- VERIFICATION SI UN FICHIER JOINT A ETE AJOUTE OU PAS -->
+                            <?php 
+                            if ($T3) {  
+                            foreach($tableau_lien as $lien) { ?>
+                            <a href="
+                            <?php echo $lien
+                            ?>
+                            " target="_blank" class="file"><img src="../../public/images/pdf.png" alt="pièce(s) jointe(s)" title=""></a>
+                            <?php } 
+                            } else { ?>
+                            <a href="" class="file"></a>
+                            <?php } ?>
                         </div>
                         <div class="detail-element not-required">
                             <p class="detail-element__title">Fichier réponse</p>
-                            <a href="" target="_blank" class="file"><img src="../../public/images/pdf.png" alt="fichier reponse" title=""></a>
+                            <a href="
+                            <?php 
+                                if ($T4) {
+                                    echo $T4[0]['lienFichierReponse'];
+                                } else {
+                                    echo '';
+                                } 
+                            ?>
+                            " target="_blank" class="file"><img src="../../public/images/pdf.png" alt="fichier reponse" title=""></a>
                         </div>
                     </div>
                 </div>
@@ -73,19 +107,23 @@
                     <div class="container-detail">
                         <div class="detail-element">
                             <p class="detail-element__title">Destinataire</p>
-                            <p class="detail-element__content">Lorem ipsum dolo</p>
+                            <p class="detail-element__content"><?php echo $T1[0]['destinataire'] ?></p>
                         </div>
                         <div class="detail-element">
                             <p class="detail-element__title">Expéditeur</p>
-                            <p class="detail-element__content">Copie</p>
+                            <p class="detail-element__content"><?php echo $T1[0]['expediteur'] ?></p>
                         </div>
                         <div class="detail-element not-required">
-                            <p class="detail-element__title">Copie(s)</p>
-                            <p class="detail-element__content">Lorem ipsum dolo</p>
+                            <p class="detail-element__title">En copie(s)</p>
+                            <p class="detail-element__content"><?php echo $noms_copies ?></p>
                         </div>
                         <div class="detail-element">
-                            <p class="detail-element__title">Utilisateur</p>
-                            <p class="detail-element__content">Lorem ipsum dolo</p>
+                            <p class="detail-element__title">Matricule enregistreur</p>
+                            <p class="detail-element__content"><?php echo $T1[0]['Matricule'] ?></p>
+                        </div>
+                        <div class="detail-element">
+                            <p class="detail-element__title">Nom enregistreur</p>
+                            <p class="detail-element__content"><?php echo $T1[0]['nom_enregistreur'].' '.$T1[0]['prenom_enregistreur'] ?></p>
                         </div>
                     </div>
                 </div>
@@ -94,23 +132,23 @@
                     <div class="container-detail">
                         <div class="detail-element">
                             <p class="detail-element__title">Origine</p>
-                            <p class="detail-element__content">Lorem ipsum dolo</p>
+                            <p class="detail-element__content"><?php echo $T1[0]['origine_courrier'] ?></p>
                         </div>
                         <div class="detail-element">
                             <p class="detail-element__title">Type de Courrier</p>
-                            <p class="detail-element__content">Lorem ipsum dolo</p>
+                            <p class="detail-element__content"><?php echo $T1[0]['type_courrier'] ?></p>
                         </div>
                         <div class="detail-element">
                             <p class="detail-element__title">Catégorie</p>
-                            <p class="detail-element__content">Lorem ipsum dolo</p>
+                            <p class="detail-element__content"><?php echo $T1[0]['categorie'] ?></p>
                         </div>
                         <div class="detail-element">
                             <p class="detail-element__title">Plis fermé</p>
-                            <p class="detail-element__content">Lorem ipsum dolo</p>
+                            <p class="detail-element__content"><?php echo $T1[0]['plis_ferme'] ?></p>
                         </div>
                         <div class="detail-element">
                             <p class="detail-element__title">Statut</p>
-                            <p class="detail-element__content">Lorem ipsum dolo</p>
+                            <p class="detail-element__content"><?php echo $T1[0]['etat_courrier'] ?></p>
                         </div>
                     </div>
                 </div>

@@ -44,7 +44,7 @@
                             <h3>Période de recherche</h3>
                             <div class="fields-date">
                                 <input type="date" name="startDate">
-                                <span> À </span>
+                                <span>&nbsp;À&nbsp;</span>
                                 <input type="date" name="endDate">
                                 <input type="image" src="../images/recherche.png" alt="bouton rechercher" class="form-search-date__btn-search">
                             </div>
@@ -111,7 +111,7 @@
                         <output name="" class="dashboard-date"><?php echo $courrier['dateEnregistrement'] ?></output>
                         <output name="" class="dashboard-status"><?php echo $courrier['etat_courrier'] ?></output>
                         <div class="dashboard-action">
-                            <a href="../../Traitement/Controle/DetailCourrier.php?$idCourrier=<?=$courrier['idCourrier']?>&& $typeCourrier=<?=$courrier['type_courrier']?>">
+                            <a href="../../public/page/details.php?$idCourrier=<?=$courrier['idCourrier']?>&& $typeCourrier=<?=$courrier['type_courrier']?>">
                                 <input type="image" src="../images/details.png" alt="" title="détails">
                             </a>
                             <input type="image" src="../images/modifier.png" alt="" title="modifier">
