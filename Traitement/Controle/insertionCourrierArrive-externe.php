@@ -212,6 +212,7 @@ $liencourrier,$formatCourrier,$objet,$matricule,$idReponse,$expediteur,$destinat
 $nombre_fichiers_joins,$etatCourrier
 );
 
+insertHistorique("enregistrement du courrier",$idcourrierArrive,$nom_entite,"courrier arrivé");
 
 
 //---------------------------------------------Insérer les fichiers joins - ----------------------------------------

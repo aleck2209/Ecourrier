@@ -717,8 +717,54 @@ function verifierCourrierDansModification($idCourrier) {
 
 
 
+function recupererHistoriqueParIdCourrierEtType($idCourrier, $typeCourrier) {
+    try {
+        $objet_connexion = connectToDb('localhost','ecourrierdb2','Dba','EcourrierDba');
+        // Vérifier le type de courrier (départ ou arrivée)
+        if ($typeCourrier === 'courrier départ') {
+            // Requête SQL pour récupérer les historiques liés à un courrier de départ
+            $sql = "SELECT  h.action_effectuee, h.date_operation, h.entite_resoinsable
+                FROM historique h
+                WHERE h.idCourrierdepart = :idCourrier
+                group by h.action_effectuee, h.date_operation, h.entite_resoinsable
+                ORDER BY h.date_operation DESC
+            ";
+        } elseif ($typeCourrier === 'courrier arrivé') {
+            // Requête SQL pour récupérer les historiques liés à un courrier d'arrivée
+            $sql = "SELECT h.action_effectuee, h.date_operation, h.entite_resoinsable
+                FROM historique h
+                WHERE h.idCourrierArrive = :idCourrier
+                group by h.action_effectuee, h.date_operation, h.entite_resoinsable
+                ORDER BY h.date_operation DESC
+            ";
+        } else {
+            throw new Exception("Type de courrier invalide. Utilisez 'depart' ou 'arrive'.");
+        }
 
+        // Préparer la requête
+        $stmt = $objet_connexion->prepare($sql);
 
+        // Lier le paramètre :idCourrier
+        $stmt->bindParam(':idCourrier', $idCourrier, PDO::PARAM_INT);
+        
+        // Exécuter la requête
+        $stmt->execute();
+
+        // Récupérer les résultats
+        $historiques = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Vérifier si des résultats ont été trouvés
+        if ($historiques) {
+            return $historiques; // Retourner le tableau des historiques
+        } else {
+            return []; // Si aucun historique n'est trouvé, retourner un tableau vide
+        }
+    } catch (PDOException $e) {
+        // Gestion des erreurs de la base de données
+        echo "Erreur de récupération des historiques: " . $e->getMessage();
+        return [];
+    }
+}
 
 
 

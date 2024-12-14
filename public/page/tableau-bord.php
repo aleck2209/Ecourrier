@@ -117,8 +117,13 @@
                                 <a href="../../Traitement/Controle/DetailCourrier.php?$idCourrier=<?=$courrier['idCourrier']?>&& $typeCourrier=<?=$courrier['type_courrier']?>">
                                     <input type="image" src="../images/details.png" alt="" title="détails">
                                 </a>
+
+                                <a href="../../Publique2/page/formulaireUpdate.php?$idCourrier=<?=$courrier['idCourrier']?>&& $typeCourrier=<?=$courrier['type_courrier']?>">
                                 <input type="image" src="../images/modifier.png" alt="">
+                                </a>
+                                <a href="../../Publique2/page/PageHistorique.php?$idCourrier=<?=$courrier['idCourrier']?>&& $typeCourrier=<?=$courrier['type_courrier']?>">
                                 <input type="image" src="../images/historique.png" alt="">
+                                </a>
                                 <input type="image" src="../images/supprimer.png" alt="" title="supprimer">
                             </div>
                     </div>

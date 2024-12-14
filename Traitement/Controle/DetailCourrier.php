@@ -6,6 +6,7 @@ $typeCourrier= $_GET['$typeCourrier'];
 var_dump( $_GET['$typeCourrier']);
 $noms_copies = "";
 $tableau_lien = [];
+$date_mise_circulation = '';
 
 
 // Récupération des détails pour un courrier départ et un courrier arrivé
@@ -20,6 +21,15 @@ if ($typeCourrier ==="courrier arrivé") {
               on  courrierarrive.Matricule_initiateur = utilisateur.Matricule
               where idCourrier =:idCourrier";
     $T1 = getInfosForCourrier($sql1,$idCourrier);
+
+
+    //Récupérer la date de mise en circulation 
+    if ($T1[0]['date_mise_circulation']) {
+        $date_mise_circulation = new DateTime($T1[0]['date_mise_circulation']);
+        $date_mise_circulation = $date_mise_circulation->format('Y-m-d\TH:i');
+    }
+
+
 
     $sql2= "SELECT nom_destinataire
             FROM copie_courrier
@@ -41,6 +51,7 @@ if ($typeCourrier ==="courrier arrivé") {
     print_r($T1);
     print_r($T2);
     echo $noms_copies;
+
     $sql3= "SELECT lien_fichier_annexe
             FROM fichier_annexe
             WHERE idCourrierArv = :idCourrier";

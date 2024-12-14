@@ -361,6 +361,44 @@ function insererCourrierDansModification($idCourrier) {
 
 
 
+function insertHistorique($action, $idCourrier, $entiteQuiEnregistre,$typeCourrier) {
+    try {
+
+
+        $objet_connection = connectToDb('localhost', 'ecourrierdb2', 'Dba', 'EcourrierDba');
+        // Vérification de l'entité et préparation de la requête SQL
+        if ($typeCourrier === 'courrier départ') {
+            $sql = "INSERT INTO historique (action_effectuee, date_operation, idCourrierdepart, idCourrierArrive,entite_resoinsable) 
+                    VALUES (:action, NOW(), :idCourrier, NULL,:entite_resoinsable)";
+        } elseif ($typeCourrier === 'courrier arrivé') {
+            $sql = "INSERT INTO historique (action_effectuee, date_operation, idCourrierdepart, idCourrierArrive,entite_resoinsable) 
+                    VALUES (:action, NOW(), NULL, :idCourrier,:entite_resoinsable)";
+        } else {
+            throw new Exception("Entité invalide, utilisez 'depart' ou 'arrive'.");
+        }
+
+        // Préparer la requête
+        $stmt = $objet_connection->prepare($sql);
+
+        // Lier les paramètres
+        $stmt->bindParam(':action', $action, PDO::PARAM_STR);
+        $stmt->bindParam(':idCourrier', $idCourrier, PDO::PARAM_INT);
+        $stmt->bindParam(':entite_resoinsable', $entiteQuiEnregistre, PDO::PARAM_STR);
+        // Exécuter la requête
+        $stmt->execute();
+
+        // Affichage d'un message de succès
+        echo "L'action a été enregistrée avec succès.";
+    } catch (PDOException $e) {
+        // Gestion des erreurs de la base de données
+        echo "Erreur de connexion ou d'insertion: " . $e->getMessage();
+    } catch (Exception $e) {
+        // Gestion des autres erreurs (par exemple, entité invalide)
+        echo "Erreur: " . $e->getMessage();
+    }
+}
+
+
 
 
 

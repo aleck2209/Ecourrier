@@ -23,7 +23,7 @@ $dateEnreg =verifierValeurNulle(trim($_POST['dateEnregistrement']));
 $reference =verifierValeurNulle(trim($_POST['Reference']));
 $fichier = gererFormat($_FILES['fichier']);
 $objet = verifierValeurNulle(trim($_POST['Objet_du_courrier']));
-$matricule ='user02' ;
+$matricule ='user01' ;
 $etatExpedition =  NULL ;
 $expediteur = null ;
 $destinataire  = verifierValeurNulle($_POST['destinataire']) ;
@@ -242,6 +242,8 @@ $liencourrier,$formatCourrier,$objet,$matricule,$idReponse,$etatExpedition,$expe
 $nombre_fichiers_joins,$etatCourrier
 );
 
+//Mise à jour de l'historique de ce courrier
+insertHistorique("enregistrement du courrier",$idcourrierdepart,$nom_entite,"courrier départ");
 //---------------------------------------------Insertion des copies de courriers dans la base de données----------------------------- 
 
 if (!in_array(null,$TableauNomDestinataireCopie)) {
@@ -272,6 +274,9 @@ $liencourrier,$formatCourrier,$objet,$matricule,$idReponse,$expediteur,$destinat
 $nombre_fichiers_joins,$etatCourrier
 );
 
+
+//Mise à jour de l'historique de ce courrier
+insertHistorique("enregistrement du courrier",$idcourrierArrive,$nom_entite,"courrier arrivé");
 //--------------------------------------------insertion automatique du courrier arrivé de ce destinataire----------------------------
 
 if ($nombre_fichiers_joins ===count($liens_fichiers_joins_arrives )) {
