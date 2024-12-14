@@ -6,7 +6,7 @@ $requete = " select e.id_entite, e.nom_entite
 from entite_banque e inner join utilisateur u on 
 e.id_entite = u.id_entite
 where u.Matricule = ?;";
-$matricule = 'user01';
+$matricule = 'user03';
 
 $nom_entite = recupererNomEntiteParIdUtilisateur($requete,$matricule);
 
@@ -42,7 +42,7 @@ $endDate = $_POST['endDate']?? '';
 
 
 if (isset($_POST['form_type4'])) {
-    $startDate = $_POST['searchKeyword']?? '';
+    $searchKeyword = $_POST['searchKeyword']?? '';
     
     }
 

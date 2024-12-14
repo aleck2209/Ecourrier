@@ -538,6 +538,7 @@ function getCourriersBO($nom_entite, $searchKeyword = '', $startDate = '', $endD
 
     // Recherche par mot-clé
     if ($searchKeyword) {
+        echo $searchKeyword;
         $query .= " AND (objet_du_courrier LIKE :searchKeyword OR destinataire LIKE :searchKeyword OR numero_ordre LIKE :searchKeyword )";
         $params[':searchKeyword'] = "%$searchKeyword%";
     }
@@ -603,7 +604,8 @@ function getCourriersBO($nom_entite, $searchKeyword = '', $startDate = '', $endD
 
     // Filtrage par type de courrier (arrivé ou départ)
     if ($typeCourrier) {
-        if ($typeCourrier === 'courrier arrive') {
+        
+        if ($typeCourrier === 'courrier arrivé') {
             $query = " SELECT idCourrier,numero_ordre, 
                objet_du_courrier,
                Etat_interne_externe,  -- Pas d'alias 'cd' ou 'ca'
@@ -688,7 +690,7 @@ function getInfosForCourrier($requete,$idCourrier){
        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
    
        // Retourner les résultats
-       return $results; 
+        return $results; 
 
 }
 
