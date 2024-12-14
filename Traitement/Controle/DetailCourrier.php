@@ -4,9 +4,11 @@ require('../../Traitement/Base_de_donnee/Recuperation.php');
 $idCourrier= $_GET['$idCourrier'];
 $typeCourrier= $_GET['$typeCourrier'];
 var_dump( $_GET['$typeCourrier']);
-$noms_copies = "";
-$tableau_lien = [];
-$date_mise_circulation = '';
+$noms_copies = ""; // noms des destinataires de copies
+$tableau_lien = []; //tableaux des liens de fichiers
+$date_mise_circulation = '';// date de mise en circulation du courrier
+$nom_fichier = "";// date mise en circulaton du currier
+$tableau_des_noms_des_fichiers_joints = [];
 
 
 // Récupération des détails pour un courrier départ et un courrier arrivé
@@ -23,12 +25,22 @@ if ($typeCourrier ==="courrier arrivé") {
     $T1 = getInfosForCourrier($sql1,$idCourrier);
 
 
+     
+
+
     //Récupérer la date de mise en circulation 
-    if ($T1[0]['date_mise_circulation']) {
+    if (isset($T1[0]['date_mise_circulation'])) {
         $date_mise_circulation = new DateTime($T1[0]['date_mise_circulation']);
         $date_mise_circulation = $date_mise_circulation->format('Y-m-d\TH:i');
     }
 
+
+    //récupérer le nom du fichier
+
+    if (isset($T1[0]['lien_courrier'])) {
+        $nom_fichier = recupererNomFichiers($T1[0]['lien_courrier']);
+        echo $nom_fichier;
+    }
 
 
     $sql2= "SELECT nom_destinataire
@@ -58,6 +70,8 @@ if ($typeCourrier ==="courrier arrivé") {
 
     $T3 = getInfosForCourrier($sql3,$idCourrier);
 
+  
+
     //Récupération du tableau contenant les liens des fichiers courriers 
     if (count($T3)>0) {
         foreach ($T3 as $lien) {
@@ -66,6 +80,16 @@ if ($typeCourrier ==="courrier arrivé") {
         }
     }
     
+      // Récupération des noms des fichiers 
+      if (count($tableau_lien)>0) {
+        foreach ($tableau_lien as $lien_fichier_annexe) {
+            $tableau_des_noms_des_fichiers_joints[]= recupererNomFichiers($lien_fichier_annexe);
+        }
+    }
+
+
+
+
     $sql4 = "SELECT lienFichierReponse, dateReponse
     FROM fichierreponse
     WHERE idCourrierDepart = :idCourrier;";
@@ -96,6 +120,20 @@ elseif ($typeCourrier ==="courrier départ") {
              where idCourrier =:idCourrier";
     
     $T1 = getInfosForCourrier($sql1,$idCourrier);
+
+    
+    //Récupérer la date de mise en circulation 
+    if (isset($T1[0]['date_mise_circulation'])) {
+        $date_mise_circulation = new DateTime($T1[0]['date_mise_circulation']);
+        $date_mise_circulation = $date_mise_circulation->format('Y-m-d\TH:i');
+    }
+
+     //récupérer le nom du fichier
+    if (isset($T1[0]['lien_courrier'])) {
+        $nom_fichier = recupererNomFichiers($T1[0]['lien_courrier']);
+    }
+
+
     $sql2= "SELECT nom_destinataire
             FROM copie_courrier
             WHERE id_courrierDepart = :idCourrier";
@@ -128,6 +166,12 @@ elseif ($typeCourrier ==="courrier départ") {
         $tableau_lien []= $lien['lien_fichier_annexe'];
     }
    
+    if (count($tableau_lien)>0) {
+        foreach ($tableau_lien as $lien_fichier_annexe) {
+            $tableau_des_noms_des_fichiers_joints[]= recupererNomFichiers($lien_fichier_annexe);
+        }
+    }
+
     print_r($T3);
     
     print_r($tableau_lien);
@@ -138,7 +182,6 @@ elseif ($typeCourrier ==="courrier départ") {
 
     $T4 = getInfosForCourrier($sql4,$idCourrier);
     print_r($T4);
-
 
 
 }

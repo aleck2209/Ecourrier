@@ -289,15 +289,6 @@ if ($nombre_fichiers_joins ===count($liens_fichiers_joins)) {
 
 
 
-
-
-
-
-
-
-
-
-
 die( '<script>
 alert("Votre action a été effectuée avec succès.");
 setTimeout(function(){

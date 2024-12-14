@@ -201,8 +201,7 @@ function recupererLigneSpecifique($table,$colonne,$valeur){
 
     }
 
-   
-  
+
 
     "SELECT cd.numero_ordre,cd.Etat_interne_externe, cd.lien_courrier,cd.destinataire,cd.dateEnregistrement, cd.etat_courrier
     FROM courrierdepart cd
@@ -507,6 +506,23 @@ function getResultsFromQuery($nom_entite, $query) {
     // Retourner les résultats
     return $results;
 }
+
+
+
+function recupererNomFichiers($lien){
+    if (strlen($lien)==0) {
+        return  ;
+    }
+    $partiesLien = explode("/",$lien);
+    $nom_fichier = $partiesLien[count($partiesLien)-1];
+    return $nom_fichier;
+
+}
+
+
+
+
+
 
 
 
