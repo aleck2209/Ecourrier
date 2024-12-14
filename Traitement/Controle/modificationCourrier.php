@@ -104,7 +104,7 @@ $Tableau_Infos_ancien_courrier = getInfosForCourrier($sql1,$idCourrier);
 
 
     // Vérifier les données (simple exemple de validation)
-    if (empty($objet) || empty($categorie) || empty($destinataire) || empty($etat_courrier) || empty($typeDocument)) {
+    if (empty($objet) || empty($categorie) || empty($destinataire) || empty($etat_courrier)) {
         die("Tous les champs sont obligatoires.");
     }
     // Vérification pour le courrier arrivé interne

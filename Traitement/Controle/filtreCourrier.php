@@ -6,7 +6,7 @@ $requete = " select e.id_entite, e.nom_entite
 from entite_banque e inner join utilisateur u on 
 e.id_entite = u.id_entite
 where u.Matricule = ?;";
-$matricule = 'user03';
+$matricule = 'user01';
 
 $nom_entite = recupererNomEntiteParIdUtilisateur($requete,$matricule);
 

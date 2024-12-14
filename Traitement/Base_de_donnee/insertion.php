@@ -4,7 +4,7 @@ require('../../Traitement/Base_de_donnee/Recuperation.php');
 
 function insererCourrierDepart($numeroOrdre,$TypeDoc,$etat_inter_exter,
 $etat_plis_ferme,$categorie,$dateEnreg,$datemiseCirculation,$reference,
-$liencourrier,$formatCourrier,$objet,$matricule,$idReponse,$etatExpedition,$expediteur,$destinataire,$identite_dest,$pole_dest,
+$liencourrier,$objet,$matricule,$idReponse,$etatExpedition,$expediteur,$destinataire,$identite_dest,$pole_dest,
 $nbre_fichiers_joins,$etatCourrier
 ){
     $test = false;
@@ -19,9 +19,9 @@ $nbre_fichiers_joins,$etatCourrier
     $signature_gouverneur = "non";
 
     $sql = "INSERT into courrierdepart(`idCourrier`,`Type_document`,`Etat_interne_externe`,`etat_courrier`,`etat_plis_ferme`, `dateEnregistrement`,`date_mise_circulation`,`Reference`,
-    `lien_courrier`,`format_fichier_courrier`,`Objet_du_courrier`,`Matricule_initiateur`,`idFichierReponse`,`etat_expedition`,`expediteur`,`destinataire`,`entite_dest`,`pole_destinataire`,`categorie`,
+    `lien_courrier`,`Objet_du_courrier`,`Matricule_initiateur`,`idFichierReponse`,`etat_expedition`,`expediteur`,`destinataire`,`entite_dest`,`pole_destinataire`,`categorie`,
     `numero_ordre`,`nombre_fichiers_joins`,`date_derniere_modification`,`signature_gouverneur`) values (:idCourrier,:Type_document,:Etat_interne_externe,:etat_courrier,:etat_plis_ferme,
-    :dateEnregistrement,:date_mise_circulation,:Reference,:lien_courrier,:format_fichier_courrier,:Objet_du_courrier,:Matricule_initiateur,:idFichierReponse,:etat_expedition,:expediteur,
+    :dateEnregistrement,:date_mise_circulation,:Reference,:lien_courrier,:Objet_du_courrier,:Matricule_initiateur,:idFichierReponse,:etat_expedition,:expediteur,
     :destinataire,:entite_dest,:pole_destinataire,:categorie,:numero_ordre,:nombre_fichiers_joins,:date_derniere_modification, :signature_gouverneur);
       ";
           
@@ -36,7 +36,6 @@ $nbre_fichiers_joins,$etatCourrier
     $resulats->bindValue(":date_mise_circulation",$datemiseCirculation);
     $resulats->bindValue(":Reference",$reference);
     $resulats->bindValue(":lien_courrier",$liencourrier);
-    $resulats->bindValue(":format_fichier_courrier",$formatCourrier);
     $resulats->bindValue(":Objet_du_courrier",$objet);
     $resulats->bindValue(":Matricule_initiateur",$matricule);
     $resulats->bindValue(":idFichierReponse",$idReponse);
@@ -63,7 +62,6 @@ $nbre_fichiers_joins,$etatCourrier
         'DateMiseCirculation' => $datemiseCirculation,
         'Reference' => $reference,
         'LienCourrier' => $liencourrier,
-        'FormatCourrier' => $formatCourrier,
         'Objet' => $objet,
         'Matricule' => $matricule,
         'IdReponse' => $idReponse,
@@ -238,7 +236,7 @@ $nbre_fichiers_joins){
 
 function insererCourrierArriveV2($numeroOrdre,$TypeDoc,$etat_inter_exter,
 $etat_plis_ferme,$categorie,$dateEnreg,$datemiseCirculation,$reference,
-$liencourrier,$formatCourrier,$objet,$matricule,$idReponse,$expediteur,$destinataire,$identite_dest,$pole_dest,
+$liencourrier,$objet,$matricule,$idReponse,$expediteur,$destinataire,$identite_dest,$pole_dest,
 $nbre_fichiers_joins,$etatCourrier){
 
     $test = false;
@@ -258,7 +256,7 @@ values
  ?,?,?,?,?,
  ?,?,?,?,?,
 ?,?,?,?,?,
-?,?);
+?);
   ";
 $resulats = $objet_connection->prepare($sql);
 
@@ -271,19 +269,18 @@ $resulats->bindValue(6,$dateEnreg);
 $resulats->bindValue(7,$datemiseCirculation);
 $resulats->bindValue(8,$reference);
 $resulats->bindValue(9,$liencourrier);
-$resulats->bindValue(10,$formatCourrier);
-$resulats->bindValue(11,$objet);
-$resulats->bindValue(12,$matricule);
-$resulats->bindValue(13,$idReponse);
-$resulats->bindValue(14,$numeroOrdre);
-$resulats->bindValue(15,$categorie);
-$resulats->bindValue(16,$identite_dest);
-$resulats->bindValue(17,$pole_dest);
-$resulats->bindValue(18,$nbre_fichiers_joins);
-$resulats->bindValue(19,$expediteur);
-$resulats->bindValue(20,$destinataire);
-$resulats->bindValue(21,$date_derniere_modification);
-$resulats->bindValue(22,$signature_gouverneur);
+$resulats->bindValue(10,$objet);
+$resulats->bindValue(11,$matricule);
+$resulats->bindValue(12,$idReponse);
+$resulats->bindValue(13,$numeroOrdre);
+$resulats->bindValue(14,$categorie);
+$resulats->bindValue(15,$identite_dest);
+$resulats->bindValue(16,$pole_dest);
+$resulats->bindValue(17,$nbre_fichiers_joins);
+$resulats->bindValue(18,$expediteur);
+$resulats->bindValue(19,$destinataire);
+$resulats->bindValue(20,$date_derniere_modification);
+$resulats->bindValue(21,$signature_gouverneur);
 
 
 
@@ -300,7 +297,6 @@ $tableauAssociatif = [
     'DateMiseCirculation' => $datemiseCirculation,
     'Reference' => $reference,
     'LienCourrier' => $liencourrier,
-    'FormatCourrier' => $formatCourrier,
     'Objet' => $objet,
     'Matricule' => $matricule,
     'IdReponse' => $idReponse,

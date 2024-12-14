@@ -6,6 +6,11 @@ require('../../Traitement/Verification/VerifierNumeroOrdreParEntite.php');
 require('../../Traitement/Verification/verifierFormat.php');
 require('../../Traitement/Verification/verifierValeurEnum.php');
 
+// On commence par désactiver l'affichage des erreurs PHP en production
+ini_set('display_errors', 0); // Désactive l'affichage des erreurs
+error_reporting(E_ALL); // Active l'enregistrement des erreurs pour le débogage (peut être modifié en production)
+
+
 
 //récupération des données provenant du formulaire et vérification des données
 $numeroOrdre = verifierValeurNulle(trim($_POST['numero_ordre']));
@@ -15,11 +20,11 @@ $etat_plis_ferme = verifierValeurNulle(trim($_POST['etat_plis_ferme']));
 $categorie =verifierValeurNulle(trim($_POST['categorie']));
 $dateEnreg =verifierValeurNulle(trim($_POST['dateEnregistrement']));
 $reference =verifierValeurNulle(trim($_POST['Reference']));
-$fichier = gererFormat($_FILES['fichier']);
+$fichier = $_FILES['fichier'];
 $objet = verifierValeurNulle(trim($_POST['Objet_du_courrier']));
 $matricule ='user03' ;
 $etatExpedition = null;
-$expediteur = verifierValeurNulle(trim($_POST['expediteur'])) ; ;
+$expediteur = verifierValeurNulle(trim($_POST['expediteur'])) ; 
 $destinataire  = verifierValeurNulle($_POST['destinataire']) ;
 // $liste_copie_courrier = verifierValeurNulle(trim($_POST['copie_courrier'])) ;
 $test_etat_interne_externe =trim($_POST['etat_interne_externe']);
@@ -64,8 +69,7 @@ if (isset($Liste_pole_destinataire)) {
 
 
 
-
-
+if ($etat_plis_ferme==="non") {
 
 
 $liendossier = creerListeDossiersCourrierArrive($etat_inter_exter,$destinataire);
@@ -79,8 +83,16 @@ $liens_fichiers_joins = get_uploaded_files_pathsarrive($chemin_fichiers_joins,$n
 print_r($liens_fichiers_joins);
 
 
-$formatCourrier = pathinfo($fichier['name'],PATHINFO_EXTENSION);
+if (isset($fichier)) {
+    $formatCourrier = pathinfo($fichier['name'],PATHINFO_FILENAME); # code...
+}else{
+    $formatCourrier = null;
+}
 
+} else  {
+    $liendossier = '';
+    $liencourrier = "";
+}
 
 
 //-------------------------------------------Controle du numero d'ordre--------------------------------
@@ -101,6 +113,14 @@ if ($numeroOrdrePrefix != $num_a_entrer) {
 }
 //-------------------------------------fin controle numero d'ordre-------------------------------------
 
+// ---------------------------------------Ici nous vérifions si le fichier à été envoyé  
+
+if ($etat_plis_ferme==="non") {
+    if (strlen($_FILES['fichier']['name'])==0) {
+        die("Vous n'avez pas choisi un fichier");
+    }
+   
+}
 
 
 
@@ -187,13 +207,13 @@ try {
 
 if (is_null($objet)) {
     die("Vous n'avez pas renseigné un objet pour votre courrier");
-} elseif (is_null($numeroOrdre)) {
+} elseif (strlen($numeroOrdre)==0) {
     die("Vous n'avez pas renseigné un numéro d'ordre pour votre courrier");
-} elseif (is_null($dateEnreg)) {
+} elseif (strlen($dateEnreg)==0) {
     die("Vous n'avez pas renseigné une date d'enregistrement d'ordre pour votre courrier");
-}elseif (is_null($TypeDoc)) {
+}elseif (strlen($TypeDoc)==0 && $etat_plis_ferme==="non") {
     die("Vous n'avez pas renseigné un type de document pour votre courrier");
-} elseif (is_null($expediteur)) {
+} elseif (!isset($fichier) && $etat_plis_ferme==="non" ) {
     die("Vous n'avez pas renseigné un expéditeur pour votre courrier");
 }
 
@@ -208,7 +228,7 @@ $etatCourrier = 'reçu';
 
 $idcourrierArrive = insererCourrierArriveV2($numeroOrdre,$TypeDoc,$etat_inter_exter,
 $etat_plis_ferme,$categorie,$dateEnreg,null,$reference,
-$liencourrier,$formatCourrier,$objet,$matricule,$idReponse,$expediteur,$destinataire,$identite_dest,$idpole_dest,
+$liencourrier,$objet,$matricule,$idReponse,$expediteur,$destinataire,$identite_dest,$idpole_dest,
 $nombre_fichiers_joins,$etatCourrier
 );
 
@@ -224,6 +244,14 @@ if ($nombre_fichiers_joins ===count($liens_fichiers_joins)) {
     
 }
 
+
+die( '<script>
+alert("Votre action a été effectuée avec succès.");
+setTimeout(function(){
+    window.location.href = "../../public/page/courrier-interne.php";
+}, 500); 
+</script>'
+);
 
 
 ?>
