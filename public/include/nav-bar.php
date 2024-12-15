@@ -31,5 +31,9 @@
         <a class="nav-bar__link" href="courrier-externe.php">Courrier externe</a>
     </nav>
     <!-- FIN CAS DES PAGES ENREFISTRER FICHIER -->
+
+    <!-- DEBUT DE SCRIPT JS -->
+    <script src="../js/nav-active.js"></script>
+    <!-- FIN DE SCRIPT JS -->
 </body>
 </html>

@@ -216,6 +216,12 @@ main {
     border-radius: var(--BORDER-RADIUS);
     color: var(--BLACK);
 }
+
+.nav-bar__link_active {
+    background-color: var(--WHITE);
+    border-radius: var(--BORDER-RADIUS);
+    color: var(--BLACK); 
+}
         /* FIN NAVIGATION */
         /* DEBUT FORMULAIRE */
 .field {
@@ -385,6 +391,12 @@ input[type="reset"]:hover,
 
 .gestion-courrier ul li a:hover,
 .gestion-utilisateur ul li a:hover {
+    background-color: var(--GOLD-LIGHT);
+    color: var(--GOLD);
+}
+
+.gestion-courrier .sidebar-active,
+.gestion-utilisateur .sidebar-active {
     background-color: var(--GOLD-LIGHT);
     color: var(--GOLD);
 }
@@ -765,7 +777,6 @@ input[type="reset"]:hover,
 .detail-element__title {
     font-weight: 600;
     margin-bottom: 0.2rem;
-    text-decoration: underline;
 }
 
 .detail-element__content {

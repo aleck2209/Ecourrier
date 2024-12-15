@@ -21,14 +21,11 @@
         ?>
         <!-- FIN DU HEADER -->
 
-
-
-      <!-- DEBUT DE LA PAGE filtrer courrier -->   
-       <?php
-        include("../../Traitement/Controle/filtreCourrier.php");
-
-?>
-<!-- FIN DE LA PAGE filtrer courrier  -->
+        <!-- DEBUT DE LA PAGE FILTRE COURRIER -->   
+        <?php
+            include("../../Traitement/Controle/filtreCourrier.php");
+        ?>
+        <!-- FIN DE LA PAGE FILTRE COURRIER  -->
 
         <main class="main">
             <section class="page-content-dashboard" id="page-user">
@@ -47,7 +44,7 @@
                             <h3>Période de recherche</h3>
                             <div class="fields-date">
                                 <input type="date" name="startDate">
-                                <span> À </span>
+                                <span>&nbsp;À&nbsp;</span>
                                 <input type="date" name="endDate">
                                 <input type="image" src="../images/recherche.png" alt="bouton rechercher" class="form-search-date__btn-search">
                             </div>
@@ -117,12 +114,11 @@
                                 <a href="../../Traitement/Controle/DetailCourrier.php?$idCourrier=<?=$courrier['idCourrier']?>&& $typeCourrier=<?=$courrier['type_courrier']?>">
                                     <input type="image" src="../images/details.png" alt="" title="détails">
                                 </a>
-
                                 <a href="../../Publique2/page/formulaireUpdate.php?$idCourrier=<?=$courrier['idCourrier']?>&& $typeCourrier=<?=$courrier['type_courrier']?>">
-                                <input type="image" src="../images/modifier.png" alt="">
+                                    <input type="image" src="../images/modifier.png" alt="" title="modifier">
                                 </a>
                                 <a href="../../Publique2/page/PageHistorique.php?$idCourrier=<?=$courrier['idCourrier']?>&& $typeCourrier=<?=$courrier['type_courrier']?>">
-                                <input type="image" src="../images/historique.png" alt="">
+                                    <input type="image" src="../images/historique.png" alt="" title="historique">
                                 </a>
                                 <input type="image" src="../images/supprimer.png" alt="" title="supprimer">
                             </div>
@@ -133,12 +129,6 @@
         </main>
     </div>
     <!-- FIN DE LA PAGE TABLEAU DE BORD  -->
-    
-
-<!-- inclusion de la page filtrer courrier -->
-
-
-
 
      <!-- DEBUT SCRIPT JS -->
     <script src="../js/afficher-header.js"></script>

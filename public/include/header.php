@@ -13,7 +13,7 @@
                 <p>Utilisateur</p>
                 <figcaption class="user-case-header__card-icon-rappel">
                     <a href="creer-rappel.php" class="user-case-header__link-icon-rappel">
-                        <img src="../images/rappel.png" alt="créer un rappel" class="user-case-header__icon-rappel">
+                        <img src="../images/rappel.png" alt="créer un rappel" title="créer un rappel" class="user-case-header__icon-rappel">
                     </a>
                 </figcaption>
             </div>

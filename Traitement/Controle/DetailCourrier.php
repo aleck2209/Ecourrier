@@ -3,7 +3,6 @@ require('../../Traitement/Base_de_donnee/Recuperation.php');
 
 $idCourrier= $_GET['$idCourrier'];
 $typeCourrier= $_GET['$typeCourrier'];
-var_dump( $_GET['$typeCourrier']);
 $noms_copies = ""; // noms des destinataires de copies
 $tableau_lien = []; //tableaux des liens de fichiers
 $date_mise_circulation = '';// date de mise en circulation du courrier
@@ -58,10 +57,6 @@ if ($typeCourrier ==="courrier arrivé") {
         $noms_copies .= ($noms_copies != "" ? ", " : "") . $destinataire['nom_destinataire'];
     }
 
-    // Affichage du résultat
-    // Affichera : DGE, DSI
-    print_r($T1);
-    print_r($T2);
     echo $noms_copies;
 
     $sql3= "SELECT lien_fichier_annexe
@@ -96,11 +91,6 @@ if ($typeCourrier ==="courrier arrivé") {
 
     $T4 = getInfosForCourrier($sql4,$idCourrier);
 
-    print_r($T3);
-    print_r($tableau_lien);
-    print_r($T4);
-
-
 }
 
 
@@ -112,7 +102,7 @@ elseif ($typeCourrier ==="courrier départ") {
 
 
     $sql1 = "SELECT Type_document,Etat_interne_externe as origine_courrier,etat_courrier,
-             etat_plis_ferme as plis_ferme,dateEnregistrement,Reference,lien_courrier,Objet_du_courrier,Matricule,destinataire,
+             etat_plis_ferme as plis_ferme,dateEnregistrement,date_mise_circulation,Reference,lien_courrier,Objet_du_courrier,Matricule,destinataire,
              nom_utilisateur as nom_enregistreur,prenom_utilisateur as prenom_enregistreur,nombre_fichiers_joins as nombre_de_fichiers_joins,
              'courrier départ' AS type_courrier,expediteur,numero_ordre, categorie, date_derniere_modification , signature_gouverneur
              from courrierdepart inner join  utilisateur
@@ -155,11 +145,6 @@ elseif ($typeCourrier ==="courrier départ") {
     $T3 = getInfosForCourrier($sql3,$idCourrier);
 
 
-    
-
-    print_r($T1);
-    print_r($T2);
-
     foreach ($T3 as $lien) {
         
         // Ajout du nom à la chaîne, en vérifiant si la chaîne n'est pas vide pour éviter une virgule en début de chaîne
@@ -171,28 +156,12 @@ elseif ($typeCourrier ==="courrier départ") {
             $tableau_des_noms_des_fichiers_joints[]= recupererNomFichiers($lien_fichier_annexe);
         }
     }
-
-    print_r($T3);
-    
-    print_r($tableau_lien);
     
     $sql4 = "SELECT lienFichierReponse, dateReponse
     FROM fichierreponse
     WHERE idCourrierDepart = :idCourrier;";
 
     $T4 = getInfosForCourrier($sql4,$idCourrier);
-    print_r($T4);
-
 
 }
-
-
-
 ?>
-
-
-
-
-
-
-

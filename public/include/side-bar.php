@@ -18,7 +18,7 @@
             <div class="gestion-courrier">
                 <ul>
                     <li>
-                        <a href="tableau-bord.php">Tableau de Bord</a>
+                        <a class="sidebar" href="tableau-bord.php">Tableau de Bord</a>
                     </li>
                     <li>
                         <a href="courrier-interne.php">Enregistrer Courrier</a>
@@ -28,10 +28,10 @@
                         <!-- DEBUT DROPDOWN -->
                         <ul class="gestion-courrier__dropdown">
                             <li>
-                                <a href="#">Courrier Départ</a>
+                                <a class="sidebar" href="#">Courrier Départ</a>
                             </li>
                             <li>
-                                <a href="#">Courrier Arrivé</a>
+                                <a class="sidebar" href="#">Courrier Arrivé</a>
                             </li>
                         </ul>
                         <!-- FIN DROPDOWN -->
@@ -45,10 +45,10 @@
         <div class="gestion-utilisateur">
             <ul>
                 <li>
-                    <a href="compte.php">Compte</a>
+                    <a class="sidebar" href="compte.php">Compte</a>
                 </li>
                 <li>
-                    <a href="#">Déconnexion</a>
+                    <a class="sidebar" href="#">Déconnexion</a>
                 </li>
                 <li>
                     <a href="liste-utilisateur.php">Administration</a>
@@ -57,5 +57,9 @@
         </div>
     </nav>
     <!-- FIN SIDEBAR -->
+
+    <!-- DEBUT DE SCRIPT JS -->
+    <script src="../js/sidebar-active.js"></script>
+    <!-- FIN DE SCRIPT JS -->
 </body>
 </html>
