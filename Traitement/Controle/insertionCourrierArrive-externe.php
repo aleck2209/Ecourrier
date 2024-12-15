@@ -127,29 +127,53 @@ if ($etat_plis_ferme==="non") {
 
 //---------------------------------------Controle des destinataires internes--------------------------------
 
-// if (is_null($destinataire)) {
-//     echo 'destinataire nul';
-//     die("Vous n'avez pas saisi de destinataire");
-// }else{
-//     if ($etat_inter_exter==="courrier interne") {
-//         if (is_null($identite_dest) && is_null($idpole_dest)) {
-//             # Si on entre ici cela veut dire qu'il n'a pas entrer un destinataire interne à la banque
-//             die("Vous n'avez pas entré comme destinataire un service de la banque");
-//         }
-        
-//     }elseif ($etat_inter_exter==="courrier externe") {
-//         if (!is_null($identite_dest) || !is_null($idpole_dest)) {
-//             die("Vous avez défini une entité interieure à la banque comme destinataire d'un courrier externe ");
-//         }
-//     }
+if (is_null($destinataire)) {
+    echo 'destinataire nul';
+    die("Vous n'avez pas saisi de destinataire");
+}else{
     
-// }
-
-
-
-
-
+        if (is_null($identite_dest) && is_null($idpole_dest)) {
+            # Si on entre ici cela veut dire qu'il n'a pas entrer un destinataire interne à la banque
+            die("Vous n'avez pas entré comme destinataire un service de la banque");
+        }
+        
+  
+}
 //-------------------------------------Fin controle des destinataires internes------------------------------
+
+
+
+//--------------------------------------------Contrôl des valeurs des expéditeurs ---------------------------------------------------
+
+// ------------------------------------L'expéditeur ne doit pas être une entité dans le 
+$Liste_entite_expediteur = recupererLigneSpecifique('entite_banque','nom_entite',$expediteur);
+$Liste_pole_expediteur = recupererLigneSpecifique('pole','nom_pole',$expediteur);
+
+
+if (isset($Liste_entite_expediteur)) {
+    $objet_entite_banque_expediteur = $Liste_entite_expediteur[0];
+    $identite_expediteur = $objet_entite_banque_expediteur->id_entite;
+} else {
+    $identite_dest_expediteur = null;
+}
+
+
+if (isset($Liste_pole_expediteur)) {
+    $objet_pole_expediteur = $Liste_pole_expediteur[0];
+    $idpole_expediteur = $objet_pole_expediteur->id_pole;
+}else {
+    $idpole_expediteur = null;
+} 
+
+if (isset($expediteur)) {
+    if (!is_null($identite_expediteur) || !is_null($idpole_expediteur)) {
+        die('<script>alert("erreur  l\'entité '. $expediteur .' mentionné comme expéditeur d\'un courrier arrivé externe est interne à banque. Veuillez bien renseigner ce champs")</script>');
+
+    }
+}
+
+//---------------------------------------------------Fin du contrôle expéditeurs----------------------------------
+
 
 
 //------------------------------------Controle des valeurs énum------------------------------------------------

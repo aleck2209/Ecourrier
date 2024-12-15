@@ -46,19 +46,46 @@ $etatExpedition = null;
 
 
 
-
-
-
-
-
-
 //---------------------------------------Controle des nom destinataires----------------------------------
 
 if (!is_null($destinataire)) {
     $Liste_entite_destinataire = recupererLigneSpecifique('entite_banque','nom_entite',$destinataire);
 $Liste_pole_destinataire = recupererLigneSpecifique('pole','nom_pole',$destinataire);
+
 //on récupère le nom et le format du fichier dans un tableau
 $TableauNomDestinataireCopie = explode(",",$liste_copie_courrier) ;
+
+//On vérifie que les noms des copies existent bien dans la base de données
+
+if (count($TableauNomDestinataireCopie)>0) {
+    foreach ($TableauNomDestinataireCopie as $nom_copie) {
+        $Liste_des_entites_en_copies = recupererLigneSpecifique('entite_banque','nom_entite',$nom_copie);
+        $Liste_des_poles_en_copie = recupererLigneSpecifique('pole','nom_pole',$nom_copie);
+    
+        if (isset($Liste_des_entites_en_copies)) {
+            $objet_entite_banque_copie = $Liste_des_entites_en_copies[0];
+            $identite_copie = $objet_entite_banque_copie->id_entite;
+        } else {
+            $identite_dest = null;
+        }
+        
+        
+        if (isset($Liste_des_poles_en_copie)) {
+            $objet_pole_copie = $Liste_des_poles_en_copie[0];
+            $idpole_copie = $objet_pole_copie->id_pole;
+        }else {
+            $idpole_dest = null;
+        } 
+    
+        if (is_null($identite_copie) && is_null($idpole_copie)) {
+            die('<script>alert("erreur  le destinataire '. $nom_copie .' mentionné en copie n\'est pas une reconnu comme une entité de la banque")</script>');
+
+        }
+    }
+}
+
+
+// Récupération de l'id du destinataire du courrier 
 if (isset($Liste_entite_destinataire)) {
     $objet_entite_banque = $Liste_entite_destinataire[0];
     $identite_dest = $objet_entite_banque->id_entite;
@@ -162,7 +189,7 @@ if (is_null($destinataire)) {
     if ($etat_inter_exter==="courrier interne") {
         if (is_null($identite_dest) && is_null($idpole_dest)) {
             # Si on entre ici cela veut dire qu'il n'a pas entrer un destinataire interne à la banque
-            die('<script>alert("erreur  destinataire incorrecte")</script>');
+            die('<script>alert("erreur  le destinataire n\'est pas une reconnu comme une entité de la banque")</script>');
         }
         
     }elseif ($etat_inter_exter==="courrier externe") {

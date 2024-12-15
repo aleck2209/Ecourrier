@@ -527,6 +527,7 @@ function recupererNomFichiers($lien){
 
 
 
+
 function getCourriersBO($nom_entite, $searchKeyword = '', $startDate = '', $endDate = '', $sortType = '', $sortOrder = '', $origine = '', $priority = '', $typeCourrier = '') {
     // Connexion à la base de données (tu peux ajuster cela selon ton contexte)
     $objet_connexion = connectToDb('localhost','ecourrierdb2','Dba','EcourrierDba');

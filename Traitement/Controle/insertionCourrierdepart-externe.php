@@ -58,7 +58,38 @@ if (!is_null($destinataire)) {
     $Liste_entite_destinataire = recupererLigneSpecifique('entite_banque','nom_entite',$destinataire);
 $Liste_pole_destinataire = recupererLigneSpecifique('pole','nom_pole',$destinataire);
 //on récupère le nom et le format du fichier dans un tableau
+
 $TableauNomDestinataireCopie = explode(",",$liste_copie_courrier) ;
+
+if (count($TableauNomDestinataireCopie)>0) {
+    foreach ($TableauNomDestinataireCopie as $nom_copie) {
+        $Liste_des_entites_en_copies = recupererLigneSpecifique('entite_banque','nom_entite',$nom_copie);
+        $Liste_des_poles_en_copie = recupererLigneSpecifique('pole','nom_pole',$nom_copie);
+    
+        if (isset($Liste_des_entites_en_copies)) {
+            $objet_entite_banque_copie = $Liste_des_entites_en_copies[0];
+            $identite_copie = $objet_entite_banque_copie->id_entite;
+        } else {
+            $identite_dest = null;
+        }
+        
+        
+        if (isset($Liste_des_poles_en_copie)) {
+            $objet_pole_copie = $Liste_des_poles_en_copie[0];
+            $idpole_copie = $objet_pole_copie->id_pole;
+            echo $idpole_copie;
+        }else {
+            $idpole_dest = null;
+        } 
+    
+        if (is_null($identite_copie) && is_null($idpole_copie)) {
+            die('<script>alert("erreur  l\'entité '. $nom_copie .' mentionné en copie n\'est pas une reconnu comme une entité de la banque")</script>');
+
+        }
+    }
+}
+
+
 if (isset($Liste_entite_destinataire)) {
     $objet_entite_banque = $Liste_entite_destinataire[0];
     $identite_dest = $objet_entite_banque->id_entite;
@@ -249,6 +280,8 @@ if (strlen($TypeDoc)==0 && $etat_plis_ferme==="non") {
  }
 
 
+// ------------------------------------Contrôle des noms de copies ------------------------------------
+
 
 
 
@@ -259,6 +292,9 @@ if (strlen($TypeDoc)==0 && $etat_plis_ferme==="non") {
 
 
 //----------------------------------------------Fin controle-----------------------------------------------
+
+//----------------------------------------------- Insertion du courrier ------------------------------------
+
 $etatCourrier = 'envoyé';
 $idcourrierdepart = insererCourrierDepart($numeroOrdre,$TypeDoc,$etat_inter_exter,
 $etat_plis_ferme,$categorie,$dateEnreg,null,$reference,
