@@ -38,7 +38,6 @@ if ($typeCourrier ==="courrier arrivé") {
 
     if (isset($T1[0]['lien_courrier'])) {
         $nom_fichier = recupererNomFichiers($T1[0]['lien_courrier']);
-        echo $nom_fichier;
     }
 
 

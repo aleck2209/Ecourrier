@@ -238,7 +238,12 @@ main {
     width: var(--WD-HALF-SPACE);
 }
 
-label {
+.number-space {
+    width: 15%;
+}
+
+label, 
+.update-element__title {
     font-family: var(--FF-ROBOTO);
     font-size: var(--FS-LABEL);
     font-weight: var(--FW-LABEL);
@@ -270,6 +275,7 @@ select {
 
 select {
     background-color: var(--WHITE);
+    text-transform: capitalize;
 }
             /* DEBUT BTN*/
 input[type="submit"],
@@ -430,7 +436,8 @@ input[type="reset"]:hover,
 .page-content-list-profil,
 .page-content-list-user,
 .page-content-account,
-.page-content-detail {
+.page-content-detail,
+.page-content-update-mail {
     margin-top: var(--MG-TOP-SECTION);
 }
 /* FIN CONTENT PAGE */
@@ -444,7 +451,8 @@ input[type="reset"]:hover,
 .page-content-package-case h2,
 .page-content-list-profil h2,
 .page-content-list-user h2,
-.page-content-account h2 {
+.page-content-account h2,
+.page-content-update-mail h2 {
     color: var(--DARK);
     font-family: var(--FF-ROBOTO);
     font-size: var(--FS-TITRE-PAGE);
@@ -457,7 +465,8 @@ input[type="reset"]:hover,
 .form-reminder,
 .form-save-mail,
 .form-package-case,
-.form-account {
+.form-account,
+.form-update-mail {
     display: flex;
     flex-flow: column nowrap;
     font-family: var(--FF-ROBOTO);
@@ -492,7 +501,8 @@ input[type="reset"]:hover,
 .fields-reminder,
 .fields-save-mail,
 .fields-package-case,
-.fields-account {
+.fields-account,
+.fields-update-mail {
     display: flex;
     flex-flow: row wrap;
     gap: var(--GAP-FIELDS);
@@ -787,3 +797,12 @@ input[type="reset"]:hover,
     width: 2rem;
 }
 /* FIN PAGE DETAILS */
+
+/* DEBUT PAGE MODIFIER */
+.update-element__title {
+    margin-bottom: 0.5rem;
+}
+
+.update-file img {
+    width: 2.3rem;
+}

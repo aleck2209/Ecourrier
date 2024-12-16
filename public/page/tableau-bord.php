@@ -111,7 +111,7 @@
                             <output name="" class="dashboard-date"><?php echo $courrier['dateEnregistrement'] ?></output>
                             <output name="" class="dashboard-status"><?php echo $courrier['etat_courrier'] ?></output>
                             <div class="dashboard-action">
-                                <a href="../../Traitement/Controle/DetailCourrier.php?$idCourrier=<?=$courrier['idCourrier']?>&& $typeCourrier=<?=$courrier['type_courrier']?>">
+                                <a href="../../public/page/details.php?$idCourrier=<?=$courrier['idCourrier']?>&& $typeCourrier=<?=$courrier['type_courrier']?>">
                                     <input type="image" src="../images/details.png" alt="" title="détails">
                                 </a>
                                 <a href="../../Publique2/page/formulaireUpdate.php?$idCourrier=<?=$courrier['idCourrier']?>&& $typeCourrier=<?=$courrier['type_courrier']?>">
