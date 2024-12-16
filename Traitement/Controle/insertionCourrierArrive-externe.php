@@ -6,6 +6,11 @@ require('../../Traitement/Verification/VerifierNumeroOrdreParEntite.php');
 require('../../Traitement/Verification/verifierFormat.php');
 require('../../Traitement/Verification/verifierValeurEnum.php');
 
+// On commence par désactiver l'affichage des erreurs PHP en production
+ini_set('display_errors', 0); // Désactive l'affichage des erreurs
+error_reporting(E_ALL); // Active l'enregistrement des erreurs pour le débogage (peut être modifié en production)
+
+
 
 //récupération des données provenant du formulaire et vérification des données
 $numeroOrdre = verifierValeurNulle(trim($_POST['numero_ordre']));
@@ -15,11 +20,11 @@ $etat_plis_ferme = verifierValeurNulle(trim($_POST['etat_plis_ferme']));
 $categorie =verifierValeurNulle(trim($_POST['categorie']));
 $dateEnreg =verifierValeurNulle(trim($_POST['dateEnregistrement']));
 $reference =verifierValeurNulle(trim($_POST['Reference']));
-$fichier = gererFormat($_FILES['fichier']);
+$fichier = $_FILES['fichier'];
 $objet = verifierValeurNulle(trim($_POST['Objet_du_courrier']));
 $matricule ='user03' ;
 $etatExpedition = null;
-$expediteur = verifierValeurNulle(trim($_POST['expediteur'])) ; ;
+$expediteur = verifierValeurNulle(trim($_POST['expediteur'])) ; 
 $destinataire  = verifierValeurNulle($_POST['destinataire']) ;
 // $liste_copie_courrier = verifierValeurNulle(trim($_POST['copie_courrier'])) ;
 $test_etat_interne_externe =trim($_POST['etat_interne_externe']);
@@ -64,8 +69,7 @@ if (isset($Liste_pole_destinataire)) {
 
 
 
-
-
+if ($etat_plis_ferme==="non") {
 
 
 $liendossier = creerListeDossiersCourrierArrive($etat_inter_exter,$destinataire);
@@ -79,8 +83,16 @@ $liens_fichiers_joins = get_uploaded_files_pathsarrive($chemin_fichiers_joins,$n
 print_r($liens_fichiers_joins);
 
 
-$formatCourrier = pathinfo($fichier['name'],PATHINFO_EXTENSION);
+if (isset($fichier)) {
+    $formatCourrier = pathinfo($fichier['name'],PATHINFO_FILENAME); # code...
+}else{
+    $formatCourrier = null;
+}
 
+} else  {
+    $liendossier = '';
+    $liencourrier = "";
+}
 
 
 //-------------------------------------------Controle du numero d'ordre--------------------------------
@@ -101,35 +113,67 @@ if ($numeroOrdrePrefix != $num_a_entrer) {
 }
 //-------------------------------------fin controle numero d'ordre-------------------------------------
 
+// ---------------------------------------Ici nous vérifions si le fichier à été envoyé  
+
+if ($etat_plis_ferme==="non") {
+    if (strlen($_FILES['fichier']['name'])==0) {
+        die("Vous n'avez pas choisi un fichier");
+    }
+   
+}
 
 
 
 
 //---------------------------------------Controle des destinataires internes--------------------------------
 
-// if (is_null($destinataire)) {
-//     echo 'destinataire nul';
-//     die("Vous n'avez pas saisi de destinataire");
-// }else{
-//     if ($etat_inter_exter==="courrier interne") {
-//         if (is_null($identite_dest) && is_null($idpole_dest)) {
-//             # Si on entre ici cela veut dire qu'il n'a pas entrer un destinataire interne à la banque
-//             die("Vous n'avez pas entré comme destinataire un service de la banque");
-//         }
-        
-//     }elseif ($etat_inter_exter==="courrier externe") {
-//         if (!is_null($identite_dest) || !is_null($idpole_dest)) {
-//             die("Vous avez défini une entité interieure à la banque comme destinataire d'un courrier externe ");
-//         }
-//     }
+if (is_null($destinataire)) {
+    echo 'destinataire nul';
+    die("Vous n'avez pas saisi de destinataire");
+}else{
     
-// }
-
-
-
-
-
+        if (is_null($identite_dest) && is_null($idpole_dest)) {
+            # Si on entre ici cela veut dire qu'il n'a pas entrer un destinataire interne à la banque
+            die("Vous n'avez pas entré comme destinataire un service de la banque");
+        }
+        
+  
+}
 //-------------------------------------Fin controle des destinataires internes------------------------------
+
+
+
+//--------------------------------------------Contrôl des valeurs des expéditeurs ---------------------------------------------------
+
+// ------------------------------------L'expéditeur ne doit pas être une entité dans le 
+$Liste_entite_expediteur = recupererLigneSpecifique('entite_banque','nom_entite',$expediteur);
+$Liste_pole_expediteur = recupererLigneSpecifique('pole','nom_pole',$expediteur);
+
+
+if (isset($Liste_entite_expediteur)) {
+    $objet_entite_banque_expediteur = $Liste_entite_expediteur[0];
+    $identite_expediteur = $objet_entite_banque_expediteur->id_entite;
+} else {
+    $identite_dest_expediteur = null;
+}
+
+
+if (isset($Liste_pole_expediteur)) {
+    $objet_pole_expediteur = $Liste_pole_expediteur[0];
+    $idpole_expediteur = $objet_pole_expediteur->id_pole;
+}else {
+    $idpole_expediteur = null;
+} 
+
+if (isset($expediteur)) {
+    if (!is_null($identite_expediteur) || !is_null($idpole_expediteur)) {
+        die('<script>alert("erreur  l\'entité '. $expediteur .' mentionné comme expéditeur d\'un courrier arrivé externe est interne à banque. Veuillez bien renseigner ce champs")</script>');
+
+    }
+}
+
+//---------------------------------------------------Fin du contrôle expéditeurs----------------------------------
+
 
 
 //------------------------------------Controle des valeurs énum------------------------------------------------
@@ -187,13 +231,13 @@ try {
 
 if (is_null($objet)) {
     die("Vous n'avez pas renseigné un objet pour votre courrier");
-} elseif (is_null($numeroOrdre)) {
+} elseif (strlen($numeroOrdre)==0) {
     die("Vous n'avez pas renseigné un numéro d'ordre pour votre courrier");
-} elseif (is_null($dateEnreg)) {
+} elseif (strlen($dateEnreg)==0) {
     die("Vous n'avez pas renseigné une date d'enregistrement d'ordre pour votre courrier");
-}elseif (is_null($TypeDoc)) {
+}elseif (strlen($TypeDoc)==0 && $etat_plis_ferme==="non") {
     die("Vous n'avez pas renseigné un type de document pour votre courrier");
-} elseif (is_null($expediteur)) {
+} elseif (!isset($fichier) && $etat_plis_ferme==="non" ) {
     die("Vous n'avez pas renseigné un expéditeur pour votre courrier");
 }
 
@@ -208,10 +252,11 @@ $etatCourrier = 'reçu';
 
 $idcourrierArrive = insererCourrierArriveV2($numeroOrdre,$TypeDoc,$etat_inter_exter,
 $etat_plis_ferme,$categorie,$dateEnreg,null,$reference,
-$liencourrier,$formatCourrier,$objet,$matricule,$idReponse,$expediteur,$destinataire,$identite_dest,$idpole_dest,
+$liencourrier,$objet,$matricule,$idReponse,$expediteur,$destinataire,$identite_dest,$idpole_dest,
 $nombre_fichiers_joins,$etatCourrier
 );
 
+insertHistorique("enregistrement du courrier",$idcourrierArrive,$nom_entite,"courrier arrivé");
 
 
 //---------------------------------------------Insérer les fichiers joins - ----------------------------------------
@@ -223,6 +268,14 @@ if ($nombre_fichiers_joins ===count($liens_fichiers_joins)) {
     
 }
 
+
+die( '<script>
+alert("Votre action a été effectuée avec succès.");
+setTimeout(function(){
+    window.location.href = "../../public/page/courrier-interne.php";
+}, 500); 
+</script>'
+);
 
 
 ?>

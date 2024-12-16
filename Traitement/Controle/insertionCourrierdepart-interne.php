@@ -21,9 +21,9 @@ $etat_plis_ferme = verifierValeurNulle(trim($_POST['etat_plis_ferme']));
 $categorie =verifierValeurNulle(trim($_POST['categorie']));
 $dateEnreg =verifierValeurNulle(trim($_POST['dateEnregistrement']));
 $reference =verifierValeurNulle(trim($_POST['Reference']));
-$fichier = gererFormat($_FILES['fichier']);
+$fichier = $_FILES['fichier'];
 $objet = verifierValeurNulle(trim($_POST['Objet_du_courrier']));
-$matricule ='user02' ;
+$matricule ='user01' ;
 $etatExpedition =  NULL ;
 $expediteur = null ;
 $destinataire  = verifierValeurNulle($_POST['destinataire']) ;
@@ -46,19 +46,46 @@ $etatExpedition = null;
 
 
 
-
-
-
-
-
-
 //---------------------------------------Controle des nom destinataires----------------------------------
 
 if (!is_null($destinataire)) {
     $Liste_entite_destinataire = recupererLigneSpecifique('entite_banque','nom_entite',$destinataire);
 $Liste_pole_destinataire = recupererLigneSpecifique('pole','nom_pole',$destinataire);
+
 //on récupère le nom et le format du fichier dans un tableau
 $TableauNomDestinataireCopie = explode(",",$liste_copie_courrier) ;
+
+//On vérifie que les noms des copies existent bien dans la base de données
+
+if (count($TableauNomDestinataireCopie)>0) {
+    foreach ($TableauNomDestinataireCopie as $nom_copie) {
+        $Liste_des_entites_en_copies = recupererLigneSpecifique('entite_banque','nom_entite',$nom_copie);
+        $Liste_des_poles_en_copie = recupererLigneSpecifique('pole','nom_pole',$nom_copie);
+    
+        if (isset($Liste_des_entites_en_copies)) {
+            $objet_entite_banque_copie = $Liste_des_entites_en_copies[0];
+            $identite_copie = $objet_entite_banque_copie->id_entite;
+        } else {
+            $identite_dest = null;
+        }
+        
+        
+        if (isset($Liste_des_poles_en_copie)) {
+            $objet_pole_copie = $Liste_des_poles_en_copie[0];
+            $idpole_copie = $objet_pole_copie->id_pole;
+        }else {
+            $idpole_dest = null;
+        } 
+    
+        if (is_null($identite_copie) && is_null($idpole_copie)) {
+            die('<script>alert("erreur  le destinataire '. $nom_copie .' mentionné en copie n\'est pas une reconnu comme une entité de la banque")</script>');
+
+        }
+    }
+}
+
+
+// Récupération de l'id du destinataire du courrier 
 if (isset($Liste_entite_destinataire)) {
     $objet_entite_banque = $Liste_entite_destinataire[0];
     $identite_dest = $objet_entite_banque->id_entite;
@@ -92,7 +119,7 @@ if (isset($Liste_pole_destinataire)) {
 
 
 
-
+if ($etat_plis_ferme==="non") {
 
 $liendossier = creerListeDossiersCourrierDepart($etat_inter_exter,$destinataire);
 $liencourrier = deposerFichierDansDossier($liendossier,$fichier);
@@ -106,7 +133,19 @@ $liens_fichiers_joins = get_uploaded_files_paths($chemin_fichiers_joins,$nom_bal
 
 $liens_fichiers_joins_arrives = get_uploaded_files_pathsarrive($chemin_fichiers_joins,$nom_balise_fichiers_join);
 
-$formatCourrier = pathinfo($fichier['name'],PATHINFO_EXTENSION);
+if (isset($fichier)) {
+    $formatCourrier = pathinfo($fichier['name'],PATHINFO_FILENAME); # code...
+}else{
+    $formatCourrier = null;
+}
+
+} else  {
+    $liendossier = '';
+    $liencourrier = "";
+}
+
+
+
 
 
 
@@ -130,6 +169,15 @@ if ($numeroOrdrePrefix != $num_a_entrer) {
 
 
 
+// ---------------------------------------Ici nous vérifions si le fichier à été envoyé  
+
+if ($etat_plis_ferme==="non") {
+    if (strlen($_FILES['fichier']['name'])==0) {
+        die("Vous n'avez pas choisi un fichier");
+    }
+   
+}
+
 
 
 //---------------------------------------Controle des destinataires internes--------------------------------
@@ -141,7 +189,7 @@ if (is_null($destinataire)) {
     if ($etat_inter_exter==="courrier interne") {
         if (is_null($identite_dest) && is_null($idpole_dest)) {
             # Si on entre ici cela veut dire qu'il n'a pas entrer un destinataire interne à la banque
-            die('<script>alert("erreur  destinataire incorrecte")</script>');
+            die('<script>alert("erreur  le destinataire n\'est pas une reconnu comme une entité de la banque")</script>');
         }
         
     }elseif ($etat_inter_exter==="courrier externe") {
@@ -217,13 +265,20 @@ if (is_null($_POST['Objet_du_courrier'])) {
 }
 if (strlen($objet)==0) {
     die('<script>alert("erreur  Objet non renseigné")</script>');
-} elseif (strlen($numeroOrdre)==0) {
+} 
+if (strlen($numeroOrdre)==0) {
     die("Vous n'avez pas renseigné un numéro d'ordre pour votre courrier");
-} elseif (strlen($numeroOrdre)==0) {
+} 
+if (strlen($dateEnreg)==0) {
     die("Vous n'avez pas renseigné une date d'enregistrement d'ordre pour votre courrier");
-}elseif (strlen($TypeDoc)==0) {
+}
+if (strlen($TypeDoc)==0 && $etat_plis_ferme==="non") {
     die("Vous n'avez pas renseigné un type de document pour votre courrier");
 }
+ if (!isset($fichier) && $etat_plis_ferme==="non" ) {
+    die("vous n'avez pas choisi de fichier");
+ }
+
 
 
 
@@ -238,10 +293,12 @@ if (strlen($objet)==0) {
 $etatCourrier = 'envoyé';
 $idcourrierdepart = insererCourrierDepart($numeroOrdre,$TypeDoc,$etat_inter_exter,
 $etat_plis_ferme,$categorie,$dateEnreg,null,$reference,
-$liencourrier,$formatCourrier,$objet,$matricule,$idReponse,$etatExpedition,$expediteur,$destinataire,$identite_dest,$idpole_dest,
+$liencourrier,$objet,$matricule,$idReponse,$etatExpedition,$expediteur,$destinataire,$identite_dest,$idpole_dest,
 $nombre_fichiers_joins,$etatCourrier
 );
 
+//Mise à jour de l'historique de ce courrier
+insertHistorique("enregistrement du courrier",$idcourrierdepart,$nom_entite,"courrier départ");
 //---------------------------------------------Insertion des copies de courriers dans la base de données----------------------------- 
 
 if (!in_array(null,$TableauNomDestinataireCopie)) {
@@ -268,10 +325,13 @@ if ($nombre_fichiers_joins ===count($liens_fichiers_joins)) {
 $etatCourrier = 'reçu';
 $idcourrierArrive = insererCourrierArriveV2($numeroOrdre,$TypeDoc,$etat_inter_exter,
 $etat_plis_ferme,$categorie,$dateEnreg,null,$reference,
-$liencourrier,$formatCourrier,$objet,$matricule,$idReponse,$expediteur,$destinataire,$identite_dest,$idpole_dest,
+$liencourrier,$objet,$matricule,$idReponse,$expediteur,$destinataire,$identite_dest,$idpole_dest,
 $nombre_fichiers_joins,$etatCourrier
 );
 
+
+//Mise à jour de l'historique de ce courrier
+insertHistorique("enregistrement du courrier",$idcourrierArrive,$nom_entite,"courrier arrivé");
 //--------------------------------------------insertion automatique du courrier arrivé de ce destinataire----------------------------
 
 if ($nombre_fichiers_joins ===count($liens_fichiers_joins_arrives )) {

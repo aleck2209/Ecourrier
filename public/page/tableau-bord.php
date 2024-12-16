@@ -102,22 +102,26 @@
                         <p class="dashboard-action">Opérations</p>
                     </div>
                     <?php foreach($courriers as $courrier) { ?>
-                    <div class="element-dashboard-mail">
-                        <output name="" class="dashboard-number"><?php echo $courrier['numero_ordre'] ?></output>
-                        <output name="" class="dasboard-object"><?php echo $courrier['objet_du_courrier'] ?></output>
-                        <output name="" class="dashboard-file"><a href="<?php echo ($courrier['lien_courrier']) ?>" target="_blank"><img src="../../public/images/pdf.png" alt=""></a></output>
-                        <output name="" class="dashboard-service"><?php echo $courrier['destinataire'] ?></output>
-                        <output name="" class="dashboard-correspondant"><?php echo $courrier['type_courrier'] ?></output>
-                        <output name="" class="dashboard-date"><?php echo $courrier['dateEnregistrement'] ?></output>
-                        <output name="" class="dashboard-status"><?php echo $courrier['etat_courrier'] ?></output>
-                        <div class="dashboard-action">
-                            <a href="../../public/page/details.php?$idCourrier=<?=$courrier['idCourrier']?>&& $typeCourrier=<?=$courrier['type_courrier']?>">
-                                <input type="image" src="../images/details.png" alt="" title="détails">
-                            </a>
-                            <input type="image" src="../images/modifier.png" alt="" title="modifier">
-                            <input type="image" src="../images/historique.png" alt="" title="historique">
-                            <input type="image" src="../images/supprimer.png" alt="" title="supprimer">
-                        </div>
+                        <div class="element-dashboard-mail">
+                            <output name="" class="dashboard-number"><?php echo $courrier['numero_ordre'] ?></output>
+                            <output name="" class="dasboard-object"><?php echo $courrier['objet_du_courrier'] ?></output>
+                            <output name="" class="dashboard-file"><a href="<?php echo ($courrier['lien_courrier']) ?>" target="_blank"><img src="../../public/images/pdf.png" alt=""></a></output>
+                            <output name="" class="dashboard-service"><?php echo $courrier['destinataire'] ?></output>
+                            <output name="" class="dashboard-correspondant"><?php echo $courrier['type_courrier'] ?></output>
+                            <output name="" class="dashboard-date"><?php echo $courrier['dateEnregistrement'] ?></output>
+                            <output name="" class="dashboard-status"><?php echo $courrier['etat_courrier'] ?></output>
+                            <div class="dashboard-action">
+                                <a href="../../Traitement/Controle/DetailCourrier.php?$idCourrier=<?=$courrier['idCourrier']?>&& $typeCourrier=<?=$courrier['type_courrier']?>">
+                                    <input type="image" src="../images/details.png" alt="" title="détails">
+                                </a>
+                                <a href="../../Publique2/page/formulaireUpdate.php?$idCourrier=<?=$courrier['idCourrier']?>&& $typeCourrier=<?=$courrier['type_courrier']?>">
+                                    <input type="image" src="../images/modifier.png" alt="" title="modifier">
+                                </a>
+                                <a href="../../Publique2/page/PageHistorique.php?$idCourrier=<?=$courrier['idCourrier']?>&& $typeCourrier=<?=$courrier['type_courrier']?>">
+                                    <input type="image" src="../images/historique.png" alt="" title="historique">
+                                </a>
+                                <input type="image" src="../images/supprimer.png" alt="" title="supprimer">
+                            </div>
                     </div>
                     <?php } ?>
                 </div>

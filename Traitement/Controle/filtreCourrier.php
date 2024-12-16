@@ -10,7 +10,7 @@ $matricule = 'user01';
 
 $nom_entite = recupererNomEntiteParIdUtilisateur($requete,$matricule);
 
-
+$nom_fichier = ""; // Nom du fichier 
 
 if ($nom_entite ==="BO") {
     $courriers=getCourriersBO($nom_entite); 
@@ -42,13 +42,15 @@ $endDate = $_POST['endDate']?? '';
 
 
 if (isset($_POST['form_type4'])) {
-    $startDate = $_POST['searchKeyword']?? '';
+    $searchKeyword = $_POST['searchKeyword']?? '';
     
     }
 
     $courriers = getCourriersBO($nom_entite,$searchKeyword,$startDate,$endDate, $sortType,$sortOrder,$origine,$priority,$typeCourrier);
 
-
+    if (isset($courriers['lien_courrier'])) {
+        $nom_fichier = recupererNomFichiers($courriers); // Récupération du nom du fichier
+    }
 }
 
 
@@ -89,6 +91,10 @@ if (isset($_POST['form_type4'])) {
 
     $courriers = getCourriers($nom_entite,$searchKeyword,$startDate,$endDate, $sortType,$sortOrder,$origine,$priority,$typeCourrier);
 
+    
+    if (isset($courriers['lien_courrier'])) {
+        $nom_fichier = recupererNomFichiers($courriers); // Récupération du nom du fichier 
+    }
 }
 
 

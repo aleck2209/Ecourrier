@@ -201,8 +201,7 @@ function recupererLigneSpecifique($table,$colonne,$valeur){
 
     }
 
-   
-  
+
 
     "SELECT cd.numero_ordre,cd.Etat_interne_externe, cd.lien_courrier,cd.destinataire,cd.dateEnregistrement, cd.etat_courrier
     FROM courrierdepart cd
@@ -510,6 +509,24 @@ function getResultsFromQuery($nom_entite, $query) {
 
 
 
+function recupererNomFichiers($lien){
+    if (strlen($lien)==0) {
+        return  ;
+    }
+    $partiesLien = explode("/",$lien);
+    $nom_fichier = $partiesLien[count($partiesLien)-1];
+    return $nom_fichier;
+
+}
+
+
+
+
+
+
+
+
+
 
 function getCourriersBO($nom_entite, $searchKeyword = '', $startDate = '', $endDate = '', $sortType = '', $sortOrder = '', $origine = '', $priority = '', $typeCourrier = '') {
     // Connexion à la base de données (tu peux ajuster cela selon ton contexte)
@@ -538,6 +555,7 @@ function getCourriersBO($nom_entite, $searchKeyword = '', $startDate = '', $endD
 
     // Recherche par mot-clé
     if ($searchKeyword) {
+        echo $searchKeyword;
         $query .= " AND (objet_du_courrier LIKE :searchKeyword OR destinataire LIKE :searchKeyword OR numero_ordre LIKE :searchKeyword )";
         $params[':searchKeyword'] = "%$searchKeyword%";
     }
@@ -603,7 +621,8 @@ function getCourriersBO($nom_entite, $searchKeyword = '', $startDate = '', $endD
 
     // Filtrage par type de courrier (arrivé ou départ)
     if ($typeCourrier) {
-        if ($typeCourrier === 'courrier arrive') {
+        
+        if ($typeCourrier === 'courrier arrivé') {
             $query = " SELECT idCourrier,numero_ordre, 
                objet_du_courrier,
                Etat_interne_externe,  -- Pas d'alias 'cd' ou 'ca'
@@ -688,7 +707,7 @@ function getInfosForCourrier($requete,$idCourrier){
        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
    
        // Retourner les résultats
-       return $results; 
+        return $results; 
 
 }
 
@@ -717,8 +736,54 @@ function verifierCourrierDansModification($idCourrier) {
 
 
 
+function recupererHistoriqueParIdCourrierEtType($idCourrier, $typeCourrier) {
+    try {
+        $objet_connexion = connectToDb('localhost','ecourrierdb2','Dba','EcourrierDba');
+        // Vérifier le type de courrier (départ ou arrivée)
+        if ($typeCourrier === 'courrier départ') {
+            // Requête SQL pour récupérer les historiques liés à un courrier de départ
+            $sql = "SELECT  h.action_effectuee, h.date_operation, h.entite_resoinsable
+                FROM historique h
+                WHERE h.idCourrierdepart = :idCourrier
+                group by h.action_effectuee, h.date_operation, h.entite_resoinsable
+                ORDER BY h.date_operation DESC
+            ";
+        } elseif ($typeCourrier === 'courrier arrivé') {
+            // Requête SQL pour récupérer les historiques liés à un courrier d'arrivée
+            $sql = "SELECT h.action_effectuee, h.date_operation, h.entite_resoinsable
+                FROM historique h
+                WHERE h.idCourrierArrive = :idCourrier
+                group by h.action_effectuee, h.date_operation, h.entite_resoinsable
+                ORDER BY h.date_operation DESC
+            ";
+        } else {
+            throw new Exception("Type de courrier invalide. Utilisez 'depart' ou 'arrive'.");
+        }
 
+        // Préparer la requête
+        $stmt = $objet_connexion->prepare($sql);
 
+        // Lier le paramètre :idCourrier
+        $stmt->bindParam(':idCourrier', $idCourrier, PDO::PARAM_INT);
+        
+        // Exécuter la requête
+        $stmt->execute();
+
+        // Récupérer les résultats
+        $historiques = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Vérifier si des résultats ont été trouvés
+        if ($historiques) {
+            return $historiques; // Retourner le tableau des historiques
+        } else {
+            return []; // Si aucun historique n'est trouvé, retourner un tableau vide
+        }
+    } catch (PDOException $e) {
+        // Gestion des erreurs de la base de données
+        echo "Erreur de récupération des historiques: " . $e->getMessage();
+        return [];
+    }
+}
 
 
 
