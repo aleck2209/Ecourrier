@@ -1,13 +1,18 @@
-document.addEventListener('DOMContentLoaded', alertSave(), regNumOrdre())
+document.addEventListener('DOMContentLoaded', alertSave(), regNumOrdre(), afficherCorrespondant())
 
 // AUTOCOMPLETION CAS DU DESTINATAIRE
 function completion() {
     const data = ["DSI", "DPMG", "DRHF", "DOF", "DAI", "DCBCG", "DOP"];
     const destinataire = document.getElementById('destinataire');
+    const expediteur = document.getElementById('expediteur');
     const list = document.getElementById('listAutocompleteDestinataire');
+    const listExp = document.getElementById('listAutocompleteExpediteur');
 
     const value = destinataire.value.toUpperCase();
+    const valueExp = expediteur.value.toUpperCase();
     list.innerHTML = "";
+    listExp.innerHTML = ""
+
     if (value) {
         data.forEach(item => {
             if(item.startsWith(value)) {
@@ -22,10 +27,27 @@ function completion() {
             }
         })
     }
+    
+    if (valueExp) {
+        data.forEach(item => {
+            if(item.startsWith(valueExp)) {
+                const div = document.createElement('div');
+                div.textContent = item;
+                div.className = "autocomplete-list__item"
+                div.onclick = () => {
+                    expediteur.value = item;
+                    listExp.innerHTML = "";
+                }
+                listExp.appendChild(div)
+            }
+        })
+    }
 
     document.addEventListener('click', (e) => {
         if (e.target !== destinataire) {
             list.innerHTML = "";
+        } else if (e.target !== expediteur) {
+            listExp.innerHTML = "";
         }
     })
 }
@@ -148,4 +170,25 @@ function regNumOrdre() {
             alert("veuillez respecter le format attendu, exemple: 25/DGE/DSI/2024.")
         }
     });
+}
+
+// AFFICHER LE DESTINATEUR OU EXPEDITEUR
+function afficherCorrespondant() {
+    const fieldDestinataire = document.getElementById('fieldDestinataire');
+    const fieldExpediteur = document.getElementById('fieldExpediteur');
+    const destinataire = document.getElementById('destinataire');
+    const expediteur = document.getElementById('expediteur');
+    const typeCourrier = document.getElementById('typeCourrier');
+
+    if (typeCourrier.value == "arrive") {
+        destinataire.removeAttribute('required');
+        fieldDestinataire.style.display = "none";
+        expediteur.setAttribute('required', 'required');
+        fieldExpediteur.style.display = "flex"
+    } else {
+        expediteur.removeAttribute('required');
+        fieldExpediteur.style.display = "none";
+        destinataire.setAttribute('required', 'required');
+        fieldDestinataire.style.display = "flex";
+    } 
 }
