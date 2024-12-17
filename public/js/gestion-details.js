@@ -14,7 +14,5 @@ function displayElement() {
         if (link && (!link.getAttribute('href') || link.getAttribute('href').trim() == "")) {
             div.style.display = 'none';
         }
-
-
     })
 }

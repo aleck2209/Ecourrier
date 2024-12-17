@@ -42,6 +42,7 @@
     --FS-NAME-USER: 1.25rem;
     --FS-NAV: 0.75rem;
     --FS-SIDEBAR: 0.9rem;
+    --FS-TITLE: 1.05rem;
     --FS-TITRE-FORM: 1.125rem; /*18px*/
     --FS-TITRE-PAGE: 1.25rem;
     /* FIN FONT-SIZE */
@@ -238,7 +239,12 @@ main {
     width: var(--WD-HALF-SPACE);
 }
 
-label {
+.number-space {
+    width: 15%;
+}
+
+label, 
+.update-element__title {
     font-family: var(--FF-ROBOTO);
     font-size: var(--FS-LABEL);
     font-weight: var(--FW-LABEL);
@@ -270,6 +276,7 @@ select {
 
 select {
     background-color: var(--WHITE);
+    text-transform: capitalize;
 }
             /* DEBUT BTN*/
 input[type="submit"],
@@ -430,7 +437,9 @@ input[type="reset"]:hover,
 .page-content-list-profil,
 .page-content-list-user,
 .page-content-account,
-.page-content-detail {
+.page-content-detail,
+.page-content-update-mail,
+.page-content-historical-mail {
     margin-top: var(--MG-TOP-SECTION);
 }
 /* FIN CONTENT PAGE */
@@ -444,7 +453,9 @@ input[type="reset"]:hover,
 .page-content-package-case h2,
 .page-content-list-profil h2,
 .page-content-list-user h2,
-.page-content-account h2 {
+.page-content-account h2,
+.page-content-update-mail h2,
+.page-content-historical-mail h2 {
     color: var(--DARK);
     font-family: var(--FF-ROBOTO);
     font-size: var(--FS-TITRE-PAGE);
@@ -457,7 +468,8 @@ input[type="reset"]:hover,
 .form-reminder,
 .form-save-mail,
 .form-package-case,
-.form-account {
+.form-account,
+.form-update-mail {
     display: flex;
     flex-flow: column nowrap;
     font-family: var(--FF-ROBOTO);
@@ -492,7 +504,8 @@ input[type="reset"]:hover,
 .fields-reminder,
 .fields-save-mail,
 .fields-package-case,
-.fields-account {
+.fields-account,
+.fields-update-mail {
     display: flex;
     flex-flow: row wrap;
     gap: var(--GAP-FIELDS);
@@ -547,12 +560,13 @@ input[type="reset"]:hover,
 .title-deleted-user,
 .title-list-profil,
 .title-list-user,
-.title-dashboard-mail {
+.title-dashboard-mail,
+.title-historical-mail {
     align-items: center;
     color: var(--DARK);
     display: flex;
     font-family: var(--FF-ROBOTO);
-    font-size: var(--FS-NAME-USER);
+    font-size: var(--FS-TITLE);
     font-weight: var(--FW-FIELD);
     justify-content: space-between;
     margin-bottom: 0.5rem;
@@ -564,7 +578,8 @@ input[type="reset"]:hover,
 .element-deleted-user,
 .element-list-profil,
 .element-list-user,
-.element-dashboard-mail {
+.element-dashboard-mail,
+.element-historical-mail {
     align-items: center;
     color: var(--BLACK);
     display: flex;
@@ -581,7 +596,8 @@ input[type="reset"]:hover,
 .element-list-user,
 .element-dashboard-mail,
 .element-notif,
-.element-reminder {
+.element-reminder,
+.element-historical-mail {
     border-bottom: var(--BORDER-BT-DOTTED);
 }
 
@@ -648,13 +664,35 @@ input[type="reset"]:hover,
     margin-top: 0.5rem; 
 }
 
-.title-dashboard-mail p,
-.element-dashboard-mail output,
-.dashboard-action {
-    width: 12%;
+.title-dashboard-mail,
+.element-dashboard-mail {
+    gap: 1rem;
+}
+
+.dashboard-action,
+.dashboard-number {
+    width: 10%;
+}
+
+.dashboard-file,
+.dashboard-status {
+    width: 4%;
+}
+
+.dashboard-expediteur,
+.dashboard-service {
+    width: 7%;
 }
 
 .dashboard-date {
+    width: 9%;
+}
+.dasboard-object {
+    width: 18%;
+}
+
+output[class="dashboard-file"],
+output[class="dashboard-status"] {
     text-align: center;
 }
 
@@ -662,6 +700,10 @@ input[type="reset"]:hover,
     background-color: transparent;
     padding: var(--PG-BTN-OPERATION);
     width: var(--WD-BTN-OPERATION);
+}
+
+.dashboard-action a {
+    text-decoration: none;
 }
 
 .dashboard-file img {
@@ -787,3 +829,28 @@ input[type="reset"]:hover,
     width: 2rem;
 }
 /* FIN PAGE DETAILS */
+
+/* DEBUT PAGE MODIFIER */
+.update-element__title {
+    margin-bottom: 0.5rem;
+}
+
+.update-file img {
+    width: 2.3rem;
+}
+
+.update-file {
+    text-decoration: none;
+}
+/* FIN PAGE MODIFIER */
+
+/* DEBUT PAGE HISTORIQUE */
+.title-historical-mail {
+    margin-top: 1.5rem;
+}
+
+.title-historical-mail p,
+.element-historical-mail p {
+    width: 33%;
+}
+/* FIN PAGE HISTORIQUE */

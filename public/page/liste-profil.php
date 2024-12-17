@@ -27,30 +27,28 @@
                 include('../include/nav-bar.php');
             ?>
             <!-- FIN DE LA BARRE DE NAVIGATION -->
-            <section class="page-content-list-profil" id="page-admin">
-                <div class="block-profil">
-                    <div class="header-list-profil">
-                        <h2>Liste des profils</h2>
-                        <form action="" method="post" class="form-search">
-                            <input type="search" name="" id="" placeholder="rechercher...">
-                            <input type="image" src="../images/recherche.png" alt="bouton rechercher" class="form-search__btn-search">
-                        </form>
-                    </div> 
-                    <div class="list-profil">
-                        <div class="title-list-profil">
-                            <p>Code</p>
-                            <p>Intitulé</p>
-                            <p>Opération</p>
-                        </div>
-                        <div class="element-list-profil">
-                            <p>#njkqs</p>
-                            <p>nsdi</p>
-                            <form action="" method="post">
-                                <input type="image" src="../images/tout-selectionner.png" alt="" class="element-list-profil__btn-select" alt="tout selectionner">
-                            </form>
-                        </div>
-                    </div>
+            <section class="page-content-list-profil" id="page-admin">                
+                <div class="header-list-profil">
+                    <h2>Liste des profils</h2>
+                    <form action="" method="post" class="form-search">
+                        <input type="search" name="" id="" placeholder="rechercher...">
+                        <input type="image" src="../images/recherche.png" alt="bouton rechercher" class="form-search__btn-search">
+                    </form>
                 </div> 
+                <div class="list-profil">
+                    <div class="title-list-profil">
+                        <p>Code</p>
+                        <p>Intitulé</p>
+                        <p>Opération</p>
+                    </div>
+                    <div class="element-list-profil">
+                        <p>#njkqs</p>
+                        <p>nsdi</p>
+                        <form action="" method="post">
+                            <input type="image" src="../images/tout-selectionner.png" alt="" class="element-list-profil__btn-select" alt="tout selectionner">
+                        </form>
+                    </div>
+                </div>                 
             </section>
         </main>
     </div>
