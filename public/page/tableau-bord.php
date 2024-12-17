@@ -96,7 +96,7 @@
                         <p class="dasboard-object">Objet</p>
                         <p class="dashboard-file">Fichiers</p>
                         <p class="dashboard-service">Destinataire</p>
-                        <p class="dashboard-correspondant">Correspondant</p>
+                        <p class="dashboard-expediteur">Expéditeur</p>
                         <p class="dashboard-date">Date</p>
                         <p class="dashboard-status">Statut</p>
                         <p class="dashboard-action">Opérations</p>
@@ -107,7 +107,7 @@
                             <output name="" class="dasboard-object"><?php echo $courrier['objet_du_courrier'] ?></output>
                             <output name="" class="dashboard-file"><a href="<?php echo ($courrier['lien_courrier']) ?>" target="_blank"><img src="../../public/images/pdf.png" alt=""></a></output>
                             <output name="" class="dashboard-service"><?php echo $courrier['destinataire'] ?></output>
-                            <output name="" class="dashboard-correspondant"><?php echo $courrier['type_courrier'] ?></output>
+                            <output name="" class="dashboard-expediteur"><?php echo $courrier['type_courrier'] ?></output>
                             <output name="" class="dashboard-date"><?php echo $courrier['dateEnregistrement'] ?></output>
                             <output name="" class="dashboard-status"><?php echo $courrier['etat_courrier'] ?></output>
                             <div class="dashboard-action">
@@ -117,7 +117,7 @@
                                 <a href="../../public/page/modifier-courrier.php?$idCourrier=<?=$courrier['idCourrier']?>&& $typeCourrier=<?=$courrier['type_courrier']?>">
                                     <input type="image" src="../images/modifier.png" alt="" title="modifier">
                                 </a>
-                                <a href="../../Publique2/page/PageHistorique.php?$idCourrier=<?=$courrier['idCourrier']?>&& $typeCourrier=<?=$courrier['type_courrier']?>">
+                                <a href="../../public/page/historique-courrier.php?$idCourrier=<?=$courrier['idCourrier']?>&& $typeCourrier=<?=$courrier['type_courrier']?>">
                                     <input type="image" src="../images/historique.png" alt="" title="historique">
                                 </a>
                                 <input type="image" src="../images/supprimer.png" alt="" title="supprimer">

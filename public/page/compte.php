@@ -21,7 +21,7 @@
         ?>
         <!-- FIN DU HEADER -->
         <main class="main">
-            <section class="page-content-account" id="page user">
+            <section class="page-content-account">
                 <h2>Informations Compte</h2>
                 <!-- DEBUT DU FORMULAIRE -->
                 <form action="" method="post" class="form-account">

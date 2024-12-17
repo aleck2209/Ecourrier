@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', DisplayElement());
+document.addEventListener('DOMContentLoaded', DisplayElement(), alertSave());
 
 
 function DisplayElement() {
@@ -71,4 +71,43 @@ function DisplayElement() {
         }
 
     })
+}
+
+function alertSave() {
+    const form = document.querySelector('.page-content-update-mail');
+    const alertBox = document.getElementById('alert-box');
+    const confirmExit = document.getElementById('confirm-exit');
+    const cancelExit = document.getElementById('cancel-exit');
+    const navigationLinks = document.querySelectorAll('a');
+    let isFormDirty = false;
+    let redirectUrl = null; //STOCKE URL CIBLE APRES CONFIRMATION DE CHANGEMENT DE PAGE
+
+    // MARQUER LE FORMULAIRE COMME MODIFIE LORSQU'UN CHAMP CHANGE
+    form.addEventListener('change', () => {
+        isFormDirty = true
+    });
+
+    // GESTION DES CLICS SUR LES LIENS INTERNES DE APPLICATION
+    navigationLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            if(isFormDirty) {
+                e.preventDefault(); //EMPECHE LA NAVIGATION IMMEDIATE
+                redirectUrl = e.target.href; //CAPTURE URL IMMEDIATE
+                alertBox.classList.remove('alert-hidden');
+            }
+        });
+    });
+
+    // ACTION DE ALERTE
+    confirmExit.addEventListener('click', () => {
+        alertBox.classList.add("alert-hidden");
+        if(redirectUrl) {
+            window.location.href = redirectUrl //REDIRIGE VERS LA PAGE DEMANDEE
+        }
+    });
+
+    cancelExit.addEventListener('click', () => {
+        alertBox.classList.add("alert-hidden");
+        redirectUrl = null; //REINITIALISE URL CIBLE SI UTILISATEUR ANNULE
+    });
 }

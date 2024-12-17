@@ -71,7 +71,7 @@
                         </div>
                     </div>
                     <div class="fields-update-mail">
-                        <div class="field number-field">
+                        <div class="field number-space">
                             <label for="numPieceJointe">nombre pièce jointe</label>
                             <input type="number" name="nombre_de_fichiers_joins" id="numPieceJointe" min="0" max="10" value="<?php echo $T1[0]['nombre_de_fichiers_joins'] ?>">
                         </div>
@@ -113,6 +113,11 @@
             </section>
         </main>
     </div>
+
+    <?php
+        // APPEL DE L'ALERTE
+        require('../include/alerte.php');
+    ?>
     <!-- FIN DE LA PAGE MODIFIER COURRIER  -->
      <!-- DEBUT SCRIPT JS -->
     <script src="../js/afficher-header.js"></script>
