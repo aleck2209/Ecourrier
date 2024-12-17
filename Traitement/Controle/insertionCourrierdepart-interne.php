@@ -13,7 +13,7 @@ require('../../Traitement/Controle/gestionFichiesCourrierArrive.php');
 ini_set('display_errors', 0); // Désactive l'affichage des erreurs
 error_reporting(E_ALL); // Active l'enregistrement des erreurs pour le débogage (peut être modifié en production)
 
-        //récupération des données provenant du formulaire et vérification des données
+//récupération des données provenant du formulaire et vérification des données
 $numeroOrdre = verifierValeurNulle(trim($_POST['numero_ordre']));
 $TypeDoc = verifierValeurNulle(trim($_POST['Type_document']));
 //$etat_inter_exter= verifierValeurNulle(trim($_POST['Etat_interne_externe'])) ;
@@ -53,36 +53,9 @@ if (!is_null($destinataire)) {
 $Liste_pole_destinataire = recupererLigneSpecifique('pole','nom_pole',$destinataire);
 
 //on récupère le nom et le format du fichier dans un tableau
-$TableauNomDestinataireCopie = explode(",",$liste_copie_courrier) ;
 
-//On vérifie que les noms des copies existent bien dans la base de données
 
-if (count($TableauNomDestinataireCopie)>0) {
-    foreach ($TableauNomDestinataireCopie as $nom_copie) {
-        $Liste_des_entites_en_copies = recupererLigneSpecifique('entite_banque','nom_entite',$nom_copie);
-        $Liste_des_poles_en_copie = recupererLigneSpecifique('pole','nom_pole',$nom_copie);
-    
-        if (isset($Liste_des_entites_en_copies)) {
-            $objet_entite_banque_copie = $Liste_des_entites_en_copies[0];
-            $identite_copie = $objet_entite_banque_copie->id_entite;
-        } else {
-            $identite_dest = null;
-        }
-        
-        
-        if (isset($Liste_des_poles_en_copie)) {
-            $objet_pole_copie = $Liste_des_poles_en_copie[0];
-            $idpole_copie = $objet_pole_copie->id_pole;
-        }else {
-            $idpole_dest = null;
-        } 
-    
-        if (is_null($identite_copie) && is_null($idpole_copie)) {
-            die('<script>alert("erreur  le destinataire '. $nom_copie .' mentionné en copie n\'est pas une reconnu comme une entité de la banque")</script>');
 
-        }
-    }
-}
 
 
 // Récupération de l'id du destinataire du courrier 
@@ -110,6 +83,43 @@ if (isset($Liste_pole_destinataire)) {
       </script>');
     
 }
+
+
+if (strlen($liste_copie_courrier)!=0) {
+    $TableauNomDestinataireCopie = explode(",",$liste_copie_courrier) ;
+
+//On vérifie que les noms des copies existent bien dans la base de données
+
+if (count($TableauNomDestinataireCopie)>0) {
+    foreach ($TableauNomDestinataireCopie as $nom_copie) {
+        $Liste_des_entites_en_copies = recupererLigneSpecifique('entite_banque','nom_entite',$nom_copie);
+        $Liste_des_poles_en_copie = recupererLigneSpecifique('pole','nom_pole',$nom_copie);
+    
+        if (isset($Liste_des_entites_en_copies)) {
+            $objet_entite_banque_copie = $Liste_des_entites_en_copies[0];
+            $identite_copie = $objet_entite_banque_copie->id_entite;
+        } else {
+            $identite_copie = null;
+        }
+        
+        
+        if (isset($Liste_des_poles_en_copie)) {
+            $objet_pole_copie = $Liste_des_poles_en_copie[0];
+            $idpole_copie = $objet_pole_copie->id_pole;
+        }else {
+            $idpole_copie = null;
+        } 
+    
+        if (is_null($identite_copie) && is_null($idpole_copie)) {
+            die('<script>alert("erreur  le destinataire '. $nom_copie .' mentionné en copie n\'est pas reconnu comme une entité de la banque")</script>');
+
+        }
+    }
+}
+}
+
+
+
 
 
 //------------------------------------fin controle des nom destinataires---------------------------------------
@@ -150,13 +160,54 @@ if (isset($fichier)) {
 
 
 //-------------------------------------------Controle du numero d'ordre--------------------------------
+
+// Ici On récupère le pole ou l'entité à laquelle appartient un utilisateur  
+
+
+
+
 #Récupération du nom de l'entité à laquelle est relié un utilisateur
-$requete = " select e.id_entite, e.nom_entite
+// $requete = " select e.id_entite, e.nom_entite
+// from entite_banque e inner join utilisateur u on 
+// e.id_entite = u.id_entite
+// where u.Matricule = ?;";
+
+$sql1 = " select p.id_pole, p.nom_pole
+from pole p inner join utilisateur u on 
+p.id_pole = u.id_pole
+where u.Matricule = ?;";
+
+$sql2=" select e.id_entite, e.nom_entite
 from entite_banque e inner join utilisateur u on 
 e.id_entite = u.id_entite
 where u.Matricule = ?;";
-$nom_entite = recupererNomEntiteParIdUtilisateur($requete,$matricule);
+
+$infos_entite_utilisateur = recupererIdEntiteOuIdPolePourUnUtilisateur($sql2,$matricule);
+
+$infos_pole_utilisateur = recupererIdEntiteOuIdPolePourUnUtilisateur($sql1,$matricule);
+
+
+if (isset($infos_pole_utilisateur['id_pole'])) {
+    
+$nom_entite = recupererNomEntiteParIdUtilisateur($sql1,$matricule);
 $expediteur = $nom_entite;
+
+#On récupère le numéro d'ordre qu'on doit entré en fonction de l'entité
+$num_a_entrer = verifierNumeoOrdreParPole($nom_entite);
+$numeroOrdrePrefix = explode('/', $numeroOrdre)[0];  // On récupère juste la partie avant le "/"
+
+// On compare le numéro d'ordre entré à celui qui est attendu en fonction de l'entité
+if ($numeroOrdrePrefix != $num_a_entrer) {
+    die("Le numéro d'ordre pour le pole  $nom_entite attendu est : $num_a_entrer");
+}
+
+
+}
+
+elseif (isset($infos_entite_utilisateur['id_entite'])) {
+    $nom_entite = recupererNomEntiteParIdUtilisateur($sql2,$matricule);
+$expediteur = $nom_entite;
+
 #On récupère le numéro d'ordre qu'on doit entré en fonction de l'entité
 $num_a_entrer = verifierNumeoOrdreParEntiteV2($nom_entite);
 $numeroOrdrePrefix = explode('/', $numeroOrdre)[0];  // On récupère juste la partie avant le "/"
@@ -165,6 +216,12 @@ $numeroOrdrePrefix = explode('/', $numeroOrdre)[0];  // On récupère juste la p
 if ($numeroOrdrePrefix != $num_a_entrer) {
     die("Le numéro d'ordre pour l'entité $nom_entite attendu est : $num_a_entrer");
 }
+}
+
+
+// $nom_entite = recupererNomEntiteParIdUtilisateur($requete,$matricule);
+// $expediteur = $nom_entite;
+
 //-------------------------------------fin controle numero d'ordre-------------------------------------
 
 
@@ -322,7 +379,9 @@ if ($nombre_fichiers_joins ===count($liens_fichiers_joins)) {
 
 
 //--------------------------------------------insertion automatique du courrier arrivé de ce destinataire----------------------------
-$etatCourrier = 'reçu';
+
+if ($expediteur != $destinataire) {
+    $etatCourrier = 'reçu';
 $idcourrierArrive = insererCourrierArriveV2($numeroOrdre,$TypeDoc,$etat_inter_exter,
 $etat_plis_ferme,$categorie,$dateEnreg,null,$reference,
 $liencourrier,$objet,$matricule,$idReponse,$expediteur,$destinataire,$identite_dest,$idpole_dest,
@@ -340,6 +399,10 @@ if ($nombre_fichiers_joins ===count($liens_fichiers_joins_arrives )) {
     }
     
 }
+
+}
+
+
 
 
 

@@ -12,7 +12,7 @@
         require('../include/side-bar.php');
 
         // VARIABLE BUREAU D'ORDRE
-        $bureauOrdre = "BO";
+        $bureauOrdre = "B";
     ?>
 
     <!-- DEBUT DE LA PAGE ENREGISTRER COURRIER -->

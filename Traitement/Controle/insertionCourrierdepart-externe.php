@@ -23,7 +23,7 @@ $dateEnreg =verifierValeurNulle(trim($_POST['dateEnregistrement']));
 $reference =verifierValeurNulle(trim($_POST['Reference']));
 $fichier = $_FILES['fichier'];
 $objet = verifierValeurNulle(trim($_POST['Objet_du_courrier']));
-$matricule ='user01' ;
+$matricule ='user04' ;
 $etatExpedition =  NULL ;
 $expediteur = null ;
 $destinataire  = verifierValeurNulle($_POST['destinataire']) ;
@@ -152,13 +152,44 @@ if (isset($fichier)) {
 
 
 //-------------------------------------------Controle du numero d'ordre--------------------------------
-#Récupération du nom de l'entité à laquelle est relié un utilisateur
-$requete = " select e.id_entite, e.nom_entite
+
+
+$sql1 = " select p.id_pole, p.nom_pole
+from pole p inner join utilisateur u on 
+p.id_pole = u.id_pole
+where u.Matricule = ?;";
+
+$sql2=" select e.id_entite, e.nom_entite
 from entite_banque e inner join utilisateur u on 
 e.id_entite = u.id_entite
 where u.Matricule = ?;";
-$nom_entite = recupererNomEntiteParIdUtilisateur($requete,$matricule);
+
+$infos_entite_utilisateur = recupererIdEntiteOuIdPolePourUnUtilisateur($sql2,$matricule);
+
+$infos_pole_utilisateur = recupererIdEntiteOuIdPolePourUnUtilisateur($sql1,$matricule);
+
+
+if (isset($infos_pole_utilisateur['id_pole'])) {
+    
+$nom_entite = recupererNomEntiteParIdUtilisateur($sql1,$matricule);
 $expediteur = $nom_entite;
+
+#On récupère le numéro d'ordre qu'on doit entré en fonction de l'entité
+$num_a_entrer = verifierNumeoOrdreParPole($nom_entite);
+$numeroOrdrePrefix = explode('/', $numeroOrdre)[0];  // On récupère juste la partie avant le "/"
+
+// On compare le numéro d'ordre entré à celui qui est attendu en fonction de l'entité
+if ($numeroOrdrePrefix != $num_a_entrer) {
+    die("Le numéro d'ordre pour le pole  $nom_entite attendu est : $num_a_entrer");
+}
+
+
+}
+
+elseif (isset($infos_entite_utilisateur['id_entite'])) {
+    $nom_entite = recupererNomEntiteParIdUtilisateur($sql2,$matricule);
+$expediteur = $nom_entite;
+
 #On récupère le numéro d'ordre qu'on doit entré en fonction de l'entité
 $num_a_entrer = verifierNumeoOrdreParEntiteV2($nom_entite);
 $numeroOrdrePrefix = explode('/', $numeroOrdre)[0];  // On récupère juste la partie avant le "/"
@@ -167,6 +198,9 @@ $numeroOrdrePrefix = explode('/', $numeroOrdre)[0];  // On récupère juste la p
 if ($numeroOrdrePrefix != $num_a_entrer) {
     die("Le numéro d'ordre pour l'entité $nom_entite attendu est : $num_a_entrer");
 }
+}
+
+
 //-------------------------------------fin controle numero d'ordre-------------------------------------
 
 // ---------------------------------------Ici nous vérifions si le fichier à été envoyé  
