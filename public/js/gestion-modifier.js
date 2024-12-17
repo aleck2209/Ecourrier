@@ -8,7 +8,7 @@ function DisplayElement() {
     const pieceJoints = document.getElementById('pieceJoint');
     const fichierEnregistre = document.getElementById('fichierEnregistre');
 
-    // VARIABLE CAREGORIE
+    // VARIABLE CATEGORIE
     const categorie = document.getElementById('categorie');
     const optionUpdate = document.getElementById('optionUpdate');
 
@@ -16,7 +16,27 @@ function DisplayElement() {
     // VALEUR DES PARAGRPHES
     const fichier = "fichier enregistré";
     const piece = "Pièce(s) Jointes(s)";
+
+    // VARIABLE COPIE, REFERENCE, TYPE DE DOCUMENT
+    const reference = document.getElementById('reference');
+    const typeDocument = document.getElementById('typeDocument') 
+    const copie = document.getElementById('copie');
+
+
+    // AJOUT DE PLACEHORDER QUAND ELEMENT EST VIDE
+    if (copie.value.trim() == "") {
+        copie.setAttribute('placeholder', 'Aucune entité a été mis en copie')
+    }
+    if (reference.value.trim() == "") {
+        reference.setAttribute('placeholder', 'Pas de reférence renseigné')
+    }
+    if (typeDocument.value.trim() == "") {
+        typeDocument.setAttribute('placeholder', 'Type de document non renseigné')
+    }
+
+
     
+    // GESTION DE LA CATEGORIE
     if (optionUpdate.value.trim() == "urgent" || optionUpdate.value.trim() == "Urgent") {
         const normalOption = new Option('normal', 'normal');
         categorie.add(normalOption);
@@ -25,6 +45,7 @@ function DisplayElement() {
         categorie.add(urgentOption);
     }
 
+    // AFFICHAGE OU PAS DES FICHIER
     elements.forEach(div => {
         const link = div.querySelector('.update-file');
         const paragraph = div.querySelector('p')

@@ -678,6 +678,10 @@ input[type="reset"]:hover,
     width: 1.5rem;
 }
 
+.dashboard-action a {
+    text-decoration: none;
+}
+
 /* FIN PAGE TABLEAU DE BORD */
 
 /* DEBUT ALERTE */
@@ -806,3 +810,9 @@ input[type="reset"]:hover,
 .update-file img {
     width: 2.3rem;
 }
+
+.update-file {
+    text-decoration: none;
+}
+
+/* FIN PAGE MODIFIER */

@@ -114,7 +114,7 @@
                                 <a href="../../public/page/details.php?$idCourrier=<?=$courrier['idCourrier']?>&& $typeCourrier=<?=$courrier['type_courrier']?>">
                                     <input type="image" src="../images/details.png" alt="" title="détails">
                                 </a>
-                                <a href="../../Publique2/page/formulaireUpdate.php?$idCourrier=<?=$courrier['idCourrier']?>&& $typeCourrier=<?=$courrier['type_courrier']?>">
+                                <a href="../../public/page/modifier-courrier.php?$idCourrier=<?=$courrier['idCourrier']?>&& $typeCourrier=<?=$courrier['type_courrier']?>">
                                     <input type="image" src="../images/modifier.png" alt="" title="modifier">
                                 </a>
                                 <a href="../../Publique2/page/PageHistorique.php?$idCourrier=<?=$courrier['idCourrier']?>&& $typeCourrier=<?=$courrier['type_courrier']?>">
@@ -122,7 +122,7 @@
                                 </a>
                                 <input type="image" src="../images/supprimer.png" alt="" title="supprimer">
                             </div>
-                    </div>
+                        </div>
                     <?php } ?>
                 </div>
             </section>
