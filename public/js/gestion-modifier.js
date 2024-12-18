@@ -5,7 +5,6 @@ function DisplayElement() {
     const elements = document.querySelectorAll('.not-required');
 
     // VARIABLE DES LABELS
-    const pieceJoints = document.getElementById('pieceJoint');
     const fichierEnregistre = document.getElementById('fichierEnregistre');
 
     // VARIABLE CATEGORIE
@@ -15,7 +14,6 @@ function DisplayElement() {
     
     // VALEUR DES PARAGRPHES
     const fichier = "fichier enregistré";
-    const piece = "Pièce(s) Jointes(s)";
 
     // VARIABLE COPIE, REFERENCE, TYPE DE DOCUMENT
     const reference = document.getElementById('reference');
@@ -61,15 +59,6 @@ function DisplayElement() {
                 fichierEnregistre.textContent = "Remplacer fichier du courrier";
             }
         }
-        
-        if (paragraph.textContent.trim() === piece) {
-            if (link && (!link.getAttribute('href') || link.getAttribute('href').trim() == "")) {
-                pieceJoints.textContent = "Ajouter pièce(s) jointe(s)";
-            } else {
-                pieceJoints.textContent = "Remplacer pièce(s) jointe(s)";
-            }
-        }
-
     })
 }
 

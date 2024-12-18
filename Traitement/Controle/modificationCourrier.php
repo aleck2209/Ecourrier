@@ -223,7 +223,7 @@ if ((preg_replace('/\s+/', ' ', trim($Tableau_Infos_ancien_courrier[0]["lien_cou
 // Vérifier s'il y a des actions modifiées à enregistrer
 if (count($actionsModifiees) > 0) {
     // Afficher le tableau des actions modifiées
-    print_r($actionsModifiees);
+    // print_r($actionsModifiees);
     // Appel de la fonction pour mettre à jour le courrier départ
     updateCourrier($sqlCourrierDepart, $paramsCourrierDepart);
 
