@@ -70,14 +70,14 @@
                             <input type="text" name="signature_gouverneur" id="signature" value="<?php echo ($T1[0]['signature_gouverneur']) ?>">
                         </div>
                     </div>
+                    <!-- >
                     <div class="fields-update-mail">
                         <div class="field number-space">
                             <label for="numPieceJointe">nombre pièce jointe</label>
                             <input type="number" name="nombre_de_fichiers_joins" id="numPieceJointe" min="0" max="10" value="<?php echo $T1[0]['nombre_de_fichiers_joins'] ?>">
                         </div>
                         <div class="update-element not-required">
-                            <p class="update-element__title">Pièce(s) Jointes(s)</p>
-                            <!-- VERIFICATION SI UN FICHIER JOINT A ETE AJOUTE OU PAS -->
+                            
                             <?php
                             if ($T3) {
                                 foreach($tableau_lien as $lien) { ?>
@@ -91,9 +91,10 @@
                         </div>
                         <div class="field">
                             <label for="" id="pieceJoint"></label>
-                            <input type="file" name="ichiers_joints[]" id="" multiple>
+                            <input type="file" name="fichiers_joints[]" id="" multiple>
                         </div>
-                    </div>
+                    </div> 
+                    < -->
                     <div class="fields-update-mail">
                         <div class="update-element not-required">
                             <p class="update-element__title">fichier enregistré</p>

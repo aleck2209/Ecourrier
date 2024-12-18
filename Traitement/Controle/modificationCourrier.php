@@ -18,7 +18,6 @@ $nom_entite = recupererNomEntiteParIdUtilisateur($requete, $matricule);
 
 
 
-
 // Vérifier que les données ont été envoyées via POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Récupérer les données du formulaire
@@ -33,6 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $categorie = $_POST['categorie']?? '';
     $date_mise_circulation = $_POST['date_mise_circulation']?? '';
     $signature_gouverneur = $_POST['signature_gouverneur']?? '';
+    $fichiers_joints = $_FILES['fichier'];
 
     //Convertion du format de la date récupérée du formulaire au formulaire accepté dans la base de données:
       // Formater la date en ajoutant les secondes
@@ -53,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $verification = verifierCourrierDansModification($idCourrier);
 
 
-    $actionsModifiees = [];// Ce tableau contiendra les actions à mofier que nous utiliseront dans la fonction de modification
+    $actionsModifiees = "";// Ce tableau contiendra les actions à mofier que nous utiliseront dans la fonction de modification
   
     // Récupérer le contenu de la table du courrier pour comparrer et voir qu'est-ce qui à été modifier 
 if ($typeCourrier==="courrier départ") {
@@ -95,8 +95,6 @@ $Tableau_Infos_ancien_courrier = getInfosForCourrier($sql1,$idCourrier);
         $chemin_fichiers_joins = $liendossier . "/FichierAnnexes"; // Cette variable représente le lien du dossier où on doit stocker les fichiers annexes
 
         // Obtenir les liens des fichiers joints
-        $liens_fichiers_joins = get_uploaded_files_paths($chemin_fichiers_joins, $nom_balise_fichiers_join);
-        $liens_fichiers_joins_arrives = get_uploaded_files_pathsarrive($chemin_fichiers_joins, $nom_balise_fichiers_join);
     }
      if ($_FILES['fichier']['error'] ===1) {
         echo ' Veuillez vérifier la taille et le format du fichier ';
@@ -167,50 +165,83 @@ $Tableau_Infos_ancien_courrier = getInfosForCourrier($sql1,$idCourrier);
     
         // Avant de mettre à jour le courrier il nous faut vérifier quels champs ont été modifiés:
 
-
             $objet_base = trim($Tableau_Infos_ancien_courrier[0]["Objet_du_courrier"]);
             $objet_formulaire = trim($objet);
             $objet_base = preg_replace('/\s+/', ' ', $objet_base);  // Remplace les espaces multiples par un seul espace
             $objet_formulaire = preg_replace('/\s+/', ' ', $objet_formulaire);  // Idem pour l'objet du formulaire
-
-// Comparaison après nettoyage
-if ($objet_base !== $objet_formulaire) {
-    $actionsModifiees[] = "Objet mis à jour";
-}
-
-if (preg_replace('/\s+/', ' ', trim($Tableau_Infos_ancien_courrier[0]["destinataire"])) !== preg_replace('/\s+/', ' ', trim($destinataire))) {
-    $actionsModifiees[] = "Destinataire mis à jour";
-}
-
-if (preg_replace('/\s+/', ' ', trim($Tableau_Infos_ancien_courrier[0]["etat_courrier"])) !== preg_replace('/\s+/', ' ', trim($etat_courrier))) {
-    $actionsModifiees[] = "État du courrier mis à jour";
-}
-
-if (preg_replace('/\s+/', ' ', trim($Tableau_Infos_ancien_courrier[0]["Type_document"])) !== preg_replace('/\s+/', ' ', trim($typeDocument))) {
-    $actionsModifiees[] = "Type de document mis à jour";
-}
-if (preg_replace('/\s+/', ' ', trim($Tableau_Infos_ancien_courrier[0]["categorie"])) !== preg_replace('/\s+/', ' ', trim($categorie))) {
-    $actionsModifiees[] = "Catégorie mise à jour";
-}
-
-if (preg_replace('/\s+/', ' ', trim($Tableau_Infos_ancien_courrier[0]["signature_gouverneur"])) !== preg_replace('/\s+/', ' ', trim($signature_gouverneur))) {
-    if ($nom_entite ==="Sécrétariat") {
-        $actionsModifiees[] = "Signature apportée à ce courrier";
-    } else {
-        echo " Vous n'êtes pas habilité à changer la case signature du gouverneur";
-        exit;
-    }
-    
-}
-if (preg_replace('/\s+/', ' ', trim($Tableau_Infos_ancien_courrier[0]["numero_ordre"])) !== preg_replace('/\s+/', ' ', trim($numero_ordre))) {
-    $actionsModifiees[] = "Numéro d'ordre mis à jour";
-}
-// Vérification si le fichier a changé (en supposant que lien_courrier soit null si aucun fichier n'a été ajouté)
-// Vérification si le fichier a changé (en supposant que lien_courrier soit null si aucun fichier n'a été ajouté)
-if ((preg_replace('/\s+/', ' ', trim($Tableau_Infos_ancien_courrier[0]["lien_courrier"])) !== preg_replace('/\s+/', ' ', trim($liencourrier))) && $liencourrier !== null) {
-    $actionsModifiees[] = "Fichier du courrier mis à jour";
-}
-//Vérification si la date de mise en circulation a changé
+            
+            // Comparaison après nettoyage
+            if ($objet_base !== $objet_formulaire) {
+                if (empty($actionsModifiees)) {
+                    $actionsModifiees .= "Objet";
+                } else {
+                    $actionsModifiees .= ", Objet";
+                }
+            }
+            
+            if (preg_replace('/\s+/', ' ', trim($Tableau_Infos_ancien_courrier[0]["destinataire"])) !== preg_replace('/\s+/', ' ', trim($destinataire))) {
+                if (empty($actionsModifiees)) {
+                    $actionsModifiees .= "Destinataire";
+                } else {
+                    $actionsModifiees .= ", Destinataire";
+                }
+            } 
+            
+            if (preg_replace('/\s+/', ' ', trim($Tableau_Infos_ancien_courrier[0]["etat_courrier"])) !== preg_replace('/\s+/', ' ', trim($etat_courrier))) {
+                if (empty($actionsModifiees)) {
+                    $actionsModifiees .= "État du courrier";
+                } else {
+                    $actionsModifiees .= ", État du courrier";
+                }
+            }   
+            
+            if (preg_replace('/\s+/', ' ', trim($Tableau_Infos_ancien_courrier[0]["Type_document"])) !== preg_replace('/\s+/', ' ', trim($typeDocument))) {
+                if (empty($actionsModifiees)) {
+                    $actionsModifiees .= "Type de document";
+                } else {
+                    $actionsModifiees .= ", Type de document";
+                }
+            }
+            
+            if (preg_replace('/\s+/', ' ', trim($Tableau_Infos_ancien_courrier[0]["categorie"])) !== preg_replace('/\s+/', ' ', trim($categorie))) {
+                if (empty($actionsModifiees)) {
+                    $actionsModifiees .= "Catégorie";
+                } else {
+                    $actionsModifiees .= ", Catégorie";
+                }
+            }
+            
+            if (preg_replace('/\s+/', ' ', trim($Tableau_Infos_ancien_courrier[0]["signature_gouverneur"])) !== preg_replace('/\s+/', ' ', trim($signature_gouverneur))) {
+                if ($nom_entite === "Sécrétariat") {
+                    if (empty($actionsModifiees)) {
+                        $actionsModifiees .= "Signature";
+                    } else {
+                        $actionsModifiees .= ", Signature";
+                    }
+                } else {
+                    echo "Vous n'êtes pas habilité à changer la case signature du gouverneur";
+                    exit;
+                }
+            }
+            
+            if (preg_replace('/\s+/', ' ', trim($Tableau_Infos_ancien_courrier[0]["numero_ordre"])) !== preg_replace('/\s+/', ' ', trim($numero_ordre))) {
+                if (empty($actionsModifiees)) {
+                    $actionsModifiees .= "Numéro d'ordre";
+                } else {
+                    $actionsModifiees .= ", Numéro d'ordre";
+                }
+            }
+            
+            // Vérification si le fichier a changé
+            if ((preg_replace('/\s+/', ' ', trim($Tableau_Infos_ancien_courrier[0]["lien_courrier"])) !== preg_replace('/\s+/', ' ', trim($liencourrier))) && $liencourrier !== null) {
+                if (empty($actionsModifiees)) {
+                    $actionsModifiees .= "Fichier du courrier";
+                } else {
+                    $actionsModifiees .= ", Fichier du courrier";
+                }
+            }
+            
+            $actionsModifiees .= " Mis à jour";//Vérification si la date de mise en circulation a changé
 // if (preg_replace('/\s+/', ' ', trim($Tableau_Infos_ancien_courrier[0]["date_mise_circulation"])) !== preg_replace('/\s+/', ' ', trim($date_mise_circulation)) && $date_mise_circulation !=null) {
    
 //     echo $Tableau_Infos_ancien_courrier[0]["date_mise_circulation"].'<br>';
@@ -221,15 +252,15 @@ if ((preg_replace('/\s+/', ' ', trim($Tableau_Infos_ancien_courrier[0]["lien_cou
 
 
 // Vérifier s'il y a des actions modifiées à enregistrer
-if (count($actionsModifiees) > 0) {
+if (strlen($actionsModifiees) > 0) {
     // Afficher le tableau des actions modifiées
     print_r($actionsModifiees);
     // Appel de la fonction pour mettre à jour le courrier départ
     updateCourrier($sqlCourrierDepart, $paramsCourrierDepart);
 
-    foreach ($actionsModifiees as $action) {
-        insertHistorique($action,$idCourrier,$nom_entite,$typeCourrier); 
-    }
+   
+        insertHistorique($actionsModifiees,$idCourrier,$nom_entite,$typeCourrier); 
+   
     
  
 
@@ -285,9 +316,9 @@ setTimeout(function(){
             updateCourrier($sqlCourrierArrive, $paramsCourrierArrive);
 
             //Vérification des données 
-            foreach ($actionsModifiees as $action) {
-                insertHistorique($action,$idCourrier,$nom_entite,$typeCourrier); 
-            }
+            
+                insertHistorique($actionsModifiees,$idCourrier,$nom_entite,$typeCourrier); 
+            
             // Il faut d'abord trouver le l'id du courrier arrivé correspondant à ce numéro d'ordre afin d'utiliser son id pour l'historique
             $ligneCourrierArrive = recupererLigneSpecifique("courrierArrive","numero_ordre",$numero_ordre);
             if (!$ligneCourrierArrive) {
@@ -366,50 +397,83 @@ setTimeout(function(){
 
             // Avant de mettre à jour le courrier il nous faut vérifier quels champs ont été modifiés:
 
-
                 $objet_base = trim($Tableau_Infos_ancien_courrier[0]["Objet_du_courrier"]);
                 $objet_formulaire = trim($objet);
                 $objet_base = preg_replace('/\s+/', ' ', $objet_base);  // Remplace les espaces multiples par un seul espace
                 $objet_formulaire = preg_replace('/\s+/', ' ', $objet_formulaire);  // Idem pour l'objet du formulaire
-    
-    // Comparaison après nettoyage
-    if ($objet_base !== $objet_formulaire) {
-        $actionsModifiees[] = "Objet mis à jour";
-    }
-    
-    if (preg_replace('/\s+/', ' ', trim($Tableau_Infos_ancien_courrier[0]["destinataire"])) !== preg_replace('/\s+/', ' ', trim($destinataire))) {
-        $actionsModifiees[] = "Destinataire mis à jour";
-    }
-    
-    if (preg_replace('/\s+/', ' ', trim($Tableau_Infos_ancien_courrier[0]["etat_courrier"])) !== preg_replace('/\s+/', ' ', trim($etat_courrier))) {
-        $actionsModifiees[] = "État du courrier mis à jour";
-    }
-    
-    if (preg_replace('/\s+/', ' ', trim($Tableau_Infos_ancien_courrier[0]["Type_document"])) !== preg_replace('/\s+/', ' ', trim($typeDocument))) {
-        $actionsModifiees[] = "Type de document mis à jour";
-    }
-    if (preg_replace('/\s+/', ' ', trim($Tableau_Infos_ancien_courrier[0]["categorie"])) !== preg_replace('/\s+/', ' ', trim($categorie))) {
-        $actionsModifiees[] = "Catégorie mise à jour";
-    }
-    
-    if (preg_replace('/\s+/', ' ', trim($Tableau_Infos_ancien_courrier[0]["signature_gouverneur"])) !== preg_replace('/\s+/', ' ', trim($signature_gouverneur))) {
-        if ($nom_entite ==="Sécrétariat") {
-            $actionsModifiees[] = "Signature apportée à ce courrier";
-        } else {
-            echo " Vous n'êtes pas habilité à changer la case signature du gouverneur";
-            exit;
-        }
-        
-    }
-    if (preg_replace('/\s+/', ' ', trim($Tableau_Infos_ancien_courrier[0]["numero_ordre"])) !== preg_replace('/\s+/', ' ', trim($numero_ordre))) {
-        $actionsModifiees[] = "Numéro d'ordre mis à jour";
-    }
-    // Vérification si le fichier a changé (en supposant que lien_courrier soit null si aucun fichier n'a été ajouté)
-    // Vérification si le fichier a changé (en supposant que lien_courrier soit null si aucun fichier n'a été ajouté)
-    if ((preg_replace('/\s+/', ' ', trim($Tableau_Infos_ancien_courrier[0]["lien_courrier"])) !== preg_replace('/\s+/', ' ', trim($liencourrier))) && $liencourrier !== null) {
-        $actionsModifiees[] = "Fichier du courrier mis à jour";
-    }
-    //Vérification si la date de mise en circulation a changé
+                
+                // Comparaison après nettoyage
+                if ($objet_base !== $objet_formulaire) {
+                    if (empty($actionsModifiees)) {
+                        $actionsModifiees .= "Objet";
+                    } else {
+                        $actionsModifiees .= ", Objet";
+                    }
+                }
+                
+                if (preg_replace('/\s+/', ' ', trim($Tableau_Infos_ancien_courrier[0]["destinataire"])) !== preg_replace('/\s+/', ' ', trim($destinataire))) {
+                    if (empty($actionsModifiees)) {
+                        $actionsModifiees .= "Destinataire";
+                    } else {
+                        $actionsModifiees .= ", Destinataire";
+                    }
+                } 
+                
+                if (preg_replace('/\s+/', ' ', trim($Tableau_Infos_ancien_courrier[0]["etat_courrier"])) !== preg_replace('/\s+/', ' ', trim($etat_courrier))) {
+                    if (empty($actionsModifiees)) {
+                        $actionsModifiees .= "État du courrier";
+                    } else {
+                        $actionsModifiees .= ", État du courrier";
+                    }
+                }   
+                
+                if (preg_replace('/\s+/', ' ', trim($Tableau_Infos_ancien_courrier[0]["Type_document"])) !== preg_replace('/\s+/', ' ', trim($typeDocument))) {
+                    if (empty($actionsModifiees)) {
+                        $actionsModifiees .= "Type de document";
+                    } else {
+                        $actionsModifiees .= ", Type de document";
+                    }
+                }
+                
+                if (preg_replace('/\s+/', ' ', trim($Tableau_Infos_ancien_courrier[0]["categorie"])) !== preg_replace('/\s+/', ' ', trim($categorie))) {
+                    if (empty($actionsModifiees)) {
+                        $actionsModifiees .= "Catégorie";
+                    } else {
+                        $actionsModifiees .= ", Catégorie";
+                    }
+                }
+                
+                if (preg_replace('/\s+/', ' ', trim($Tableau_Infos_ancien_courrier[0]["signature_gouverneur"])) !== preg_replace('/\s+/', ' ', trim($signature_gouverneur))) {
+                    if ($nom_entite === "Sécrétariat") {
+                        if (empty($actionsModifiees)) {
+                            $actionsModifiees .= "Signature";
+                        } else {
+                            $actionsModifiees .= ", Signature";
+                        }
+                    } else {
+                        echo "Vous n'êtes pas habilité à changer la case signature du gouverneur";
+                        exit;
+                    }
+                }
+                
+                if (preg_replace('/\s+/', ' ', trim($Tableau_Infos_ancien_courrier[0]["numero_ordre"])) !== preg_replace('/\s+/', ' ', trim($numero_ordre))) {
+                    if (empty($actionsModifiees)) {
+                        $actionsModifiees .= "Numéro d'ordre";
+                    } else {
+                        $actionsModifiees .= ", Numéro d'ordre";
+                    }
+                }
+                
+                // Vérification si le fichier a changé
+                if ((preg_replace('/\s+/', ' ', trim($Tableau_Infos_ancien_courrier[0]["lien_courrier"])) !== preg_replace('/\s+/', ' ', trim($liencourrier))) && $liencourrier !== null) {
+                    if (empty($actionsModifiees)) {
+                        $actionsModifiees .= "Fichier du courrier";
+                    } else {
+                        $actionsModifiees .= ", Fichier du courrier";
+                    }
+                }
+                
+                $actionsModifiees .= " Mis à jour";    //Vérification si la date de mise en circulation a changé
     // if (preg_replace('/\s+/', ' ', trim($Tableau_Infos_ancien_courrier[0]["date_mise_circulation"])) !== preg_replace('/\s+/', ' ', trim($date_mise_circulation)) && $date_mise_circulation !=null) {
        
     //     echo $Tableau_Infos_ancien_courrier[0]["date_mise_circulation"].'<br>';
@@ -420,15 +484,15 @@ setTimeout(function(){
     
     
     // Vérifier s'il y a des actions modifiées à enregistrer
-    if (count($actionsModifiees) > 0) {
+    if (strlen($actionsModifiees) > 0) {
         // Afficher le tableau des actions modifiées
         print_r($actionsModifiees);
         // Appel de la fonction pour mettre à jour le courrier arrivé externe
         updateCourrier($sqlCourrierArriveExterne, $paramsCourrierArriveExterne);
     
-        foreach ($actionsModifiees as $action) {
-            insertHistorique($action,$idCourrier,$nom_entite,$typeCourrier); 
-        }
+        
+            insertHistorique($actionsModifiees,$idCourrier,$nom_entite,$typeCourrier); 
+        
         
     }else {
         die( '<script>

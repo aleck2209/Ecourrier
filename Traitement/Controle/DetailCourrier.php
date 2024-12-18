@@ -9,7 +9,7 @@ $date_mise_circulation = '';// date de mise en circulation du courrier
 $nom_fichier = "";// date mise en circulaton du currier
 $tableau_des_noms_des_fichiers_joints = [];
 
-$matricule ='user02' ;
+$matricule ='user04' ;
 
 $sql1 = " select p.id_pole, p.nom_pole
 from pole p inner join utilisateur u on 
@@ -211,8 +211,8 @@ elseif ($typeCourrier ==="copie courrier") {
     COALESCE(cd.objet_du_courrier, ca.objet_du_courrier) AS Objet_du_courrier,
     COALESCE(cd.Matricule_initiateur, ca.Matricule_initiateur) AS Matricule,
     COALESCE(cd.destinataire, ca.destinataire) AS destinataire,
-    u.nom_utilisateur,
-    u.prenom_utilisateur,
+    u.nom_utilisateur as nom_enregistreur,
+    u.prenom_utilisateur as prenom_enregistreur,
     COALESCE(cd.nombre_fichiers_joins, ca.nombre_fichiers_joins) AS nombre_de_fichiers_joins,
 
     CASE

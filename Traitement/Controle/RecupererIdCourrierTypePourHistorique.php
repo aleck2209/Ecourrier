@@ -6,7 +6,7 @@ require('../../Traitement/Base_de_donnee/Recuperation.php');
 $idCourrier= $_GET['$idCourrier'];
 $typeCourrier= $_GET['$typeCourrier'];
 
-$matricule ='user02' ;
+$matricule ='user04' ;
 
 $sql1 = " select p.id_pole, p.nom_pole
 from pole p inner join utilisateur u on 
@@ -39,7 +39,6 @@ elseif (isset($infos_entite_utilisateur['id_entite'])){
 
 
 if ($typeCourrier ==="copie courrier") {
-    echo 'je suis dans la condition';
     $liste_des_infos_historique = recupererHistoriqueCopieCourrier($idCourrier,$nom_entite);
 } else {
     $liste_des_infos_historique = recupererHistoriqueParIdCourrierEtType($idCourrier,$typeCourrier);
