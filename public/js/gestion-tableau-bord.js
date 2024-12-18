@@ -1,15 +1,18 @@
-document.addEventListener('DOMContentLoaded', alertDelete());
+document.addEventListener('DOMContentLoaded', alertDelete(), displayFile());
 
+// SOUMISSION DES FORMULAIRES DE TRIE
 function submitFilter() {
     const form = document.getElementById('form-filter');
     form.submit();
 }
 
+// SOUMISSION DES FORMULAIRE DE FILTRE
 function submitSort() {
     const form = document.getElementById('form-sort');
     form.submit();
 }
 
+// ALERTE DE SUPPRIMER COURRIER
 function alertDelete() {
     const supprimer = document.querySelectorAll('.supprimer');
     const alertBox = document.getElementById('alert-box');
@@ -40,3 +43,17 @@ function alertDelete() {
         redirectUrl = null;
     })
 }
+
+// AFFICHAGE DES FICHIER OU PAS
+function displayFile() {
+    const lienCourriers = document.querySelectorAll('.lienCourrier');
+    const regex = /.php$/;
+
+    lienCourriers.forEach(link => {
+        if(regex.test(link.href)) {
+            link.style.display = 'none';
+        }
+    })
+}
+
+// DEBUT DE PERSISTANCE DES FILTRES

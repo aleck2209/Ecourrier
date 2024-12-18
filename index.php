@@ -3,14 +3,14 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="../css/style1.css">
+        <link rel="stylesheet" href="public/css/style1.css">
         <title>Connexion</title>
     </head>
     <body class="body-login">
         <form action="" class="form-login">
             <h1>Connexion</h1>
             <div class="field-login">
-                <label for="nomUtilisateur">Nom d'utilisateur</label>
+                <label for="nomUtilisateur">Matricule</label>
                 <input type="text" name="" id="nomUtilisateur" placeholder="Entrer votre nom utilisateur" required>
             </div>
             <div class="field-login">

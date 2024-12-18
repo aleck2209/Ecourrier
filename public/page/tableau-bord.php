@@ -70,7 +70,7 @@
                         <form action="" method="post" class="form-filter" id="form-filter">
                             <h3>Option de filtre</h3>
                             <div class="fields-filter">
-                            <input type="hidden" name="form_type2" value="form1">
+                                <input type="hidden" name="form_type2" value="form1">
                                 <select name="Origine" id="" onchange="submitFilter()" >
                                     <option value="">[Origine]</option>
                                     <option value="courrier externe">Externe</option>
@@ -116,7 +116,11 @@
                         <div class="element-dashboard-mail">
                             <output name="" class="dashboard-number"><?php echo $courrier['numero_ordre'] ?></output>
                             <output name="" class="dasboard-object"><?php echo $courrier['objet_du_courrier'] ?></output>
-                            <output name="" class="dashboard-file"><a href="<?php echo ($courrier['lien_courrier']) ?>" target="_blank"><img src="../../public/images/pdf.png" alt=""></a></output>
+                            <output name="" class="dashboard-file">
+                                <a href="<?php echo ($courrier['lien_courrier']) ?>" target="_blank" class="lienCourrier">
+                                    <img src="../../public/images/pdf.png" alt="">
+                                </a>
+                            </output>
                             <output name="" class="dashboard-expediteur"><?php echo $courrier['type_courrier'] ?></output>
                             <output name="" class="dashboard-service"><?php echo $courrier['destinataire'] ?></output>
                             <output name="" class="dashboard-date"><?php echo $courrier['dateEnregistrement'] ?></output>
