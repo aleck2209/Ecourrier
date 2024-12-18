@@ -120,7 +120,9 @@
                                 <a href="../../public/page/historique-courrier.php?$idCourrier=<?=$courrier['idCourrier']?>&& $typeCourrier=<?=$courrier['type_courrier']?>">
                                     <input type="image" src="../images/historique.png" alt="" title="historique">
                                 </a>
-                                <input type="image" src="../images/supprimer.png" alt="" title="supprimer">
+                                <a href="../../tests/supprimer-courrier.php?$idCourrier=<?=$courrier['idCourrier']?>&& $typeCourrier=<?=$courrier['type_courrier']?>" class="supprimer">
+                                    <input type="image" src="../images/supprimer.png" alt="" title="supprimer">
+                                </a>
                             </div>
                         </div>
                     <?php } ?>
@@ -128,6 +130,11 @@
             </section>
         </main>
     </div>
+
+    <?php
+        // APPEL DE L'ALERTE QUAND ON VEUT SUPPRIMER UN COURRIER
+        require('../include/alerte-supprimer.php');
+    ?>
     <!-- FIN DE LA PAGE TABLEAU DE BORD  -->
 
      <!-- DEBUT SCRIPT JS -->

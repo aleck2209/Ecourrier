@@ -91,7 +91,7 @@
     </div>
 
     <?php
-        // APPEL DE L'ALERTE
+        // APPEL DE L'ALERTE QUAND ON SORT SANS ENREGISTRER
         require('../include/alerte.php');
     ?>
     <!-- FIN DE LA PAGE MODIFIER COURRIER  -->
