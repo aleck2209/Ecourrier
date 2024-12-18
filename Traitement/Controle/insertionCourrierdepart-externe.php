@@ -337,7 +337,7 @@ $nombre_fichiers_joins,$etatCourrier
 );
 
 //Mise à jour de l'historique de ce courrier
-insertHistorique("enregistrement du courrier",$idcourrierdepart,$nom_entite,"courrier départ");
+insertHistorique("enregistrement du courrier",$idcourrierdepart,$nom_entite,"courrier départ",$matricule);
 //---------------------------------------------Insertion des copies de courriers dans la base de données----------------------------- 
 
 if (!in_array(null,$TableauNomDestinataireCopie)) {

@@ -1402,18 +1402,22 @@ function recupererHistoriqueParIdCourrierEtType($idCourrier, $typeCourrier) {
         // Vérifier le type de courrier (départ ou arrivée)
         if ($typeCourrier === 'courrier départ') {
             // Requête SQL pour récupérer les historiques liés à un courrier de départ
-            $sql = "SELECT  h.action_effectuee, h.date_operation, h.entite_resoinsable
+            $sql = "SELECT  h.action_effectuee, h.date_operation, h.entite_resoinsable,u.Matricule, u.nom_utilisateur, u.prenom_utilisateur 
                 FROM historique h
+                inner join utilisateur u
+                on h.matricule_utilisateur = u.Matricule
                 WHERE h.idCourrierdepart = :idCourrier
-                group by h.action_effectuee, h.date_operation, h.entite_resoinsable
+                group by h.action_effectuee, h.date_operation, h.entite_resoinsable, u.Matricule, u.nom_utilisateur, u.prenom_utilisateur
                 ORDER BY h.date_operation DESC
             ";
         } elseif ($typeCourrier === 'courrier arrivé') {
             // Requête SQL pour récupérer les historiques liés à un courrier d'arrivée
-            $sql = "SELECT h.action_effectuee, h.date_operation, h.entite_resoinsable
+            $sql = "SELECT h.action_effectuee, h.date_operation, h.entite_resoinsable, u.Matricule, u.nom_utilisateur, u.prenom_utilisateur 
                 FROM historique h
+                inner join utilisateur u
+                on h.matricule_utilisateur = u.Matricule
                 WHERE h.idCourrierArrive = :idCourrier
-                group by h.action_effectuee, h.date_operation, h.entite_resoinsable
+                group by h.action_effectuee, h.date_operation, h.entite_resoinsable, u.Matricule, u.nom_utilisateur, u.prenom_utilisateur
                 ORDER BY h.date_operation DESC
             ";
         } else {

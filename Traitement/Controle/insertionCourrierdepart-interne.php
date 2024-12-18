@@ -355,7 +355,7 @@ $nombre_fichiers_joins,$etatCourrier
 );
 
 //Mise à jour de l'historique de ce courrier
-insertHistorique("enregistrement du courrier",$idcourrierdepart,$nom_entite,"courrier départ");
+insertHistorique("enregistrement du courrier",$idcourrierdepart,$nom_entite,"courrier départ",$matricule);
 //---------------------------------------------Insertion des copies de courriers dans la base de données----------------------------- 
 
 if (!in_array(null,$TableauNomDestinataireCopie)) {
@@ -390,7 +390,7 @@ $nombre_fichiers_joins,$etatCourrier
 
 
 //Mise à jour de l'historique de ce courrier
-insertHistorique("enregistrement du courrier",$idcourrierArrive,$nom_entite,"courrier arrivé");
+insertHistorique("enregistrement du courrier",$idcourrierArrive,$nom_entite,"courrier arrivé",$matricule);
 //--------------------------------------------insertion automatique du courrier arrivé de ce destinataire----------------------------
 
 if ($nombre_fichiers_joins ===count($liens_fichiers_joins_arrives )) {

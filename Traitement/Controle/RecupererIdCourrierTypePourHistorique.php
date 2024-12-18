@@ -25,7 +25,7 @@ $infos_entite_utilisateur = recupererIdEntiteOuIdPolePourUnUtilisateur($sql2,$ma
 $infos_pole_utilisateur = recupererIdEntiteOuIdPolePourUnUtilisateur($sql1,$matricule);
 
 if (isset($infos_pole_utilisateur['id_pole'])){
-
+    
     $nom_entite = recupererNomEntiteParIdUtilisateur($sql1,$matricule);
 }
 
@@ -38,11 +38,12 @@ elseif (isset($infos_entite_utilisateur['id_entite'])){
 
 
 
+
 if ($typeCourrier ==="copie courrier") {
     $liste_des_infos_historique = recupererHistoriqueCopieCourrier($idCourrier,$nom_entite);
 } else {
     $liste_des_infos_historique = recupererHistoriqueParIdCourrierEtType($idCourrier,$typeCourrier);
-
+  
 }
 
 
