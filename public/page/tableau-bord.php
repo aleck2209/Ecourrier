@@ -76,15 +76,26 @@
                                     <option value="courrier externe">Externe</option>
                                     <option value="courrier interne">Interne</option>
                                 </select>
-                                <select name="priority" onchange="submitFilter()">
-                                    <option value="">[Niveau priorité]</option>
-                                    <option value="urgent">Urgent</option>
-                                    <option value="normal">Non urgent</option>
-                                </select>
                                 <select name="typeCourrier" onchange="submitFilter()">
                                     <option value="">[type courrier]</option>
                                     <option value="courrier arrive">Arrivé</option>
                                     <option value="courrier départ">Départ</option>
+                                    <option value="">Copie</option>
+                                </select>
+                                <select name="priority" onchange="submitFilter()">
+                                    <option value="">[categorie]</option>
+                                    <option value="urgent">Urgent</option>
+                                    <option value="normal">Normal</option>
+                                </select>
+                                <select name="" onchange="submitFilter()">
+                                    <option value="">[expedié]</option>
+                                    <option value="">oui</option>
+                                    <option value="">non</option>
+                                </select>
+                                <select name="" onchange="submitFilter()">
+                                    <option value="">[Signé]</option>
+                                    <option value="">oui</option>
+                                    <option value="">non</option>
                                 </select>
                             </div>
                         </form>
@@ -95,8 +106,8 @@
                         <p class="dashboard-number">Numéro</p>
                         <p class="dasboard-object">Objet</p>
                         <p class="dashboard-file">Fichiers</p>
-                        <p class="dashboard-service">Destinataire</p>
                         <p class="dashboard-expediteur">Expéditeur</p>
+                        <p class="dashboard-service">Destinataire</p>
                         <p class="dashboard-date">Date</p>
                         <p class="dashboard-status">Statut</p>
                         <p class="dashboard-action">Opérations</p>
@@ -106,8 +117,8 @@
                             <output name="" class="dashboard-number"><?php echo $courrier['numero_ordre'] ?></output>
                             <output name="" class="dasboard-object"><?php echo $courrier['objet_du_courrier'] ?></output>
                             <output name="" class="dashboard-file"><a href="<?php echo ($courrier['lien_courrier']) ?>" target="_blank"><img src="../../public/images/pdf.png" alt=""></a></output>
-                            <output name="" class="dashboard-service"><?php echo $courrier['destinataire'] ?></output>
                             <output name="" class="dashboard-expediteur"><?php echo $courrier['type_courrier'] ?></output>
+                            <output name="" class="dashboard-service"><?php echo $courrier['destinataire'] ?></output>
                             <output name="" class="dashboard-date"><?php echo $courrier['dateEnregistrement'] ?></output>
                             <output name="" class="dashboard-status"><?php echo $courrier['etat_courrier'] ?></output>
                             <div class="dashboard-action">

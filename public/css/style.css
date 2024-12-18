@@ -115,7 +115,7 @@
     --WD-HALF-SPACE: 49%;
     --WD-LOGO: 3rem;
     --WD-BTN-SEARCH: 2.93rem;
-    --WD-BTN-OPERATION: 1.7rem;
+    --WD-BTN-OPERATION: 1.418rem;
     /* FIN WIDTH */
 
     /* DEBUT HEIGHT */
@@ -619,7 +619,6 @@ input[type="reset"]:hover,
 .form-search,
 .fields-key-word,
 .fields-date,
-.fields-filter,
 .fields-sort {
     align-items: center;
     display: flex;
@@ -649,11 +648,29 @@ input[type="reset"]:hover,
     border: var(--BORDER-FORM);
     border-radius: var(--BORDER-RADIUS);
     display: flex;
-    flex-flow: column nowrap;
+    flex-flow: column wrap;
     font-family: var(--FF-ROBOTO);
     gap: var(--GAP-FORM);
     margin-bottom: var(--MG-BT-FORM);
     padding: var(--PG-FORM);
+}
+
+.form-filter select {
+    padding: var(--PG-FIELD) 0;
+    font-size: 0.8rem;
+    width: 120px;
+}
+
+.search-block input,
+.form-sort select {
+    font-size: 0.8rem; 
+}
+
+.fields-filter {
+    flex-wrap: wrap;
+    display: flex;
+    align-items: center;
+    gap: 0.2rem
 }
 
 .fields-key-word input[type="search"] {
