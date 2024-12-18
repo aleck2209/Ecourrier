@@ -1,14 +1,34 @@
 <?php
 require('../../Traitement/Base_de_donnee/Recuperation.php');
 
+$matricule = 'user04';
+$sql1 = " select p.id_pole, p.nom_pole
+from pole p inner join utilisateur u on 
+p.id_pole = u.id_pole
+where u.Matricule = ?;";
 
-$requete = " select e.id_entite, e.nom_entite
+$sql2=" select e.id_entite, e.nom_entite
 from entite_banque e inner join utilisateur u on 
 e.id_entite = u.id_entite
 where u.Matricule = ?;";
-$matricule = 'user01';
 
-$nom_entite = recupererNomEntiteParIdUtilisateur($requete,$matricule);
+
+$infos_entite_utilisateur = recupererIdEntiteOuIdPolePourUnUtilisateur($sql2,$matricule);
+
+$infos_pole_utilisateur = recupererIdEntiteOuIdPolePourUnUtilisateur($sql1,$matricule);
+
+
+
+if (isset($infos_pole_utilisateur['id_pole'])){
+    $nom_entite = recupererNomEntiteParIdUtilisateur($sql1,$matricule);
+
+}
+elseif ( (isset($infos_entite_utilisateur['id_entite']))) {
+    $nom_entite = recupererNomEntiteParIdUtilisateur($sql2,$matricule);
+ }
+
+
+
 
 $nom_fichier = ""; // Nom du fichier 
 

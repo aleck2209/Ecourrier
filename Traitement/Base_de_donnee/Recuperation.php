@@ -167,9 +167,10 @@ function recupererLigneSpecifique($table,$colonne,$valeur){
 
     }
 
+
+
     // Requetes de recupération du contenu d'une table en  fournissant que la requête et un paamètre
 
-    
     function recupererNomEntiteParIdUtilisateur($requete,$idUtilisateur){
         
         try {
@@ -186,12 +187,44 @@ function recupererLigneSpecifique($table,$colonne,$valeur){
     
         if ($test_tableau) {
             foreach ($tableau_associatif_resultats as $entite) {
-                return $entite->nom_entite;
+                
+                if (isset($entite->nom_entite)) {
+                    return $entite->nom_entite;
+                }elseif (isset($entite->nom_pole)) {
+                    return $entite->nom_pole;
+                }
+                
             }
             
         }else {
-          echo "entité non liée à l'utilisateur non trouvée ";
+          echo "entité ou pole  lié à l'utilisateur non trouvé ";
             return;
+        }
+        
+        } catch (PDOException $e) {
+            die(" erreur survenue".$e->getMessage());
+        }
+        
+
+    }
+
+    // Fonction pour récupérer soit l'id_pole soit l'id_entité pour un utilisateur donné
+
+    function recupererIdEntiteOuIdPolePourUnUtilisateur($requete,$idUtilisateur){
+        
+        try {
+            $objet_connexion = connectToDb('localhost','ecourrierdb2','Dba','EcourrierDba');
+       
+        $resultats = $objet_connexion->prepare($requete);
+    
+        $resultats->bindValue(1,$idUtilisateur);
+    
+        $resultats->execute();
+        $tableau_associatif_resultats = $resultats->fetchAll(PDO::FETCH_ASSOC);
+        //tester la longueur du tableau 
+        $test_tableau = (count($tableau_associatif_resultats)>0) ? 0 : 1 ;
+        if (isset($tableau_associatif_resultats[0])) {
+            return $tableau_associatif_resultats[0];
         }
         
         } catch (PDOException $e) {
@@ -209,20 +242,38 @@ function recupererLigneSpecifique($table,$colonne,$valeur){
     JOIN entite_banque eb ON u.id_entite = eb.id_entite
     WHERE eb.nom_entite = 'DSI';";
 
+
+
+
+
+
 function getCourriers($nom_entite, $searchKeyword = '', $startDate = '', $endDate = '', $sortType = '', $sortOrder = '', $origine = '', $priority = '', $typeCourrier = '') {
     // Connexion à la base de données (tu peux ajuster cela selon ton contexte)
     $objet_connexion = connectToDb('localhost','ecourrierdb2','Dba','EcourrierDba');
+
+ //Ici nous allons initialiser les variables 
+ $sql1 = " select nom_entite from entite_banque where nom_entite = :nom_entite";
+ $requete_entite = getResultsFromQuery($nom_entite,$sql1);
+
+ $sql2 = "select nom_pole from pole where nom_pole = :nom_pole";
+ $requete_pole = getPoleNameResultsFromQuery($nom_entite,$sql2);
+
+ // Récupération des courriers par entité 
+
+ if (!empty($requete_entite)) {
+    
 
     // Requête de base pour récupérer courriers départs et arrivés
     $query = "SELECT idCourrier,numero_ordre, 
                objet_du_courrier,
                Etat_interne_externe,  -- Pas d'alias 'cd' ou 'ca'
-               lien_courrier, 
+               lien_courrier,
+               expediteur,
                destinataire, 
                dateEnregistrement, 
                etat_courrier,
                'courrier départ' AS type_courrier
-        FROM courrierdepart
+        FROM courrierdepart 
         JOIN utilisateur u ON courrierdepart.Matricule_initiateur = u.Matricule
         JOIN entite_banque eb ON u.id_entite = eb.id_entite
         WHERE eb.nom_entite = :nom_entite 
@@ -235,15 +286,46 @@ function getCourriers($nom_entite, $searchKeyword = '', $startDate = '', $endDat
                objet_du_courrier,
                Etat_interne_externe,  -- Pas d'alias 'cd' ou 'ca'
                lien_courrier, 
-               destinataire, 
+               destinataire,
+               expediteur,
                dateEnregistrement, 
                etat_courrier,
                'courrier arrivé' AS type_courrier
         FROM courrierarrive
-        JOIN utilisateur u ON courrierarrive.Matricule_initiateur = u.Matricule
-        JOIN entite_banque eb ON u.id_entite = eb.id_entite
         WHERE courrierarrive.destinataire = :nom_entite
-       
+
+    UNION ALL
+
+    SELECT idCourrier,numero_ordre, 
+               objet_du_courrier,
+               Etat_interne_externe,  -- Pas d'alias 'cd' ou 'ca'
+               lien_courrier, 
+               destinataire,
+               expediteur, 
+               dateEnregistrement, 
+               etat_courrier,
+               'copie courrier' AS type_courrier
+        FROM courrierdepart
+        JOIN copie_courrier ON courrierdepart.idCourrier = copie_courrier.id_courrierDepart
+        
+        WHERE copie_courrier.nom_destinataire = :nom_entite
+        
+        UNION ALL
+        
+        SELECT idCourrier,numero_ordre, 
+               objet_du_courrier,
+               Etat_interne_externe,  -- Pas d'alias 'cd' ou 'ca'
+               lien_courrier, 
+               destinataire,
+               expediteur, 
+               dateEnregistrement, 
+               etat_courrier,
+               'copie courrier' AS type_courrier
+        FROM courrierarrive
+        JOIN copie_courrier ON courrierarrive.idCourrier = copie_courrier.id_courrierArrive
+        
+        WHERE copie_courrier.nom_destinataire = :nom_entite
+
     ";
    
 
@@ -259,6 +341,7 @@ function getCourriers($nom_entite, $searchKeyword = '', $startDate = '', $endDat
                Etat_interne_externe,  -- Pas d'alias 'cd' ou 'ca'
                lien_courrier, 
                destinataire, 
+               expediteur,
                dateEnregistrement, 
                etat_courrier,
                'courrier départ' AS type_courrier
@@ -267,6 +350,8 @@ function getCourriers($nom_entite, $searchKeyword = '', $startDate = '', $endDat
         JOIN entite_banque eb ON u.id_entite = eb.id_entite
         WHERE eb.nom_entite = :nom_entite AND (objet_du_courrier LIKE :searchKeyword OR destinataire LIKE :searchKeyword)
 
+         
+
         UNION ALL
 
         -- Requête pour les courriers arrivés
@@ -274,14 +359,51 @@ function getCourriers($nom_entite, $searchKeyword = '', $startDate = '', $endDat
                objet_du_courrier,
                Etat_interne_externe,  -- Pas d'alias 'cd' ou 'ca'
                lien_courrier, 
-               destinataire, 
+               destinataire,
+               expediteur,
                dateEnregistrement, 
                etat_courrier,
                'courrier arrivé' AS type_courrier
         FROM courrierarrive
-        JOIN utilisateur u ON courrierarrive.Matricule_initiateur = u.Matricule
-        JOIN entite_banque eb ON u.id_entite = eb.id_entite
         WHERE courrierarrive.destinataire = :nom_entite AND (objet_du_courrier LIKE :searchKeyword OR destinataire LIKE :searchKeyword)
+    
+        UNION ALL
+
+    SELECT idCourrier,numero_ordre, 
+               objet_du_courrier,
+               Etat_interne_externe,  -- Pas d'alias 'cd' ou 'ca'
+               lien_courrier, 
+               destinataire,
+               expediteur, 
+               dateEnregistrement, 
+               etat_courrier,
+               'copie courrier' AS type_courrier
+        FROM courrierdepart
+        JOIN copie_courrier ON courrierdepart.idCourrier = copie_courrier.id_courrierDepart
+        
+        WHERE copie_courrier.nom_destinataire = :nom_entite AND (objet_du_courrier LIKE :searchKeyword OR destinataire LIKE :searchKeyword)
+        
+        UNION ALL
+        
+        SELECT idCourrier,numero_ordre, 
+               objet_du_courrier,
+               Etat_interne_externe,  -- Pas d'alias 'cd' ou 'ca'
+               lien_courrier, 
+               destinataire,
+               expediteur, 
+               dateEnregistrement, 
+               etat_courrier,
+               'copie courrier' AS type_courrier
+        FROM courrierarrive
+        JOIN copie_courrier ON courrierarrive.idCourrier = copie_courrier.id_courrierArrive
+        
+        WHERE copie_courrier.nom_destinataire = :nom_entite AND (objet_du_courrier LIKE :searchKeyword OR destinataire LIKE :searchKeyword)
+
+    
+    
+    
+    
+    
     ";
    
         $params[':searchKeyword'] = "%$searchKeyword%";
@@ -294,6 +416,7 @@ function getCourriers($nom_entite, $searchKeyword = '', $startDate = '', $endDat
                Etat_interne_externe,  -- Pas d'alias 'cd' ou 'ca'
                lien_courrier, 
                destinataire, 
+               expediteur,
                dateEnregistrement, 
                etat_courrier,
                'courrier départ' AS type_courrier
@@ -310,13 +433,48 @@ function getCourriers($nom_entite, $searchKeyword = '', $startDate = '', $endDat
                Etat_interne_externe,  -- Pas d'alias 'cd' ou 'ca'
                lien_courrier, 
                destinataire, 
+               expediteur,
                dateEnregistrement, 
                etat_courrier,
                'courrier arrivé' AS type_courrier
         FROM courrierarrive
-        JOIN utilisateur u ON courrierarrive.Matricule_initiateur = u.Matricule
-        JOIN entite_banque eb ON u.id_entite = eb.id_entite
         WHERE courrierarrive.destinataire = :nom_entite and courrierarrive.dateEnregistrement  BETWEEN :startDate AND :endDate
+        
+        UNION ALL
+
+    SELECT idCourrier,numero_ordre, 
+               objet_du_courrier,
+               Etat_interne_externe,  -- Pas d'alias 'cd' ou 'ca'
+               lien_courrier, 
+               destinataire,
+               expediteur, 
+               dateEnregistrement, 
+               etat_courrier,
+               'copie courrier' AS type_courrier
+        FROM courrierdepart
+        JOIN copie_courrier ON courrierdepart.idCourrier = copie_courrier.id_courrierDepart
+        
+        WHERE copie_courrier.nom_destinataire = :nom_entite AND courrierdepart.dateEnregistrement  BETWEEN :startDate AND :endDate
+        
+        UNION ALL
+        
+        SELECT idCourrier,numero_ordre, 
+               objet_du_courrier,
+               Etat_interne_externe,  -- Pas d'alias 'cd' ou 'ca'
+               lien_courrier, 
+               destinataire,
+               expediteur, 
+               dateEnregistrement, 
+               etat_courrier,
+               'copie courrier' AS type_courrier
+        FROM courrierarrive
+        JOIN copie_courrier ON courrierarrive.idCourrier = copie_courrier.id_courrierArrive
+        
+        WHERE copie_courrier.nom_destinataire = :nom_entite AND courrierarrive.dateEnregistrement  BETWEEN :startDate AND :endDate
+
+     
+     
+     
      ";
         $params[':startDate'] = $startDate;
         $params[':endDate'] = $endDate;
@@ -331,7 +489,8 @@ function getCourriers($nom_entite, $searchKeyword = '', $startDate = '', $endDat
                objet_du_courrier,
                Etat_interne_externe,  -- Pas d'alias 'cd' ou 'ca'
                lien_courrier, 
-               destinataire, 
+               destinataire,
+               expediteur, 
                dateEnregistrement, 
                etat_courrier,
                'courrier départ' AS type_courrier
@@ -348,14 +507,48 @@ function getCourriers($nom_entite, $searchKeyword = '', $startDate = '', $endDat
                Etat_interne_externe,  -- Pas d'alias 'cd' ou 'ca'
                lien_courrier, 
                destinataire, 
+               expediteur,
                dateEnregistrement, 
                etat_courrier,
                'courrier arrivé' AS type_courrier
         FROM courrierarrive
-        JOIN utilisateur u ON courrierarrive.Matricule_initiateur = u.Matricule
-        JOIN entite_banque eb ON u.id_entite = eb.id_entite
         WHERE courrierarrive.destinataire = :nom_entite and courrierarrive.Etat_interne_externe = :origine
- 
+        
+        UNION ALL
+
+        SELECT idCourrier,numero_ordre, 
+               objet_du_courrier,
+               Etat_interne_externe,  -- Pas d'alias 'cd' ou 'ca'
+               lien_courrier, 
+               destinataire,
+               expediteur, 
+               dateEnregistrement, 
+               etat_courrier,
+               'copie courrier' AS type_courrier
+        FROM courrierdepart
+        JOIN copie_courrier ON courrierdepart.idCourrier = copie_courrier.id_courrierDepart
+        
+        WHERE copie_courrier.nom_destinataire = :nom_entite and courrierdepart.Etat_interne_externe = :origine
+        
+        UNION ALL
+        
+        SELECT idCourrier,numero_ordre, 
+               objet_du_courrier,
+               Etat_interne_externe,  -- Pas d'alias 'cd' ou 'ca'
+               lien_courrier, 
+               destinataire,
+               expediteur, 
+               dateEnregistrement, 
+               etat_courrier,
+               'copie courrier' AS type_courrier
+        FROM courrierarrive
+        JOIN copie_courrier ON courrierarrive.idCourrier = copie_courrier.id_courrierArrive
+        
+        WHERE copie_courrier.nom_destinataire = :nom_entite and courrierarrive.Etat_interne_externe = :origine
+     
+
+
+
             ";
         $params[':origine'] = $origine;
     }
@@ -368,6 +561,7 @@ function getCourriers($nom_entite, $searchKeyword = '', $startDate = '', $endDat
                Etat_interne_externe,  -- Pas d'alias 'cd' ou 'ca'
                lien_courrier, 
                destinataire, 
+               expediteur,
                dateEnregistrement, 
                etat_courrier,
                'courrier départ' AS type_courrier
@@ -384,13 +578,46 @@ function getCourriers($nom_entite, $searchKeyword = '', $startDate = '', $endDat
                Etat_interne_externe,  -- Pas d'alias 'cd' ou 'ca'
                lien_courrier, 
                destinataire, 
+               expediteur,
                dateEnregistrement, 
                etat_courrier,
                'courrier arrivé' AS type_courrier
         FROM courrierarrive
-        JOIN utilisateur u ON courrierarrive.Matricule_initiateur = u.Matricule
-        JOIN entite_banque eb ON u.id_entite = eb.id_entite
         WHERE courrierarrive.destinataire = :nom_entite and courrierarrive.categorie = :priority
+
+        UNION ALL
+
+
+        SELECT idCourrier,numero_ordre, 
+               objet_du_courrier,
+               Etat_interne_externe,  -- Pas d'alias 'cd' ou 'ca'
+               lien_courrier, 
+               destinataire,
+               expediteur, 
+               dateEnregistrement, 
+               etat_courrier,
+               'copie courrier' AS type_courrier
+        FROM courrierdepart
+        JOIN copie_courrier ON courrierdepart.idCourrier = copie_courrier.id_courrierDepart
+        
+        WHERE copie_courrier.nom_destinataire = :nom_entite and courrierdepart.categorie = :priority
+        
+        UNION ALL
+        
+        SELECT idCourrier,numero_ordre, 
+               objet_du_courrier,
+               Etat_interne_externe,  -- Pas d'alias 'cd' ou 'ca'
+               lien_courrier, 
+               destinataire,
+               expediteur, 
+               dateEnregistrement, 
+               etat_courrier,
+               'copie courrier' AS type_courrier
+        FROM courrierarrive
+        JOIN copie_courrier ON courrierarrive.idCourrier = copie_courrier.id_courrierArrive
+        
+        WHERE copie_courrier.nom_destinataire = :nom_entite AND  courrierarrive.categorie = :priority
+
     ";
         $params[':priority'] = $priority;
     }
@@ -403,12 +630,11 @@ function getCourriers($nom_entite, $searchKeyword = '', $startDate = '', $endDat
                Etat_interne_externe,  -- Pas d'alias 'cd' ou 'ca'
                lien_courrier, 
                destinataire, 
+               expediteur,
                dateEnregistrement, 
                etat_courrier,
                'courrier arrivé' AS type_courrier
         FROM courrierarrive
-        JOIN utilisateur u ON courrierarrive.Matricule_initiateur = u.Matricule
-        JOIN entite_banque eb ON u.id_entite = eb.id_entite
         WHERE courrierarrive.destinataire = :nom_entite
  ";
         } elseif ($typeCourrier === 'courrier départ') {
@@ -417,6 +643,7 @@ function getCourriers($nom_entite, $searchKeyword = '', $startDate = '', $endDat
                Etat_interne_externe,  -- Pas d'alias 'cd' ou 'ca'
                lien_courrier, 
                destinataire, 
+               expediteur,
                dateEnregistrement, 
                etat_courrier,
                'courrier départ' AS type_courrier
@@ -444,6 +671,415 @@ function getCourriers($nom_entite, $searchKeyword = '', $startDate = '', $endDat
         $query .= " ORDER BY dateEnregistrement DESC";
     }
 
+} 
+
+// -------------------------------------------------S'il s'agit d'un pole ---------------------------
+
+
+elseif (!empty($requete_pole)) {
+
+
+
+        // Requête de base pour récupérer courriers départs et arrivés
+        $query = "SELECT idCourrier,numero_ordre, 
+               objet_du_courrier,
+               Etat_interne_externe,  -- Pas d'alias 'cd' ou 'ca'
+               lien_courrier, 
+               destinataire, 
+               expediteur,
+               dateEnregistrement, 
+               etat_courrier,
+               'courrier départ' AS type_courrier
+        FROM courrierdepart
+        JOIN utilisateur u ON courrierdepart.Matricule_initiateur = u.Matricule
+        JOIN pole p ON u.id_pole = p.id_pole
+        WHERE p.nom_pole = :nom_pole 
+    
+    UNION ALL
+
+SELECT idCourrier, numero_ordre, 
+               objet_du_courrier,
+               Etat_interne_externe,  -- Pas d'alias 'cd' ou 'ca'
+               lien_courrier, 
+               destinataire, 
+               expediteur,
+               dateEnregistrement, 
+               etat_courrier,
+               'courrier arrivé' AS type_courrier
+        FROM courrierarrive
+        WHERE courrierarrive.destinataire = :nom_pole   
+     UNION ALL
+
+    SELECT idCourrier,numero_ordre, 
+               objet_du_courrier,
+               Etat_interne_externe,  -- Pas d'alias 'cd' ou 'ca'
+               lien_courrier, 
+               destinataire, 
+               expediteur,
+               dateEnregistrement, 
+               etat_courrier,
+               'copie courrier' AS type_courrier
+        FROM courrierdepart
+        JOIN copie_courrier ON courrierdepart.idCourrier = copie_courrier.id_courrierDepart
+        
+        WHERE copie_courrier.nom_destinataire = :nom_pole
+        
+        UNION ALL
+        
+        SELECT idCourrier,numero_ordre, 
+               objet_du_courrier,
+               Etat_interne_externe,  -- Pas d'alias 'cd' ou 'ca'
+               lien_courrier, 
+               destinataire, 
+               expediteur,
+               dateEnregistrement, 
+               etat_courrier,
+               'copie courrier' AS type_courrier
+        FROM courrierarrive
+        JOIN copie_courrier ON courrierarrive.idCourrier = copie_courrier.id_courrierArrive
+        
+        WHERE copie_courrier.nom_destinataire = :nom_pole
+    
+";
+
+
+// Ajouter des conditions de filtre (si présentes)
+
+$params = [':nom_pole' => $nom_entite];
+
+
+    // Recherche par mot-clé
+    if ($searchKeyword) {
+        $query = "SELECT idCourrier,numero_ordre, 
+               objet_du_courrier,
+               Etat_interne_externe,  -- Pas d'alias 'cd' ou 'ca'
+               lien_courrier, 
+               destinataire, 
+               expediteur,
+               dateEnregistrement, 
+               etat_courrier,
+               'courrier départ' AS type_courrier
+        FROM courrierdepart
+        JOIN utilisateur u ON courrierdepart.Matricule_initiateur = u.Matricule
+        JOIN pole p ON u.id_pole = p.id_pole
+        WHERE p.nom_pole = :nom_pole AND (objet_du_courrier LIKE :searchKeyword OR destinataire LIKE :searchKeyword)
+
+        UNION ALL
+
+        -- Requête pour les courriers arrivés
+        SELECT idCourrier,numero_ordre, 
+               objet_du_courrier,
+               Etat_interne_externe,  -- Pas d'alias 'cd' ou 'ca'
+               lien_courrier, 
+               destinataire,
+               expediteur, 
+               dateEnregistrement, 
+               etat_courrier,
+               'courrier arrivé' AS type_courrier
+        FROM courrierarrive
+        WHERE courrierarrive.destinataire = :nom_pole AND (objet_du_courrier LIKE :searchKeyword OR destinataire LIKE :searchKeyword)
+        
+    UNION ALL
+
+    SELECT idCourrier,numero_ordre, 
+               objet_du_courrier,
+               Etat_interne_externe,  -- Pas d'alias 'cd' ou 'ca'
+               lien_courrier, 
+               destinataire, 
+               expediteur,
+               dateEnregistrement, 
+               etat_courrier,
+               'copie courrier' AS type_courrier
+        FROM courrierdepart
+        JOIN copie_courrier ON courrierdepart.idCourrier = copie_courrier.id_courrierDepart
+        
+        WHERE copie_courrier.nom_destinataire = :nom_pole AND (objet_du_courrier LIKE :searchKeyword OR destinataire LIKE :searchKeyword)
+        
+        UNION ALL
+        
+        SELECT idCourrier,numero_ordre, 
+               objet_du_courrier,
+               Etat_interne_externe,  -- Pas d'alias 'cd' ou 'ca'
+               lien_courrier, 
+               destinataire, 
+               expediteur,
+               dateEnregistrement, 
+               etat_courrier,
+               'copie courrier' AS type_courrier
+        FROM courrierarrive
+        JOIN copie_courrier ON courrierarrive.idCourrier = copie_courrier.id_courrierArrive
+        
+        WHERE copie_courrier.nom_destinataire = :nom_pole AND (objet_du_courrier LIKE :searchKeyword OR destinataire LIKE :searchKeyword)
+    
+    
+    ";
+   
+        $params[':searchKeyword'] = "%$searchKeyword%";
+    }
+
+
+    // Filtrage par période (date de début et de fin)
+    if ($startDate && $endDate) {
+        $query = "SELECT idCourrier,numero_ordre, 
+               objet_du_courrier,
+               Etat_interne_externe,  -- Pas d'alias 'cd' ou 'ca'
+               lien_courrier, 
+               destinataire, 
+               expediteur,
+               dateEnregistrement, 
+               etat_courrier,
+               'courrier départ' AS type_courrier
+        FROM courrierdepart
+        JOIN utilisateur u ON courrierdepart.Matricule_initiateur = u.Matricule
+        JOIN pole p ON u.id_pole = p.id_pole
+        WHERE p.nom_pole = :nom_pole and courrierdepart.dateEnregistrement  BETWEEN :startDate AND :endDate
+
+        UNION ALL
+
+        -- Requête pour les courriers arrivés
+        SELECT idCourrier,numero_ordre, 
+               objet_du_courrier,
+               Etat_interne_externe,  -- Pas d'alias 'cd' ou 'ca'
+               lien_courrier, 
+               destinataire, 
+               expediteur,
+               dateEnregistrement, 
+               etat_courrier,
+               'courrier arrivé' AS type_courrier
+        FROM courrierarrive
+        WHERE courrierarrive.destinataire = :nom_pole and courrierarrive.dateEnregistrement  BETWEEN :startDate AND :endDate
+        
+    UNION ALL
+
+    SELECT idCourrier,numero_ordre, 
+               objet_du_courrier,
+               Etat_interne_externe,  -- Pas d'alias 'cd' ou 'ca'
+               lien_courrier, 
+               destinataire, 
+               expediteur,
+               dateEnregistrement, 
+               etat_courrier,
+               'copie courrier' AS type_courrier
+        FROM courrierdepart
+        JOIN copie_courrier ON courrierdepart.idCourrier = copie_courrier.id_courrierDepart
+        
+        WHERE copie_courrier.nom_destinataire = :nom_pole AND courrierdepart.dateEnregistrement  BETWEEN :startDate AND :endDate
+        
+        UNION ALL
+        
+        SELECT idCourrier,numero_ordre, 
+               objet_du_courrier,
+               Etat_interne_externe,  -- Pas d'alias 'cd' ou 'ca'
+               lien_courrier, 
+               destinataire, 
+               expediteur,
+               dateEnregistrement, 
+               etat_courrier,
+               'copie courrier' AS type_courrier
+        FROM courrierarrive
+        JOIN copie_courrier ON courrierarrive.idCourrier = copie_courrier.id_courrierArrive
+        
+        WHERE copie_courrier.nom_destinataire = :nom_pole AND courrierarrive.dateEnregistrement  BETWEEN :startDate AND :endDate
+     
+     ";
+        $params[':startDate'] = $startDate;
+        $params[':endDate'] = $endDate;
+    }
+
+
+    // Filtrage par origine (externe ou interne)
+    if ($origine) {
+
+        
+        $query =" SELECT 
+        idCourrier,numero_ordre, 
+               objet_du_courrier,
+               Etat_interne_externe,  -- Pas d'alias 'cd' ou 'ca'
+               lien_courrier, 
+               destinataire,
+               expediteur, 
+               dateEnregistrement, 
+               etat_courrier,
+               'courrier départ' AS type_courrier
+        FROM courrierdepart
+        JOIN utilisateur u ON courrierdepart.Matricule_initiateur = u.Matricule
+        JOIN pole p ON u.id_pole = p.id_pole
+        WHERE p.nom_pole = :nom_pole  and courrierdepart.Etat_interne_externe= :origine
+
+        UNION ALL
+
+        -- Requête pour les courriers arrivés
+        SELECT idCourrier,numero_ordre, 
+               objet_du_courrier,
+               Etat_interne_externe,  -- Pas d'alias 'cd' ou 'ca'
+               lien_courrier, 
+               destinataire, 
+               expediteur,
+               dateEnregistrement, 
+               etat_courrier,
+               'courrier arrivé' AS type_courrier
+        FROM courrierarrive
+        WHERE courrierarrive.destinataire = :nom_pole and courrierarrive.Etat_interne_externe = :origine
+    
+    UNION ALL
+
+    SELECT idCourrier,numero_ordre, 
+               objet_du_courrier,
+               Etat_interne_externe,  -- Pas d'alias 'cd' ou 'ca'
+               lien_courrier, 
+               destinataire, 
+               expediteur,
+               dateEnregistrement, 
+               etat_courrier,
+               'copie courrier' AS type_courrier
+        FROM courrierdepart
+        JOIN copie_courrier ON courrierdepart.idCourrier = copie_courrier.id_courrierDepart
+        
+        WHERE copie_courrier.nom_destinataire = :nom_pole AND courrierdepart.Etat_interne_externe = :origine
+    
+        UNION ALL    
+        SELECT idCourrier,numero_ordre, 
+               objet_du_courrier,
+               Etat_interne_externe,  -- Pas d'alias 'cd' ou 'ca'
+               lien_courrier, 
+               destinataire, 
+               expediteur,
+               dateEnregistrement, 
+               etat_courrier,
+               'copie courrier' AS type_courrier
+        FROM courrierarrive
+        JOIN copie_courrier ON courrierarrive.idCourrier = copie_courrier.id_courrierArrive
+        
+        WHERE copie_courrier.nom_destinataire = :nom_pole AND courrierarrive.Etat_interne_externe = :origine
+     
+         ";
+        $params[':origine'] = $origine;
+    }
+
+    // Filtrage par priorité
+    if ($priority) {
+        
+        $query = " SELECT idCourrier,numero_ordre, 
+               objet_du_courrier,
+               Etat_interne_externe,  -- Pas d'alias 'cd' ou 'ca'
+               lien_courrier, 
+               destinataire,
+               expediteur, 
+               dateEnregistrement, 
+               etat_courrier,
+               'courrier départ' AS type_courrier
+        FROM courrierdepart
+        JOIN utilisateur u ON courrierdepart.Matricule_initiateur = u.Matricule
+        JOIN pole p ON u.id_pole = p.id_pole
+        WHERE p.nom_pole = :nom_pole  and courrierdepart.categorie= :priority
+
+        UNION ALL
+
+        -- Requête pour les courriers arrivés
+        SELECT idCourrier,numero_ordre, 
+               objet_du_courrier,
+               Etat_interne_externe,  -- Pas d'alias 'cd' ou 'ca'
+               lien_courrier, 
+               destinataire, 
+               expediteur,
+               dateEnregistrement, 
+               etat_courrier,
+               'courrier arrivé' AS type_courrier
+        FROM courrierarrive
+        WHERE courrierarrive.destinataire = :nom_pole and courrierarrive.categorie = :priority
+        UNION ALL
+
+    SELECT idCourrier,numero_ordre, 
+               objet_du_courrier,
+               Etat_interne_externe,  -- Pas d'alias 'cd' ou 'ca'
+               lien_courrier, 
+               destinataire, 
+               expediteur,
+               dateEnregistrement, 
+               etat_courrier,
+               'copie courrier' AS type_courrier
+        FROM courrierdepart
+        JOIN copie_courrier ON courrierdepart.idCourrier = copie_courrier.id_courrierDepart
+        
+        WHERE copie_courrier.nom_destinataire = :nom_pole AND  courrierdepart.categorie = :priority
+        UNION ALL
+        SELECT idCourrier,numero_ordre, 
+               objet_du_courrier,
+               Etat_interne_externe,  -- Pas d'alias 'cd' ou 'ca'
+               lien_courrier, 
+               destinataire, 
+               expediteur,
+               dateEnregistrement, 
+               etat_courrier,
+               'copie courrier' AS type_courrier
+        FROM courrierarrive
+        JOIN copie_courrier ON courrierarrive.idCourrier = copie_courrier.id_courrierArrive
+        
+        WHERE copie_courrier.nom_destinataire = :nom_pole AND courrierarrive.categorie = :priority
+    
+    
+    ";
+        $params[':priority'] = $priority;
+    }
+
+
+
+
+    // Filtrage par type de courrier (arrivé ou départ)
+    if ($typeCourrier) {
+        if ($typeCourrier === 'courrier arrive') {
+            $query = " SELECT idCourrier,numero_ordre, 
+               objet_du_courrier,
+               Etat_interne_externe,  -- Pas d'alias 'cd' ou 'ca'
+               lien_courrier, 
+               destinataire, 
+               expediteur,
+               dateEnregistrement, 
+               etat_courrier,
+               'courrier arrivé' AS type_courrier
+        FROM courrierarrive
+        WHERE courrierarrive.destinataire = :nom_pole
+ ";
+        } elseif ($typeCourrier === 'courrier départ') {
+            $query = " SELECT idCourrier,numero_ordre, 
+               objet_du_courrier,
+               Etat_interne_externe,  -- Pas d'alias 'cd' ou 'ca'
+               lien_courrier, 
+               destinataire, 
+               expediteur,
+               dateEnregistrement, 
+               etat_courrier,
+               'courrier départ' AS type_courrier
+        FROM courrierdepart
+        JOIN utilisateur u ON courrierdepart.Matricule_initiateur = u.Matricule
+        JOIN pole p ON u.id_pole = p.id_pole
+        WHERE p.nom_pole = :nom_pole ";
+        }
+    }
+
+
+    if ($sortType) {
+        $query .= " ORDER BY ";
+        if ($sortType === 'date') {
+            $query .= "dateEnregistrement";
+        } elseif ($sortType === 'objet') {
+            $query .= "objet_du_courrier";
+        } elseif ($sortType === 'Numéro') {
+            $query .= "numero_ordre";
+        }
+        
+        // Définir l'ordre (croissant ou décroissant)
+        $query .= ($sortOrder === 'decroissant') ? " DESC" : " ASC";
+    } else {
+        $query .= " ORDER BY dateEnregistrement DESC";
+    }
+
+
+}
+    
+    
+    
+    
     // Préparation de la requête SQL
     $stmt = $objet_connexion->prepare($query);
 
@@ -507,7 +1143,25 @@ function getResultsFromQuery($nom_entite, $query) {
     return $results;
 }
 
+function getPoleNameResultsFromQuery($nom_entite, $query) {
+    // Connexion à la base de données
+    $objet_connexion = connectToDb('localhost', 'ecourrierdb2', 'Dba', 'EcourrierDba');
 
+    // Préparer la requête SQL
+    $stmt = $objet_connexion->prepare($query);
+
+    // Lier le paramètre :nom_entite à la valeur du nom de l'entité
+    $stmt->bindValue(':nom_pole', $nom_entite);
+
+    // Exécuter la requête
+    $stmt->execute();
+
+    // Récupérer les résultats sous forme de tableau associatif
+    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // Retourner les résultats
+    return $results;
+}
 
 function recupererNomFichiers($lien){
     if (strlen($lien)==0) {
@@ -538,6 +1192,7 @@ function getCourriersBO($nom_entite, $searchKeyword = '', $startDate = '', $endD
                Etat_interne_externe,  -- Pas d'alias 'cd' ou 'ca'
                lien_courrier, 
                destinataire, 
+               expediteur,
                dateEnregistrement, 
                etat_courrier,
                'courrier arrivé' AS type_courrier
@@ -567,6 +1222,7 @@ function getCourriersBO($nom_entite, $searchKeyword = '', $startDate = '', $endD
                Etat_interne_externe,  -- Pas d'alias 'cd' ou 'ca'
                lien_courrier, 
                destinataire, 
+               expediteur,
                dateEnregistrement, 
                etat_courrier,
                'courrier arrivé' AS type_courrier
@@ -588,6 +1244,7 @@ function getCourriersBO($nom_entite, $searchKeyword = '', $startDate = '', $endD
                Etat_interne_externe,  -- Pas d'alias 'cd' ou 'ca'
                lien_courrier, 
                destinataire, 
+               expediteur,
                dateEnregistrement, 
                etat_courrier,
                'courrier arrivé' AS type_courrier
@@ -607,7 +1264,8 @@ function getCourriersBO($nom_entite, $searchKeyword = '', $startDate = '', $endD
                objet_du_courrier,
                Etat_interne_externe,  -- Pas d'alias 'cd' ou 'ca'
                lien_courrier, 
-               destinataire, 
+               destinataire,
+               expediteur, 
                dateEnregistrement, 
                etat_courrier,
                'courrier arrivé' AS type_courrier
@@ -628,6 +1286,7 @@ function getCourriersBO($nom_entite, $searchKeyword = '', $startDate = '', $endD
                Etat_interne_externe,  -- Pas d'alias 'cd' ou 'ca'
                lien_courrier, 
                destinataire, 
+               expediteur,
                dateEnregistrement, 
                etat_courrier,
                'courrier arrivé' AS type_courrier
@@ -641,7 +1300,8 @@ function getCourriersBO($nom_entite, $searchKeyword = '', $startDate = '', $endD
                objet_du_courrier,
                Etat_interne_externe,  -- Pas d'alias 'cd' ou 'ca'
                lien_courrier, 
-               destinataire, 
+               destinataire,
+               expediteur, 
                dateEnregistrement, 
                etat_courrier,
                'courrier départ' AS type_courrier
@@ -742,18 +1402,22 @@ function recupererHistoriqueParIdCourrierEtType($idCourrier, $typeCourrier) {
         // Vérifier le type de courrier (départ ou arrivée)
         if ($typeCourrier === 'courrier départ') {
             // Requête SQL pour récupérer les historiques liés à un courrier de départ
-            $sql = "SELECT  h.action_effectuee, h.date_operation, h.entite_resoinsable
+            $sql = "SELECT  h.action_effectuee, h.date_operation, h.entite_resoinsable,u.Matricule, u.nom_utilisateur, u.prenom_utilisateur 
                 FROM historique h
+                inner join utilisateur u
+                on h.matricule_utilisateur = u.Matricule
                 WHERE h.idCourrierdepart = :idCourrier
-                group by h.action_effectuee, h.date_operation, h.entite_resoinsable
+                group by h.action_effectuee, h.date_operation, h.entite_resoinsable, u.Matricule, u.nom_utilisateur, u.prenom_utilisateur
                 ORDER BY h.date_operation DESC
             ";
         } elseif ($typeCourrier === 'courrier arrivé') {
             // Requête SQL pour récupérer les historiques liés à un courrier d'arrivée
-            $sql = "SELECT h.action_effectuee, h.date_operation, h.entite_resoinsable
+            $sql = "SELECT h.action_effectuee, h.date_operation, h.entite_resoinsable, u.Matricule, u.nom_utilisateur, u.prenom_utilisateur 
                 FROM historique h
+                inner join utilisateur u
+                on h.matricule_utilisateur = u.Matricule
                 WHERE h.idCourrierArrive = :idCourrier
-                group by h.action_effectuee, h.date_operation, h.entite_resoinsable
+                group by h.action_effectuee, h.date_operation, h.entite_resoinsable, u.Matricule, u.nom_utilisateur, u.prenom_utilisateur
                 ORDER BY h.date_operation DESC
             ";
         } else {
@@ -786,10 +1450,77 @@ function recupererHistoriqueParIdCourrierEtType($idCourrier, $typeCourrier) {
 }
 
 
+function recupererInfosCopieCourrier($requete,$idCourrier,$nom_entite){
+    
+       // Connexion à la base de données
+       $objet_connexion = connectToDb('localhost', 'ecourrierdb2', 'Dba', 'EcourrierDba');
+
+       // Préparer la requête SQL
+       $stmt = $objet_connexion->prepare($requete);
+   
+       // Lier les paramètres :idCourrier et :type_courrier et à la valeur du nom de l'entité
+       $stmt->bindValue(':idCourrier', $idCourrier);
+       $stmt->bindValue(':nom_entite', $nom_entite);
+
+       // Exécuter la requête
+       $stmt->execute();
+   
+       // Récupérer les résultats sous forme de tableau associatif
+       $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+   
+       // Retourner les résultats
+        return $results; 
+
+}
 
 
 
+// Cette fonction de récupérer l'historique d'une copie de courrier 
 
+function recupererHistoriqueCopieCourrier($idCourrier,$nom_entite){
+ $sql = "SELECT
+    COALESCE(cd.idCourrier, ca.idCourrier) AS idCourrier,
+    COALESCE(cd.Type_document, ca.Type_document) AS Type_document,
+    COALESCE(cd.Etat_interne_externe, ca.Etat_interne_externe) AS origine_courrier,
+    COALESCE(cd.etat_courrier, ca.etat_courrier) AS etat_courrier,
+    COALESCE(cd.etat_plis_ferme, ca.etat_plis_ferme) AS plis_ferme,
+    COALESCE(cd.dateEnregistrement, ca.dateEnregistrement) AS dateEnregistrement,
+    COALESCE(cd.date_mise_circulation, ca.date_mise_circulation) AS date_mise_circulation,
+    COALESCE(cd.Reference, ca.Reference) AS Reference,
+    COALESCE(cd.lien_courrier, ca.lien_courrier) AS lien_courrier,
+    COALESCE(cd.objet_du_courrier, ca.objet_du_courrier) AS Objet_du_courrier,
+    COALESCE(cd.Matricule_initiateur, ca.Matricule_initiateur) AS Matricule,
+    COALESCE(cd.destinataire, ca.destinataire) AS destinataire,
+    u.nom_utilisateur,
+    u.prenom_utilisateur,
+    COALESCE(cd.nombre_fichiers_joins, ca.nombre_fichiers_joins) AS nombre_de_fichiers_joins,
+
+    CASE
+        WHEN cd.idCourrier IS NOT NULL THEN 'courrier départ'
+        ELSE 'courrier arrivé'
+    END AS type_courrier,
+    COALESCE(cd.expediteur, ca.expediteur) AS expediteur,
+    COALESCE(cd.numero_ordre, ca.numero_ordre) AS numero_ordre,
+    COALESCE(cd.categorie, ca.categorie) AS categorie,
+    COALESCE(cd.date_derniere_modification, ca.date_derniere_modification) AS date_derniere_modification,
+    COALESCE(cd.signature_gouverneur, ca.signature_gouverneur) AS signature_gouverneur
+FROM
+    copie_courrier cc
+    LEFT JOIN courrierdepart cd ON cc.id_courrierDepart = cd.idCourrier
+    LEFT JOIN courrierarrive ca ON cc.id_courrierArrive = ca.idCourrier
+    INNER JOIN utilisateur u ON COALESCE(cd.Matricule_initiateur, ca.Matricule_initiateur) = u.Matricule
+WHERE
+    COALESCE(cd.idCourrier, ca.idCourrier) =:idCourrier and cc.nom_destinataire = :nom_entite ;";
+
+  $infos_courrier = recupererInfosCopieCourrier($sql,$idCourrier,$nom_entite) ;
+
+    
+
+   $type_courrier_origine = $infos_courrier[0]['type_courrier'];
+
+    return recupererHistoriqueParIdCourrierEtType($idCourrier,$type_courrier_origine);
+
+}
 
 
 

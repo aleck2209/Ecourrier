@@ -328,7 +328,7 @@ return $idCourrier;
 
 
 // Fonction pour insérer un idCourrier dans main_modification_courrier avec la date actuelle
-function insererCourrierDansModification($idCourrier) {
+function donnerAutorisationPourModificationCourrierArrive($idCourrier) {
     // La date et l'heure actuelles
 
     $objet_connection = connectToDb('localhost', 'ecourrierdb2', 'Dba', 'EcourrierDba');
@@ -357,18 +357,18 @@ function insererCourrierDansModification($idCourrier) {
 
 
 
-function insertHistorique($action, $idCourrier, $entiteQuiEnregistre,$typeCourrier) {
+function insertHistorique($action, $idCourrier, $entiteQuiEnregistre,$typeCourrier,$matricule) {
     try {
 
 
         $objet_connection = connectToDb('localhost', 'ecourrierdb2', 'Dba', 'EcourrierDba');
         // Vérification de l'entité et préparation de la requête SQL
         if ($typeCourrier === 'courrier départ') {
-            $sql = "INSERT INTO historique (action_effectuee, date_operation, idCourrierdepart, idCourrierArrive,entite_resoinsable) 
-                    VALUES (:action, NOW(), :idCourrier, NULL,:entite_resoinsable)";
+            $sql = "INSERT INTO historique (action_effectuee, date_operation, idCourrierdepart, idCourrierArrive,entite_resoinsable,matricule_utilisateur) 
+                    VALUES (:action, NOW(), :idCourrier, NULL,:entite_resoinsable, :matricule_utilisateur)";
         } elseif ($typeCourrier === 'courrier arrivé') {
-            $sql = "INSERT INTO historique (action_effectuee, date_operation, idCourrierdepart, idCourrierArrive,entite_resoinsable) 
-                    VALUES (:action, NOW(), NULL, :idCourrier,:entite_resoinsable)";
+            $sql = "INSERT INTO historique (action_effectuee, date_operation, idCourrierdepart, idCourrierArrive,entite_resoinsable,matricule_utilisateur) 
+                    VALUES (:action, NOW(), NULL, :idCourrier,:entite_resoinsable, :matricule_utilisateur)";
         } else {
             throw new Exception("Entité invalide, utilisez 'depart' ou 'arrive'.");
         }
@@ -380,6 +380,7 @@ function insertHistorique($action, $idCourrier, $entiteQuiEnregistre,$typeCourri
         $stmt->bindParam(':action', $action, PDO::PARAM_STR);
         $stmt->bindParam(':idCourrier', $idCourrier, PDO::PARAM_INT);
         $stmt->bindParam(':entite_resoinsable', $entiteQuiEnregistre, PDO::PARAM_STR);
+        $stmt->bindParam(':matricule_utilisateur', $matricule, PDO::PARAM_STR);
         // Exécuter la requête
         $stmt->execute();
 
