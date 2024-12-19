@@ -62,9 +62,9 @@
                     <div class="fields-save-mail">
                         <div class="field">
                             <label for="typeCourrier">Type de courrier</label>
-                            <select name="type_courrier" id="typeCourrier" onchange="afficherCorrespondant()">
-                                <option value="depart">Départ</option>
-                                <option value="arrive">Arrivé</option>
+                            <select name="" id="typeCourrier" onchange="afficherCorrespondant()">
+                                <option value="courrier départ">Départ</option>
+                                <option value="courrier arrivé">Arrivé</option>
                             </select>
                         </div>
                         <div class="field" id="fieldExpediteur">

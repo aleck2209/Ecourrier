@@ -71,28 +71,28 @@
                             <h3>Option de filtre</h3>
                             <div class="fields-filter">
                                 <input type="hidden" name="form_type2" value="form1">
-                                <select name="Origine" id="" onchange="submitFilter()" >
+                                <select name="Origine" id="">
                                     <option value="">[Origine]</option>
                                     <option value="courrier externe">Externe</option>
                                     <option value="courrier interne">Interne</option>
                                 </select>
-                                <select name="typeCourrier" onchange="submitFilter()">
+                                <select name="typeCourrier">
                                     <option value="">[type courrier]</option>
                                     <option value="courrier arrive">Arrivé</option>
                                     <option value="courrier départ">Départ</option>
                                     <option value="">Copie</option>
                                 </select>
-                                <select name="priority" onchange="submitFilter()">
+                                <select name="priority">
                                     <option value="">[categorie]</option>
                                     <option value="urgent">Urgent</option>
                                     <option value="normal">Normal</option>
                                 </select>
-                                <select name="" onchange="submitFilter()">
+                                <select name="">
                                     <option value="">[expedié]</option>
                                     <option value="">oui</option>
                                     <option value="">non</option>
                                 </select>
-                                <select name="" onchange="submitFilter()">
+                                <select name="">
                                     <option value="">[Signé]</option>
                                     <option value="">oui</option>
                                     <option value="">non</option>
@@ -104,10 +104,10 @@
                 <div class="list-mail">
                     <div class="title-dashboard-mail">
                         <p class="dashboard-number">Numéro</p>
-                        <p class="dasboard-object">Objet</p>
+                        <p class="dashboard-object">Objet</p>
                         <p class="dashboard-file">Fichiers</p>
                         <p class="dashboard-expediteur">Expéditeur</p>
-                        <p class="dashboard-service">Destinataire</p>
+                        <p class="dashboard-destinataire">Destinataire</p>
                         <p class="dashboard-date">Date</p>
                         <p class="dashboard-status">Statut</p>
                         <p class="dashboard-action">Opérations</p>
@@ -115,14 +115,14 @@
                     <?php foreach($courriers as $courrier) { ?>
                         <div class="element-dashboard-mail">
                             <output name="" class="dashboard-number"><?php echo $courrier['numero_ordre'] ?></output>
-                            <output name="" class="dasboard-object"><?php echo $courrier['objet_du_courrier'] ?></output>
+                            <output name="" class="dashboard-object"><?php echo $courrier['objet_du_courrier'] ?></output>
                             <output name="" class="dashboard-file">
                                 <a href="<?php echo ($courrier['lien_courrier']) ?>" target="_blank" class="lienCourrier">
                                     <img src="../../public/images/pdf.png" alt="">
                                 </a>
                             </output>
-                            <output name="" class="dashboard-expediteur"><?php echo $courrier['type_courrier'] ?></output>
-                            <output name="" class="dashboard-service"><?php echo $courrier['destinataire'] ?></output>
+                            <output name="" class="dashboard-expediteur"><?php echo $courrier['expediteur'] ?></output>
+                            <output name="" class="dashboard-destinataire"><?php echo $courrier['destinataire'] ?></output>
                             <output name="" class="dashboard-date"><?php echo $courrier['dateEnregistrement'] ?></output>
                             <output name="" class="dashboard-status"><?php echo $courrier['etat_courrier'] ?></output>
                             <div class="dashboard-action">
@@ -131,6 +131,9 @@
                                 </a>
                                 <a href="../../public/page/modifier-courrier.php?$idCourrier=<?=$courrier['idCourrier']?>&& $typeCourrier=<?=$courrier['type_courrier']?>">
                                     <input type="image" src="../images/modifier.png" alt="" title="modifier">
+                                </a>
+                                <a href="../../public/page/creer-rappel.php">
+                                    <input type="image" src="../images/rappel.png" alt="" title="créer un rappel">
                                 </a>
                                 <a href="../../public/page/historique-courrier.php?$idCourrier=<?=$courrier['idCourrier']?>&& $typeCourrier=<?=$courrier['type_courrier']?>">
                                     <input type="image" src="../images/historique.png" alt="" title="historique">

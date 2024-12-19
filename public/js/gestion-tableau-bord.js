@@ -1,12 +1,6 @@
 document.addEventListener('DOMContentLoaded', alertDelete(), displayFile());
 
 // SOUMISSION DES FORMULAIRES DE TRIE
-function submitFilter() {
-    const form = document.getElementById('form-filter');
-    form.submit();
-}
-
-// SOUMISSION DES FORMULAIRE DE FILTRE
 function submitSort() {
     const form = document.getElementById('form-sort');
     form.submit();
@@ -56,4 +50,35 @@ function displayFile() {
     })
 }
 
-// DEBUT DE PERSISTANCE DES FILTRES
+function restoreFilterValue() {
+    document.querySelectorAll('#form-filter select').forEach(select => {
+        const storedValue = localStorage.getItem(select.name);
+        if (storedValue) {
+            select.value = storedValue;
+        }
+    });
+}
+
+function handleSelectChange(event) {
+    
+    const changedSelect = event.target;
+    console.log(changedSelect)
+
+    localStorage.setItem(changedSelect.name, changedSelect.value);
+
+    document.querySelectorAll('#form-filter select').forEach(select => {
+        if (select !== changedSelect) {
+            select.value = "";
+            localStorage.removeItem(select.name);
+        }
+    });
+
+    document.getElementById('form-filter').submit();
+}
+
+document.querySelectorAll('#form-filter select').forEach(select => {
+    select.addEventListener('change', handleSelectChange);
+});
+
+window.onload = restoreFilterValue();
+
