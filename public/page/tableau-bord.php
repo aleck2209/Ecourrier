@@ -121,7 +121,7 @@
                                     <img src="../../public/images/pdf.png" alt="">
                                 </a>
                             </output>
-                            <output name="" class="dashboard-expediteur"><?php echo $courrier['type_courrier'] ?></output>
+                            <output name="" class="dashboard-expediteur"><?php echo $courrier['expediteur'] ?></output>
                             <output name="" class="dashboard-destinataire"><?php echo $courrier['destinataire'] ?></output>
                             <output name="" class="dashboard-date"><?php echo $courrier['dateEnregistrement'] ?></output>
                             <output name="" class="dashboard-status"><?php echo $courrier['etat_courrier'] ?></output>
@@ -131,6 +131,9 @@
                                 </a>
                                 <a href="../../public/page/modifier-courrier.php?$idCourrier=<?=$courrier['idCourrier']?>&& $typeCourrier=<?=$courrier['type_courrier']?>">
                                     <input type="image" src="../images/modifier.png" alt="" title="modifier">
+                                </a>
+                                <a href="../../public/page/creer-rappel.php">
+                                    <input type="image" src="../images/rappel.png" alt="" title="créer un rappel">
                                 </a>
                                 <a href="../../public/page/historique-courrier.php?$idCourrier=<?=$courrier['idCourrier']?>&& $typeCourrier=<?=$courrier['type_courrier']?>">
                                     <input type="image" src="../images/historique.png" alt="" title="historique">

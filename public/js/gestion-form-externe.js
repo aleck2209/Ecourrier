@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', alertSave(), courrierExterneArrive(), regNumOrdre())
+document.addEventListener('DOMContentLoaded', alertSave(), courrierExterneArrive(), regNumOrdre(), afficherPlis(), afficherPlisArrive())
 
 // AUTOCOMPLETION CAS DU DESTINATAIRE ARRIVE
 function completionArrive() {

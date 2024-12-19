@@ -882,10 +882,24 @@ output[class="dashboard-file"] {
     margin-top: 1.5rem;
 }
 
-.title-historical-mail p,
-.element-historical-mail p {
-    width: 33%;
+.historical__prenom,
+.historical__nom {
+    width: 7%;
 }
+
+.historical__matricule {
+    width: 4%;
+}
+
+.historical__service,
+.historical__date {
+    width: 9%
+}
+
+.historical__action {
+    width: 18%;
+}
+
 /* FIN PAGE HISTORIQUE */
 
 /* DEBUT PAGE CORBEILLE */
@@ -898,5 +912,4 @@ output[class="dashboard-file"] {
 .basket-object {
     width: 20%;
 }
-
 /* FIN PAGE CORBEILLE  */
