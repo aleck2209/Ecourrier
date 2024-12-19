@@ -51,6 +51,9 @@
                     <a class="sidebar" href="#">Déconnexion</a>
                 </li>
                 <li>
+                    <a class="sidebar" href="corbeille.php">Corbeille</a>
+                </li>
+                <li>
                     <a href="liste-utilisateur.php">Administration</a>
                 </li>
             </ul>

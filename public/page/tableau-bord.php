@@ -104,10 +104,10 @@
                 <div class="list-mail">
                     <div class="title-dashboard-mail">
                         <p class="dashboard-number">Numéro</p>
-                        <p class="dasboard-object">Objet</p>
+                        <p class="dashboard-object">Objet</p>
                         <p class="dashboard-file">Fichiers</p>
                         <p class="dashboard-expediteur">Expéditeur</p>
-                        <p class="dashboard-service">Destinataire</p>
+                        <p class="dashboard-destinataire">Destinataire</p>
                         <p class="dashboard-date">Date</p>
                         <p class="dashboard-status">Statut</p>
                         <p class="dashboard-action">Opérations</p>
@@ -115,14 +115,14 @@
                     <?php foreach($courriers as $courrier) { ?>
                         <div class="element-dashboard-mail">
                             <output name="" class="dashboard-number"><?php echo $courrier['numero_ordre'] ?></output>
-                            <output name="" class="dasboard-object"><?php echo $courrier['objet_du_courrier'] ?></output>
+                            <output name="" class="dashboard-object"><?php echo $courrier['objet_du_courrier'] ?></output>
                             <output name="" class="dashboard-file">
                                 <a href="<?php echo ($courrier['lien_courrier']) ?>" target="_blank" class="lienCourrier">
                                     <img src="../../public/images/pdf.png" alt="">
                                 </a>
                             </output>
                             <output name="" class="dashboard-expediteur"><?php echo $courrier['type_courrier'] ?></output>
-                            <output name="" class="dashboard-service"><?php echo $courrier['destinataire'] ?></output>
+                            <output name="" class="dashboard-destinataire"><?php echo $courrier['destinataire'] ?></output>
                             <output name="" class="dashboard-date"><?php echo $courrier['dateEnregistrement'] ?></output>
                             <output name="" class="dashboard-status"><?php echo $courrier['etat_courrier'] ?></output>
                             <div class="dashboard-action">
