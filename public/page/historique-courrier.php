@@ -49,7 +49,6 @@
     </div>
     <!-- FIN DE LA PAGE LISTE PROFIL -->
     <!-- DEBUT SCRIPT JS -->
-    <script src="../js/afficher-nav.js"></script>
     <script src="../js/afficher-header.js"></script>
     <!-- FIN SCRIPT JS -->
 </body>

@@ -903,6 +903,11 @@ output[class="dashboard-file"] {
 /* FIN PAGE HISTORIQUE */
 
 /* DEBUT PAGE CORBEILLE */
+.title-basket-mail {
+    margin-top: 1.5rem;
+}
+
+
 .basket-action input[type="image"] {
     background-color: transparent;
     padding: 0.3rem;
@@ -912,4 +917,5 @@ output[class="dashboard-file"] {
 .basket-object {
     width: 20%;
 }
+
 /* FIN PAGE CORBEILLE  */

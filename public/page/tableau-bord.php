@@ -71,28 +71,28 @@
                             <h3>Option de filtre</h3>
                             <div class="fields-filter">
                                 <input type="hidden" name="form_type2" value="form1">
-                                <select name="Origine" id="" onchange="submitFilter()" >
+                                <select name="Origine" id="">
                                     <option value="">[Origine]</option>
                                     <option value="courrier externe">Externe</option>
                                     <option value="courrier interne">Interne</option>
                                 </select>
-                                <select name="typeCourrier" onchange="submitFilter()">
+                                <select name="typeCourrier">
                                     <option value="">[type courrier]</option>
                                     <option value="courrier arrive">Arrivé</option>
                                     <option value="courrier départ">Départ</option>
                                     <option value="">Copie</option>
                                 </select>
-                                <select name="priority" onchange="submitFilter()">
+                                <select name="priority">
                                     <option value="">[categorie]</option>
                                     <option value="urgent">Urgent</option>
                                     <option value="normal">Normal</option>
                                 </select>
-                                <select name="" onchange="submitFilter()">
+                                <select name="">
                                     <option value="">[expedié]</option>
                                     <option value="">oui</option>
                                     <option value="">non</option>
                                 </select>
-                                <select name="" onchange="submitFilter()">
+                                <select name="">
                                     <option value="">[Signé]</option>
                                     <option value="">oui</option>
                                     <option value="">non</option>

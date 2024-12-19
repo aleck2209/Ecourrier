@@ -24,38 +24,39 @@
         <main class="main">
             <section class="page-content-basket" id="page-user">
                 <h2>Corbeille</h2>
-                <div class="list-mail">
-                    <div class="title-basket-mail">
-                        <p class="basket-number">Numéro</p>
-                        <p class="basket-object">Objet</p>
-                        <p class="basket-file">Fichiers</p>
-                        <p class="basket-expediteur">Expéditeur</p>
-                        <p class="basket-destinataire">Destinataire</p>
-                        <p class="basket-date">Date</p>
-                        <p class="basket-status">Statut</p>
-                        <p class="basket-action">Opérations</p>
-                    </div>
-                    <?php  ?>
-                        <div class="element-basket-mail">
-                            <output name="" class="basket-number"></output>
-                            <output name="" class="basket-object"></output>
-                            <output name="" class="basket-file">
-                                <a href="" target="_blank" class="lienCourrier">
-                                    <img src="../../public/images/pdf.png" alt="">
-                                </a>
-                            </output>
-                            <output name="" class="basket-expediteur"></output>
-                            <output name="" class="basket-destinataire"></output>
-                            <output name="" class="basket-date"></output>
-                            <output name="" class="basket-status"></output>
-                            <div class="basket-action">
-                                <a href="">
-                                    <input type="image" src="../images/details.png" alt="" title="détails">
-                                </a>
-                            </div>
-                        </div>
-                    <?php  ?>
+                <div class="title-basket-mail">
+                    <p class="basket-number">Numéro</p>
+                    <p class="basket-object">Objet</p>
+                    <p class="basket-file">Fichiers</p>
+                    <p class="basket-expediteur">Expéditeur</p>
+                    <p class="basket-destinataire">Destinataire</p>
+                    <p class="basket-date">Date</p>
+                    <p class="basket-status">Statut</p>
+                    <p class="basket-action">Opérations</p>
                 </div>
+                <?php  ?>
+                    <div class="element-basket-mail">
+                        <output name="" class="basket-number"></output>
+                        <output name="" class="basket-object"></output>
+                        <output name="" class="basket-file">
+                            <a href="" target="_blank" class="lienCourrier">
+                                <img src="../../public/images/pdf.png" alt="">
+                            </a>
+                        </output>
+                        <output name="" class="basket-expediteur"></output>
+                        <output name="" class="basket-destinataire"></output>
+                        <output name="" class="basket-date"></output>
+                        <output name="" class="basket-status"></output>
+                        <div class="basket-action">
+                            <a href="">
+                                <input type="image" src="../images/restaurer.png" alt="" title="restaurer">
+                            </a>
+                            <a href="">
+                                <input type="image" src="../images/details.png" alt="" title="détails">
+                            </a>
+                        </div>
+                    </div>
+                <?php  ?>
             </section>
         </main>
     </div>
