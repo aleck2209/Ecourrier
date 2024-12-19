@@ -39,7 +39,7 @@
                         </div>
                         <div class="field half-space">
                             <label for="reference">Réference du courrier</label>
-                            <textarea name="" id="reference" rows="2"><?php echo $T1[0]['Reference'] ?></textarea>
+                            <textarea name="reference" id="reference" rows="2"><?php echo $T1[0]['Reference'] ?></textarea>
                         </div>
                         <div class="field">
                             <label for="destinataire">Destinataire</label>

@@ -34,7 +34,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $categorie = $_POST['categorie']?? '';
     $date_mise_circulation = $_POST['date_mise_circulation']?? '';
     $signature_gouverneur = $_POST['signature_gouverneur']?? '';
+    $reference = $_POST['reference']?? '';
     $fichiers_joints = $_FILES['fichier'];
+   
 
     //Convertion du format de la date récupérée du formulaire au formulaire accepté dans la base de données:
       // Formater la date en ajoutant les secondes
@@ -122,7 +124,7 @@ setTimeout(function(){
     // Récupérer le contenu de la table du courrier pour comparrer et voir qu'est-ce qui à été modifier 
     if ($typeCourrier==="courrier départ") {
     $sql1 = " SELECT Objet_du_courrier,destinataire,etat_courrier,
-                Type_document,categorie,date_derniere_modification,
+                Type_document,categorie,date_derniere_modification,Reference,
                 signature_gouverneur,numero_ordre,lien_courrier,date_mise_circulation
                 from courrierdepart 
                 where idCourrier =:idCourrier";
@@ -132,7 +134,7 @@ setTimeout(function(){
 
   } elseif ($typeCourrier==="courrier arrivé") {
     $sql1 = " SELECT Objet_du_courrier,destinataire,etat_courrier,
-                Type_document,categorie,date_derniere_modification,
+                Type_document,categorie,date_derniere_modification,Reference,
                 signature_gouverneur,numero_ordre,lien_courrier,date_mise_circulation
                 from courrierarrive 
                 where idCourrier =:idCourrier";
@@ -225,6 +227,10 @@ setTimeout(function(){
             $sqlCourrierDepart .= ", date_mise_circulation = :date_mise_circulation";
         }
 
+        if ($reference) {
+            $sqlCourrierDepart .= ", Reference = :Reference";
+        }
+
         // Terminer la requête SQL
         $sqlCourrierDepart .= " WHERE idCourrier = :idCourrier";
 
@@ -250,7 +256,10 @@ setTimeout(function(){
             $paramsCourrierDepart[':date_mise_circulation'] = $date_mise_circulation;
         }
 
-    
+        // Si une reference a été fournie, on l'ajoute aux paramètres
+        if ($reference) {
+            $paramsCourrierDepart[':Reference'] = $reference;
+        }
                 // Avant de mettre à jour le courrier il nous faut vérifier quels champs ont été modifiés:
            
                     $objet_base = trim($Tableau_Infos_ancien_courrier[0]["Objet_du_courrier"]);
@@ -329,10 +338,16 @@ setTimeout(function(){
                 }
             }
 
+            // Vérification si la référence a changé
+            if ((preg_replace('/\s+/', ' ', trim($Tableau_Infos_ancien_courrier[0]["Reference"])) !== preg_replace('/\s+/', ' ', trim($reference))) && $reference !== null) {
+                if (empty($actionsModifiees)) {
+                    $actionsModifiees .= "Référence du courrier";
+                } else {
+                    $actionsModifiees .= ", Référence du courrier";
+                }
+            }
+
             $actionsModifiees .= " Mis à jour";
-
-
-
 
 
 
@@ -387,6 +402,10 @@ setTimeout(function(){
                 $sqlCourrierArrive .= ", lien_courrier = :lien_fichier";
             }
 
+            // Si une référence a été fournie, on l'ajoute à la mise à jour 
+            if ($reference) {
+                $sqlCourrierArrive .= ", Reference = :Reference";
+            }
             // Terminer la requête SQL
             $sqlCourrierArrive .= " WHERE numero_ordre = :numero_ordre";
 
@@ -404,6 +423,11 @@ setTimeout(function(){
             // Si un fichier a été fourni, on ajoute son lien aux paramètres
             if ($liencourrier) {
                 $paramsCourrierArrive[':lien_fichier'] = $liencourrier;
+            }
+
+            // Si un fichier a été fourni, on ajoute son lien aux paramètres
+            if ($reference) {
+                $paramsCourrierArrive[':Reference'] = $reference;
             }
 
             // Appel de la fonction pour mettre à jour le courrier arrivé
@@ -471,6 +495,10 @@ setTimeout(function(){
                 $sqlCourrierArriveExterne .= ", lien_courrier = :lien_fichier";
             }
 
+            if ($reference) {
+                $sqlCourrierArriveExterne .= ", Reference = :Reference";
+            }
+
             // Terminer la requête SQL
             $sqlCourrierArriveExterne .= " WHERE idCourrier = :idCourrier";
 
@@ -489,6 +517,10 @@ setTimeout(function(){
             // Si un fichier a été fourni, on ajoute son lien aux paramètres
             if ($liencourrier) {
                 $paramsCourrierArriveExterne[':lien_fichier'] = $liencourrier;
+            }
+            // Si une référence a été fournie, on l'ajoute  aux paramètres
+            if ($reference) {
+                $paramsCourrierArriveExterne[':Reference'] = $reference;
             }
 
 
@@ -568,8 +600,17 @@ setTimeout(function(){
                 }
             }
             
-                $actionsModifiees .= " Mis à jour";    
-            
+
+
+                    
+            // Vérification si la référence a changé
+            if ((preg_replace('/\s+/', ' ', trim($Tableau_Infos_ancien_courrier[0]["Reference"])) !== preg_replace('/\s+/', ' ', trim($reference))) && $reference !== null) {
+                if (empty($actionsModifiees)) {
+                    $actionsModifiees .= "Référence du courrier";
+                } else {
+                    $actionsModifiees .= ", Référence du courrier";
+                }
+            }
             
             
         

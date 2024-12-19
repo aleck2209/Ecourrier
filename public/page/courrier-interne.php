@@ -62,14 +62,14 @@
                     <div class="fields-save-mail">
                         <div class="field">
                             <label for="typeCourrier">Type de courrier</label>
-                            <select name="" id="typeCourrier" onchange="afficherCorrespondant()">
+                            <select name="type_courrier" id="typeCourrier" onchange="afficherCorrespondant()">
                                 <option value="depart">Départ</option>
                                 <option value="arrive">Arrivé</option>
                             </select>
                         </div>
                         <div class="field" id="fieldExpediteur">
                             <label for="expediteur">Expéditeur <span>*</span></label>
-                            <input type="text" name="" id="expediteur" oninput="completion()">
+                            <input type="text" name="expediteur_courrierArv" id="expediteur" oninput="completion()">
                             <div class="autocomplete-list" id="listAutocompleteExpediteur"></div>
                         </div>
                         <div class="field" id="fieldDestinataire">

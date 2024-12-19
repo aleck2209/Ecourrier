@@ -1528,6 +1528,154 @@ WHERE
 
 
 
+function recupererContenuCorbeilleParMatricule($matricule){
+
+    $requete = "SELECT 
+    cor.Type_document,
+    cor.Etat_interne_externe AS origine_courrier,
+    cor.etat_courrier,
+    cor.etat_plis_ferme AS plis_ferme,
+    cor.dateEnregistrement,
+    cor.date_mise_circulation,
+    cor.Reference,
+    cor.lien_courrier,
+    cor.objet_du_courrier,
+    cor.numero_ordre,
+    cor.categorie,
+    cor.nombre_fichiers_joins AS nombre_de_fichiers_joins,
+    cor.expediteur,
+    cor.destinataire,
+    cor.Matricule_initiateur,
+    ut.nom_utilisateur AS nom_enregistreur,
+    ut.prenom_utilisateur AS prenom_enregistreur,
+    cor.categorie,
+    cor.date_derniere_modification,
+    cor.signature_gouverneur,
+    cor.date_suppression,
+    cor.Matricule_agent,
+    u.nom_utilisateur AS nom_agent,
+    u.prenom_utilisateur AS prenom_agent,
+    -- Ajout du type de courrier
+    CASE
+        WHEN cor.idCourrierDepart IS NOT NULL THEN 'courrier départ'
+        WHEN cor.idCourrierArrive IS NOT NULL THEN 'courrier arrivé'
+        ELSE 'inconnu' -- Optionnel, si aucune correspondance, vous pouvez aussi mettre NULL
+    END AS type_courrier
+FROM 
+    corbeille cor
+INNER JOIN 
+    utilisateur ut ON ut.matricule = cor.Matricule_initiateur 
+INNER JOIN 
+    utilisateur u ON u.matricule = cor.Matricule_agent
+WHERE 
+    cor.Matricule_agent = :matricule;
+" ;;
+// Connexion à la base de données
+$objet_connexion = connectToDb('localhost', 'ecourrierdb2', 'Dba', 'EcourrierDba');
+
+// Préparer la requête SQL
+$stmt = $objet_connexion->prepare($requete);
+
+// Lier les paramètres :idCourrier et :type_courrier et à la valeur du nom de l'entité
+$stmt->bindValue(':matricule', $matricule);
+
+
+// Exécuter la requête
+$stmt->execute();
+
+// Récupérer les résultats sous forme de tableau associatif
+$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Retourner les résultats
+ return $results; 
+
+}
+
+
+function recupererContenuCorbeilleParEntiteOuPole($entite_pole){
+
+    $requete = "SELECT 
+    cor.Type_document,
+    cor.Etat_interne_externe AS origine_courrier,
+    cor.etat_courrier,
+    cor.etat_plis_ferme AS plis_ferme,
+    cor.dateEnregistrement,
+    cor.date_mise_circulation,
+    cor.Reference,
+    cor.lien_courrier,
+    cor.objet_du_courrier,
+    cor.numero_ordre,
+    cor.categorie,
+    cor.nombre_fichiers_joins AS nombre_de_fichiers_joins,
+    cor.expediteur,
+    cor.destinataire,
+    cor.Matricule_initiateur,
+    ut.nom_utilisateur AS nom_enregistreur,
+    ut.prenom_utilisateur AS prenom_enregistreur,
+    cor.categorie,
+    cor.date_derniere_modification,
+    cor.signature_gouverneur,
+    cor.date_suppression,
+    cor.Matricule_agent,
+    u.nom_utilisateur AS nom_agent,
+    u.prenom_utilisateur AS prenom_agent,
+    -- Ajout du type de courrier
+    CASE
+        WHEN cor.idCourrierDepart IS NOT NULL THEN 'courrier départ'
+        WHEN cor.idCourrierArrive IS NOT NULL THEN 'courrier arrivé'
+        ELSE 'inconnu' -- Optionnel, si aucune correspondance, vous pouvez aussi mettre NULL
+    END AS type_courrier,
+    -- Ajout du nom de l'entité ou du pôle de l'utilisateur
+    CASE
+        WHEN u.id_pole IS NOT NULL THEN p.nom_pole
+        WHEN u.id_entite IS NOT NULL THEN e.nom_entite
+        ELSE 'Inconnu' -- Optionnel, si aucune correspondance
+    END AS entite_ou_pole
+FROM 
+    corbeille cor
+INNER JOIN 
+    utilisateur ut ON ut.matricule = cor.Matricule_initiateur 
+INNER JOIN 
+    utilisateur u ON u.matricule = cor.Matricule_agent
+LEFT JOIN 
+    pole p ON u.id_pole = p.id_pole -- Lien entre utilisateur et pôle
+LEFT JOIN 
+    entite_banque e ON u.id_entite = e.id_entite -- Lien entre utilisateur et entité
+WHERE 
+    (p.nom_pole = :entite_pole OR e.nom_entite = :entite_pole);  --
+
+" ;
+// Connexion à la base de données
+$objet_connexion = connectToDb('localhost', 'ecourrierdb2', 'Dba', 'EcourrierDba');
+
+// Préparer la requête SQL
+$stmt = $objet_connexion->prepare($requete);
+
+// Lier les paramètres :idCourrier et :type_courrier et à la valeur du nom de l'entité
+$stmt->bindValue(':entite_pole', $entite_pole);
+
+
+// Exécuter la requête
+$stmt->execute();
+
+// Récupérer les résultats sous forme de tableau associatif
+$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Retourner les résultats
+ return $results; 
+
+}
+
+
+
+
+
+
+
+
+
+
+
 
 ?>
 

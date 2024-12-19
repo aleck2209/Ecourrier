@@ -25,10 +25,14 @@ $fichier = $_FILES['fichier'];
 $objet = verifierValeurNulle(trim($_POST['Objet_du_courrier']));
 $matricule ='user01' ;
 $etatExpedition =  NULL ;
-$expediteur = null ;
+$expediteur_courrierArv = verifierValeurNulle(trim($_POST['expediteur_courrierArv'])) ;
 $destinataire  = verifierValeurNulle($_POST['destinataire']) ;
 $liste_copie_courrier = verifierValeurNulle(trim($_POST['copie_courrier'])) ;
 $test_etat_interne_externe =trim($_POST['etat_interne_externe']);
+$test_type_courrier = verifierValeurNulle(trim($_POST['type_courrier']));
+$expediteur;
+
+
 $etat_inter_exter;
 
 
@@ -53,8 +57,6 @@ if (!is_null($destinataire)) {
 $Liste_pole_destinataire = recupererLigneSpecifique('pole','nom_pole',$destinataire);
 
 //on récupère le nom et le format du fichier dans un tableau
-
-
 
 
 
