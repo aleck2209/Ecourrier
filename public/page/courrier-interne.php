@@ -63,8 +63,8 @@
                         <div class="field">
                             <label for="typeCourrier">Type de courrier</label>
                             <select name="" id="typeCourrier" onchange="afficherCorrespondant()">
-                                <option value="depart">Départ</option>
-                                <option value="arrive">Arrivé</option>
+                                <option value="courrier depart">Départ</option>
+                                <option value="courrier arrive">Arrivé</option>
                             </select>
                         </div>
                         <div class="field" id="fieldExpediteur">

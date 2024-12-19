@@ -1,6 +1,3 @@
-
-
-
 document.addEventListener('DOMContentLoaded', alertSave(), courrierExterneArrive(), regNumOrdre())
 
 // AUTOCOMPLETION CAS DU DESTINATAIRE ARRIVE

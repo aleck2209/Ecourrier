@@ -180,12 +180,14 @@ function afficherCorrespondant() {
     const expediteur = document.getElementById('expediteur');
     const typeCourrier = document.getElementById('typeCourrier');
 
-    if (typeCourrier.value == "arrive") {
+    console.log(typeCourrier.value.trim())
+
+    if (typeCourrier.value == "courrier arrive") {
         destinataire.removeAttribute('required');
         fieldDestinataire.style.display = "none";
         expediteur.setAttribute('required', 'required');
         fieldExpediteur.style.display = "flex"
-    } else {
+    } else if (typeCourrier.value == "courrier depart") {
         expediteur.removeAttribute('required');
         fieldExpediteur.style.display = "none";
         destinataire.setAttribute('required', 'required');
