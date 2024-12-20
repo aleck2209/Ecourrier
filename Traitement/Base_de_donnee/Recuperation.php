@@ -1670,8 +1670,62 @@ $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 
 
+function getNextNumeroOrdreCourrierArriveInterne($expediteur, $destinataire) {
+    // Connexion à la base de données via la fonction connectToDb
+    $pdo = connectToDb('localhost', 'ecourrierdb2', 'Dba', 'EcourrierDba');
+    
+    // Préparer la requête SQL pour récupérer les numéros d'ordre des courriers arrivés internes
+    $sql = "
+        SELECT numero_ordre
+        FROM courrierarrive
+        WHERE Etat_interne_externe = 'courrier interne'
+          AND expediteur LIKE :expediteur
+          AND destinataire LIKE :destinataire
+    ";
+    
+    // Préparer la requête
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([
+        ':expediteur' => "%$expediteur%",
+        ':destinataire' => "%$destinataire%"
+    ]);
+    
+    // Tableau pour stocker les numéros d'ordre
+    $numeros = [];
+    
+    // Récupérer tous les numéros d'ordre
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $numeros[] = $row['numero_ordre'];
+    }
+    
+    // Si aucun numéro n'a été trouvé, retourner "1" comme premier numéro
+    if (empty($numeros)) {
+        return "1";
+    }
 
+    // Variable pour stocker la partie numérique la plus élevée
+    $maxNum = 0;
 
+    // Parcourir tous les numéros d'ordre récupérés
+    foreach ($numeros as $numero) {
+        // Diviser le numéro d'ordre au format [0-9]/[A-Z]/[A-Z]/2024, etc.
+        $parts = explode('/', $numero);
+        
+        // Vérifier que la première partie est bien un nombre
+        if (is_numeric($parts[0])) {
+            // Récupérer la première partie (numérique) du numéro d'ordre
+            $numPart = (int) $parts[0];
+            
+            // Mettre à jour la valeur maximale
+            if ($numPart > $maxNum) {
+                $maxNum = $numPart;
+            }
+        }
+    }
+    
+    // Retourner la valeur maximale + 1 sous forme de chaîne
+    return (string) ($maxNum + 1);
+}
 
 
 

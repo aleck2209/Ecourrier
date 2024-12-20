@@ -23,7 +23,7 @@ $dateEnreg =verifierValeurNulle(trim($_POST['dateEnregistrement']));
 $reference =verifierValeurNulle(trim($_POST['Reference']));
 $fichier = $_FILES['fichier'];
 $objet = verifierValeurNulle(trim($_POST['Objet_du_courrier']));
-$matricule ='user01' ;
+$matricule ='user04' ;
 $etatExpedition =  NULL ;
 $expediteur_courrierArv = verifierValeurNulle(trim($_POST['expediteur_courrierArv'])) ;
 $destinataire  = verifierValeurNulle($_POST['destinataire']) ;
@@ -40,6 +40,21 @@ $identite_dest ;
 $idpole_dest;
 $idReponse = null;
 
+if ($test_type_courrier==='courrier départ') {
+    
+    echo $test_type_courrier.'<br>';
+    echo $destinataire.'<br>';
+    echo $expediteur_courrierArv;
+    // die;
+} elseif ($test_type_courrier==='courrier arrivé') {
+    echo $test_type_courrier.'<br>';
+    echo 'expéditeur : '.$expediteur_courrierArv.'<br>';
+    echo 'destinataire : '.$destinataire;
+    // die;
+}
+
+
+
 //-----------------------------------------Test des valeurs de l'état interne externe et de l'état expédition
 
 $etat_inter_exter = ($test_etat_interne_externe =="interne") ? "courrier interne": "courrier externe" ;
@@ -52,39 +67,83 @@ $etatExpedition = null;
 
 //---------------------------------------Controle des nom destinataires----------------------------------
 
-if (!is_null($destinataire)) {
+if ($test_type_courrier==='courrier départ') {
+    if (!is_null($destinataire)) {
     $Liste_entite_destinataire = recupererLigneSpecifique('entite_banque','nom_entite',$destinataire);
-$Liste_pole_destinataire = recupererLigneSpecifique('pole','nom_pole',$destinataire);
-
-//on récupère le nom et le format du fichier dans un tableau
-
-
-
-// Récupération de l'id du destinataire du courrier 
-if (isset($Liste_entite_destinataire)) {
-    $objet_entite_banque = $Liste_entite_destinataire[0];
-    $identite_dest = $objet_entite_banque->id_entite;
-} else {
-    $identite_dest = null;
-}
-
-
-if (isset($Liste_pole_destinataire)) {
-    $objet_pole_dest = $Liste_pole_destinataire[0];
-    $idpole_dest = $objet_pole_dest->id_pole;
-}else {
-    $idpole_dest = null;
-} 
-} else {
-    // die('veuillez entrer un destinataire');
-    die('<script>
-            alert("Veuillez entrer un destinataire.");
-           setTimeout(function(){
-                window.location.href = "../../public/page/courrier-interne.php";
-            }, 500); 
-      </script>');
+    $Liste_pole_destinataire = recupererLigneSpecifique('pole','nom_pole',$destinataire);
     
+    //on récupère le nom et le format du fichier dans un tableau
+    
+    
+    
+    // Récupération de l'id du destinataire du courrier 
+    if (isset($Liste_entite_destinataire)) {
+        $objet_entite_banque = $Liste_entite_destinataire[0];
+        $identite_dest = $objet_entite_banque->id_entite;
+    } else {
+        $identite_dest = null;
+    }
+    
+    
+    if (isset($Liste_pole_destinataire)) {
+        $objet_pole_dest = $Liste_pole_destinataire[0];
+        $idpole_dest = $objet_pole_dest->id_pole;
+    }else {
+        $idpole_dest = null;
+    } 
+    } else {
+        // die('veuillez entrer un destinataire');
+        die('<script>
+                alert("Veuillez entrer un destinataire.");
+               setTimeout(function(){
+                    window.location.href = "../../public/page/courrier-interne.php";
+                }, 500); 
+          </script>');
+        
+    }
+
+
+    
+
+}  elseif ($test_type_courrier==='courrier arrivé') {
+
+    echo $test_type_courrier;
+    if (!is_null($expediteur_courrierArv)) {
+        $Liste_entite_expediteur = recupererLigneSpecifique('entite_banque','nom_entite',$expediteur_courrierArv);
+        $Liste_pole_expediteur = recupererLigneSpecifique('pole','nom_pole',$expediteur_courrierArv);
+        
+            // Récupération de l'id du destinataire du courrier 
+    if (isset($Liste_entite_expediteur)) {
+        $objet_entite_banque = $Liste_entite_expediteur[0];
+        $identite_expediteur = $objet_entite_banque->id_entite;
+    } else {
+        $identite_expediteur = null;
+    }
+    
+    if (isset($Liste_pole_expediteur)) {
+        $objet_pole_expediteur = $Liste_pole_expediteur[0];
+        $idpole_expediteur = $objet_pole_expediteur->id_pole;
+    }else {
+        $idpole_expediteur = null;
+    } 
+    
+    }
+    else {
+        // die('veuillez entrer un destinataire');
+        die('<script>
+                alert("Veuillez entrer un destinataire.");
+               setTimeout(function(){
+                    window.location.href = "../../public/page/courrier-interne.php";
+                }, 500); 
+          </script>');
+        
+    }
+
 }
+ 
+
+
+
 
 
 if (strlen($liste_copie_courrier)!=0) {
@@ -189,36 +248,78 @@ $infos_entite_utilisateur = recupererIdEntiteOuIdPolePourUnUtilisateur($sql2,$ma
 $infos_pole_utilisateur = recupererIdEntiteOuIdPolePourUnUtilisateur($sql1,$matricule);
 
 
-if (isset($infos_pole_utilisateur['id_pole'])) {
+if ( $test_type_courrier==='courrier départ') {
+    if (isset($infos_pole_utilisateur['id_pole'])) {
     
-$nom_entite = recupererNomEntiteParIdUtilisateur($sql1,$matricule);
-$expediteur = $nom_entite;
+        $nom_entite = recupererNomEntiteParIdUtilisateur($sql1,$matricule);
+        $expediteur = $nom_entite;
+        
+        #On récupère le numéro d'ordre qu'on doit entré en fonction de l'entité
+        $num_a_entrer = verifierNumeoOrdreParPole($nom_entite);
+        $numeroOrdrePrefix = explode('/', $numeroOrdre)[0];  // On récupère juste la partie avant le "/"
+        
+        // On compare le numéro d'ordre entré à celui qui est attendu en fonction de l'entité
+        if ($numeroOrdrePrefix != $num_a_entrer) {
+            die("Le numéro d'ordre pour le pole  $nom_entite attendu est : $num_a_entrer");
+        }
+        
+        
+        }
+        
+        elseif (isset($infos_entite_utilisateur['id_entite'])) {
+            $nom_entite = recupererNomEntiteParIdUtilisateur($sql2,$matricule);
+        $expediteur = $nom_entite;
+        
+        #On récupère le numéro d'ordre qu'on doit entré en fonction de l'entité
+        $num_a_entrer = verifierNumeoOrdreParEntiteV2($nom_entite);
+        $numeroOrdrePrefix = explode('/', $numeroOrdre)[0];  // On récupère juste la partie avant le "/"
+        
+        // On compare le numéro d'ordre entré à celui qui est attendu en fonction de l'entité
+        if ($numeroOrdrePrefix != $num_a_entrer) {
+            die("Le numéro d'ordre pour l'entité $nom_entite attendu est : $num_a_entrer");
+        }
+    }
 
-#On récupère le numéro d'ordre qu'on doit entré en fonction de l'entité
-$num_a_entrer = verifierNumeoOrdreParPole($nom_entite);
-$numeroOrdrePrefix = explode('/', $numeroOrdre)[0];  // On récupère juste la partie avant le "/"
 
-// On compare le numéro d'ordre entré à celui qui est attendu en fonction de l'entité
-if ($numeroOrdrePrefix != $num_a_entrer) {
-    die("Le numéro d'ordre pour le pole  $nom_entite attendu est : $num_a_entrer");
-}
+    } 
+        elseif ($test_type_courrier==='courrier arrivé') {
+            if (isset($infos_pole_utilisateur['id_pole'])) {
+        
+                $nom_entite = recupererNomEntiteParIdUtilisateur($sql1,$matricule);
+                $destinataire = $nom_entite;
+                
+                #On récupère le numéro d'ordre qu'on doit entré en fonction de l'entité
+
+                // echo '';
+                // $num_a_entrer = getNextNumeroOrdreCourrierArriveInterne($expediteur_courrierArv,$destinataire);
+                // $numeroOrdrePrefix = explode('/', $numeroOrdre)[0];  // On récupère juste la partie avant le "/"
+                
+                // // On compare le numéro d'ordre entré à celui qui est attendu en fonction de l'entité
+                // if ($numeroOrdrePrefix != $num_a_entrer) {
+                //     die("Le numéro d'ordre pour  $expediteur_courrierArv attendu est : $num_a_entrer");
+                // }
+                
+                
+                }
+                
+            elseif (isset($infos_entite_utilisateur['id_entite'])) {
+                    $nom_entite = recupererNomEntiteParIdUtilisateur($sql2,$matricule);
+                    $destinataire = $nom_entite;
+                
+                #On récupère le numéro d'ordre qu'on doit entré en fonction de l'entité
+                // $num_a_entrer = getNextNumeroOrdreCourrierArriveInterne($expediteur_courrierArv,$destinataire);
+
+                // $numeroOrdrePrefix = explode('/', $numeroOrdre)[0];  // On récupère juste la partie avant le "/"
+                
+                // // On compare le numéro d'ordre entré à celui qui est attendu en fonction de l'entité
+                // if ($numeroOrdrePrefix != $num_a_entrer) {
+                //     die("Le numéro d'ordre pour l'entité $expediteur_courrierArv attendu est : $num_a_entrer");
+                // }
+            }
+        
+    }
 
 
-}
-
-elseif (isset($infos_entite_utilisateur['id_entite'])) {
-    $nom_entite = recupererNomEntiteParIdUtilisateur($sql2,$matricule);
-$expediteur = $nom_entite;
-
-#On récupère le numéro d'ordre qu'on doit entré en fonction de l'entité
-$num_a_entrer = verifierNumeoOrdreParEntiteV2($nom_entite);
-$numeroOrdrePrefix = explode('/', $numeroOrdre)[0];  // On récupère juste la partie avant le "/"
-
-// On compare le numéro d'ordre entré à celui qui est attendu en fonction de l'entité
-if ($numeroOrdrePrefix != $num_a_entrer) {
-    die("Le numéro d'ordre pour l'entité $nom_entite attendu est : $num_a_entrer");
-}
-}
 
 
 // $nom_entite = recupererNomEntiteParIdUtilisateur($requete,$matricule);
@@ -241,23 +342,59 @@ if ($etat_plis_ferme==="non") {
 
 //---------------------------------------Controle des destinataires internes--------------------------------
 
-if (is_null($destinataire)) {
-    echo 'destinataire nul';
-    die("Vous n'avez pas saisi de destinataire");
-}else{
-    if ($etat_inter_exter==="courrier interne") {
-        if (is_null($identite_dest) && is_null($idpole_dest)) {
-            # Si on entre ici cela veut dire qu'il n'a pas entrer un destinataire interne à la banque
-            die('<script>alert("erreur  le destinataire n\'est pas une reconnu comme une entité de la banque")</script>');
+if ($test_type_courrier==='courrier départ') {
+    if (is_null($destinataire)) {
+        
+        die("Vous n'avez pas saisi de destinataire");
+    }else{
+        if ($etat_inter_exter==="courrier interne") {
+            if (is_null($identite_dest) && is_null($idpole_dest)) {
+                # Si on entre ici cela veut dire qu'il n'a pas entrer un destinataire interne à la banque
+
+                echo 'Je suis bien entré ';
+                die('<script>alert("erreur  le destinataire n\'est pas une reconnu comme une entité de la banque")</script>');
+            }
+            
+        }elseif ($etat_inter_exter==="courrier externe") {
+            if (!is_null($identite_dest) || !is_null($idpole_dest)) {
+                die("Vous avez défini une entité interieure à la banque comme destinataire d'un courrier externe ");
+            }
         }
         
-    }elseif ($etat_inter_exter==="courrier externe") {
-        if (!is_null($identite_dest) || !is_null($idpole_dest)) {
-            die("Vous avez défini une entité interieure à la banque comme destinataire d'un courrier externe ");
-        }
     }
+
+
+ } 
+ 
+ elseif ($test_type_courrier==='courrier arrivé') {
     
+    if (is_null($expediteur_courrierArv)) {
+        
+         die("Vous n'avez pas saisi d'expiditeur");
+        
+    }
+    else{
+        if ($etat_inter_exter==="courrier interne") {
+            if (is_null($identite_expediteur) && is_null($idpole_expediteur)) {
+                # Si on entre ici cela veut dire qu'il n'a pas entrer un destinataire interne à la banque
+
+                echo 'Je suis bien entré ';
+                die('<script>alert("erreur  l\'expéditeur n\'est pas une reconnu comme une entité de la banque")</script>');
+            }
+            
+        }elseif ($etat_inter_exter==="courrier externe") {
+            if (!is_null($identite_expediteur) || !is_null($idpole_expediteur)) {
+                die("Vous avez défini une entité interieure à la banque comme destinataire d'un courrier externe ");
+            }
+        }
+        
+    }
+
 }
+
+
+
+
 
 
 
@@ -343,12 +480,8 @@ if (strlen($TypeDoc)==0 && $etat_plis_ferme==="non") {
 
 
 
-
-
-
-
-
-//----------------------------------------------Fin controle-----------------------------------------------
+if ($test_type_courrier==='courrier départ') {
+  //----------------------------------------------Fin controle-----------------------------------------------
 $etatCourrier = 'envoyé';
 $idcourrierdepart = insererCourrierDepart($numeroOrdre,$TypeDoc,$etat_inter_exter,
 $etat_plis_ferme,$categorie,$dateEnreg,null,$reference,
@@ -404,9 +537,39 @@ if ($nombre_fichiers_joins ===count($liens_fichiers_joins_arrives )) {
 
 }
 
+}
 
 
 
+
+
+if ($test_type_courrier==='courrier arrivé') {
+    
+
+$etatCourrier = 'reçu';
+$idcourrierArrive = insererCourrierArriveV2($numeroOrdre,$TypeDoc,$etat_inter_exter,
+$etat_plis_ferme,$categorie,$dateEnreg,null,$reference,
+$liencourrier,$objet,$matricule,$idReponse,$expediteur_courrierArv,$destinataire,$identite_dest,$idpole_dest,
+$nombre_fichiers_joins,$etatCourrier
+);
+
+
+//Mise à jour de l'historique de ce courrier
+insertHistorique("enregistrement du courrier",$idcourrierArrive,$nom_entite,"courrier arrivé",$matricule);
+//--------------------------------------------insertion automatique du courrier arrivé de ce destinataire----------------------------
+
+if ($nombre_fichiers_joins ===count($liens_fichiers_joins_arrives )) {
+    foreach ($liens_fichiers_joins_arrives  as $lien) {
+        insererFichierJoin($lien,null,$idcourrierArrive);
+    }
+    
+}
+
+
+
+
+
+}
 
 
 

@@ -138,7 +138,7 @@
                                 <a href="../../public/page/historique-courrier.php?$idCourrier=<?=$courrier['idCourrier']?>&& $typeCourrier=<?=$courrier['type_courrier']?>">
                                     <input type="image" src="../images/historique.png" alt="" title="historique">
                                 </a>
-                                <a href="../../tests/supprimer-courrier.php?$idCourrier=<?=$courrier['idCourrier']?>&& $typeCourrier=<?=$courrier['type_courrier']?>" class="supprimer">
+                                <a href="../../Traitement/Controle/suppressioCourrier.php?$idCourrier=<?=$courrier['idCourrier']?>&& $typeCourrier=<?=$courrier['type_courrier']?>" class="supprimer">
                                     <input type="image" src="../images/supprimer.png" alt="" title="supprimer">
                                 </a>
                             </div>

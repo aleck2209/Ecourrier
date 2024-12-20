@@ -412,12 +412,6 @@ function supprimerCourrierArrive($idCourrier, $matricule) {
 
 
 
-
-
-
-
-
-
 ?>
 
 

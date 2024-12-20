@@ -36,9 +36,6 @@ elseif (isset($infos_entite_utilisateur['id_entite'])){
 }
 
 
-
-
-
 if ($typeCourrier ==="copie courrier") {
     $liste_des_infos_historique = recupererHistoriqueCopieCourrier($idCourrier,$nom_entite);
 } else {
