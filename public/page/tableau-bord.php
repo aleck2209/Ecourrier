@@ -115,6 +115,7 @@
                     </div>
                     <?php foreach($courriers as $courrier) { ?>
                         <div class="element-dashboard-mail">
+                            <input type="hidden" name="" value="<?php echo $courrier['type_courrier'] ?>">
                             <output name="" class="dashboard-number"><?php echo $courrier['numero_ordre'] ?></output>
                             <output name="" class="dashboard-object"><?php echo $courrier['objet_du_courrier'] ?></output>
                             <output name="" class="dashboard-file">
@@ -130,7 +131,7 @@
                                 <a href="../../public/page/details.php?$idCourrier=<?=$courrier['idCourrier']?>&& $typeCourrier=<?=$courrier['type_courrier']?>">
                                     <input type="image" src="../images/details.png" alt="" title="détails">
                                 </a>
-                                <a href="../../public/page/modifier-courrier.php?$idCourrier=<?=$courrier['idCourrier']?>&& $typeCourrier=<?=$courrier['type_courrier']?>">
+                                <a href="../../public/page/modifier-courrier.php?$idCourrier=<?=$courrier['idCourrier']?>&& $typeCourrier=<?=$courrier['type_courrier']?>" class="btn-modifier">
                                     <input type="image" src="../images/modifier.png" alt="" title="modifier">
                                 </a>
                                 <a href="../../public/page/creer-rappel.php">
@@ -139,7 +140,7 @@
                                 <a href="../../public/page/historique-courrier.php?$idCourrier=<?=$courrier['idCourrier']?>&& $typeCourrier=<?=$courrier['type_courrier']?>">
                                     <input type="image" src="../images/historique.png" alt="" title="historique">
                                 </a>
-                                <a href="../../tests/supprimer-courrier.php?$idCourrier=<?=$courrier['idCourrier']?>&& $typeCourrier=<?=$courrier['type_courrier']?>" class="supprimer">
+                                <a href="" class="supprimer">
                                     <input type="image" src="../images/supprimer.png" alt="" title="supprimer">
                                 </a>
                             </div>

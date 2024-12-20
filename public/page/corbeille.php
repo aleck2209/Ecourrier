@@ -49,9 +49,6 @@
                         <output name="" class="basket-status"></output>
                         <div class="basket-action">
                             <a href="">
-                                <input type="image" src="../images/restaurer.png" alt="" title="restaurer">
-                            </a>
-                            <a href="">
                                 <input type="image" src="../images/details.png" alt="" title="détails">
                             </a>
                         </div>
