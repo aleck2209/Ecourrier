@@ -77,26 +77,27 @@
                                     <option value="courrier interne">Interne</option>
                                 </select>
                                 <select name="typeCourrier">
-                                    <option value="">[type courrier]</option>
+                                    <option value="">[Type courrier]</option>
                                     <option value="courrier arrive">Arrivé</option>
                                     <option value="courrier départ">Départ</option>
                                     <option value="">Copie</option>
                                 </select>
                                 <select name="priority">
-                                    <option value="">[categorie]</option>
+                                    <option value="">[Catégorie]</option>
                                     <option value="urgent">Urgent</option>
                                     <option value="normal">Normal</option>
                                 </select>
                                 <select name="">
-                                    <option value="">[expedié]</option>
+                                    <option value="">[Expédition]</option>
                                     <option value="">oui</option>
                                     <option value="">non</option>
                                 </select>
                                 <select name="">
-                                    <option value="">[Signé]</option>
+                                    <option value="">[Signature]</option>
                                     <option value="">oui</option>
                                     <option value="">non</option>
                                 </select>
+                                <input type="submit" name="" value="Tout afficher" onclick="allDisplay()">
                             </div>
                         </form>
                     </div>

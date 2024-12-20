@@ -50,6 +50,8 @@ function displayFile() {
     })
 }
 
+
+// DEBUT PERSISTANCE DES FILTRES
 function restoreFilterValue() {
     document.querySelectorAll('#form-filter select').forEach(select => {
         const storedValue = localStorage.getItem(select.name);
@@ -62,7 +64,6 @@ function restoreFilterValue() {
 function handleSelectChange(event) {
     
     const changedSelect = event.target;
-    console.log(changedSelect)
 
     localStorage.setItem(changedSelect.name, changedSelect.value);
 
@@ -81,4 +82,21 @@ document.querySelectorAll('#form-filter select').forEach(select => {
 });
 
 window.onload = restoreFilterValue();
+// FIN PERSISTANCE DES FILTRES
 
+// 
+function allDisplay() {
+    const form = document.getElementById('form-filter');
+    const selects = form.querySelectorAll('select');
+
+    console.log(selects)
+
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        selects.forEach(select => {
+            select.value = ""
+            localStorage.removeItem(select.name);
+        });
+        form.submit();
+    })
+}
