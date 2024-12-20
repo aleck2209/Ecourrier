@@ -53,8 +53,6 @@ if ($typeCourrier ==="courrier arrivé") {
     $T1 = getInfosForCourrier($sql1,$idCourrier);
 
 
-     
-
 
     //Récupérer la date de mise en circulation 
     if (isset($T1[0]['date_mise_circulation'])) {

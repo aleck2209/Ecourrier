@@ -218,8 +218,6 @@ if (isset($fichier)) {
 
 
 
-
-
 //-------------------------------------------Controle du numero d'ordre--------------------------------
 
 // Ici On récupère le pole ou l'entité à laquelle appartient un utilisateur  

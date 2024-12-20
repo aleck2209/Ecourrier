@@ -80,22 +80,22 @@
                                     <option value="">[Type courrier]</option>
                                     <option value="courrier arrive">Arrivé</option>
                                     <option value="courrier départ">Départ</option>
-                                    <option value="">Copie</option>
+                                    <option value="copie courrier">Copie</option>
                                 </select>
                                 <select name="priority">
                                     <option value="">[Catégorie]</option>
                                     <option value="urgent">Urgent</option>
                                     <option value="normal">Normal</option>
                                 </select>
-                                <select name="">
+                                <select name="expedition">
                                     <option value="">[Expédition]</option>
-                                    <option value="">oui</option>
-                                    <option value="">non</option>
+                                    <option value="oui">oui</option>
+                                    <option value="non">non</option>
                                 </select>
-                                <select name="">
+                                <select name="signature">
                                     <option value="">[Signature]</option>
-                                    <option value="">oui</option>
-                                    <option value="">non</option>
+                                    <option value="oui">oui</option>
+                                    <option value="non">non</option>
                                 </select>
                                 <input type="submit" name="" value="Tout afficher" onclick="allDisplay()">
                             </div>

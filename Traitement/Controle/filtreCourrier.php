@@ -1,7 +1,7 @@
 <?php
 require('../../Traitement/Base_de_donnee/Recuperation.php');
 
-$matricule = 'user04';
+$matricule = 'user03';
 $sql1 = " select p.id_pole, p.nom_pole
 from pole p inner join utilisateur u on 
 p.id_pole = u.id_pole
@@ -86,6 +86,8 @@ $sortOrder= '';
 $origine = '';
 $priority = '';
 $typeCourrier = '';
+$Expedition = '';
+$signature = '';
 
 
 
@@ -97,6 +99,8 @@ if (isset($_POST['form_type1'])) {
     $priority = $_POST['priority']?? '';
     $typeCourrier = $_POST['typeCourrier']?? '';
     $origine = $_POST['Origine']?? '';
+    $Expedition = $_POST['expedition']?? '';
+    $signature = $_POST['signature']?? '';
 } 
   
 if (isset($_POST['form_type3'])) {
@@ -109,24 +113,13 @@ if (isset($_POST['form_type4'])) {
     
     }
 
-    $courriers = getCourriers($nom_entite,$searchKeyword,$startDate,$endDate, $sortType,$sortOrder,$origine,$priority,$typeCourrier);
+    $courriers = getCourriers($nom_entite,$searchKeyword,$startDate,$endDate, $sortType,$sortOrder,$origine,$priority,$typeCourrier,$Expedition,$signature);
 
     
     if (isset($courriers['lien_courrier'])) {
         $nom_fichier = recupererNomFichiers($courriers); // Récupération du nom du fichier 
     }
 }
-
-
-
-
-
-
-
-
-
-
-
 
 
 
