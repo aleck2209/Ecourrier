@@ -48,10 +48,10 @@
                     <a class="sidebar" href="compte.php">Compte</a>
                 </li>
                 <li>
-                    <a class="sidebar" href="#">Déconnexion</a>
+                    <a class="sidebar" href="corbeille.php">Corbeille</a>
                 </li>
                 <li>
-                    <a class="sidebar" href="corbeille.php">Corbeille</a>
+                    <a class="sidebar" href="#">Déconnexion</a>
                 </li>
                 <li>
                     <a href="liste-utilisateur.php">Administration</a>

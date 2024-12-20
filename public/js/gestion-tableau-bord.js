@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', alertDelete(), displayFile());
+document.addEventListener('DOMContentLoaded', alertDelete(), displayFile(), copieCase());
 
 // SOUMISSION DES FORMULAIRES DE TRIE
 function submitSort() {
@@ -50,6 +50,8 @@ function displayFile() {
     })
 }
 
+
+// DEBUT PERSISTANCE DES FILTRES
 function restoreFilterValue() {
     document.querySelectorAll('#form-filter select').forEach(select => {
         const storedValue = localStorage.getItem(select.name);
@@ -62,7 +64,6 @@ function restoreFilterValue() {
 function handleSelectChange(event) {
     
     const changedSelect = event.target;
-    console.log(changedSelect)
 
     localStorage.setItem(changedSelect.name, changedSelect.value);
 
@@ -81,4 +82,34 @@ document.querySelectorAll('#form-filter select').forEach(select => {
 });
 
 window.onload = restoreFilterValue();
+// FIN PERSISTANCE DES FILTRES
 
+// AFFICHER TOUT LES COURRIERS
+function allDisplay() {
+    const form = document.getElementById('form-filter');
+    const selects = form.querySelectorAll('select');
+
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        selects.forEach(select => {
+            select.value = ""
+            localStorage.removeItem(select.name);
+        });
+        form.submit();
+    })
+}
+
+function copieCase() {
+    divs = document.querySelectorAll('.element-dashboard-mail');
+
+    divs.forEach(div => {
+        const input = div.querySelector('input');
+        const btnSupprimer = div.querySelector('.supprimer');
+        const btnModifier = div.querySelector('.btn-modifier');
+        if (input.value == 'copie courrier') {
+            btnModifier.style.display = 'none';
+            btnSupprimer.style.display = 'none'
+        }
+    })
+    
+}
