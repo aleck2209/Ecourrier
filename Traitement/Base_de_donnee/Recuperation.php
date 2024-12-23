@@ -1489,7 +1489,8 @@ function getCourriersBO($nom_entite, $searchKeyword = '', $startDate = '', $endD
         FROM courrierarrive
         JOIN utilisateur u ON courrierarrive.Matricule_initiateur = u.Matricule
         JOIN entite_banque eb ON u.id_entite = eb.id_entite
-        WHERE eb.nom_entite = :nom_entite
+        WHERE eb.nom_entite = :nom_entite and courrierarrive.Etat_interne_externe='courrier externe'
+
        
     ";
    
