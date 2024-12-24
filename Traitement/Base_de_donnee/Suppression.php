@@ -411,6 +411,138 @@ function supprimerCourrierArrive($idCourrier, $matricule) {
 }
 
 
+function supprimerCourrierArriveInterne($numero_ordre, $matricule) {
+    try {
+        // Connexion à la base de données
+        $objet_connexion = connectToDb('localhost', 'ecourrierdb2', 'Dba', 'EcourrierDba');
+        
+        // Démarrer une transaction pour garantir que toutes les opérations se font atomiquement
+        $objet_connexion->beginTransaction();
+
+        // Préparer la requête pour récupérer l'idCourrier à partir du numero_ordre
+        $query = "SELECT idCourrier, * FROM courrierarrive WHERE numero_ordre = :numero_ordre";
+        $stmt = $objet_connexion->prepare($query);
+        $stmt->bindParam(':numero_ordre', $numero_ordre, PDO::PARAM_INT);
+        $stmt->execute();
+        
+        $courrier = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$courrier) {
+            throw new Exception("Courrier arrivé non trouvé pour le numéro d'ordre: $numero_ordre");
+        }
+
+        // Ajouter des vérifications pour 'pole_destinataire' et 'objet_du_courrier'
+        $objetDuCourrier = isset($courrier['objet_du_courrier']) ? $courrier['objet_du_courrier'] : 'Objet inconnu';
+
+        // Générer un identifiant pour la corbeille
+        $idCorbeille = incrementerClePrimaireNumerique('corbeille');
+
+        // Préparer les données pour l'insertion dans la table corbeille
+        $dataCorbeille = [
+            ':idCorbeille' => $idCorbeille,
+            ':idCourrierDepart' => null,
+            ':idCourrierArrive' => $courrier['idCourrier'],  // Utilisation de l'idCourrier récupéré
+            ':Type_document' => $courrier['Type_document'],
+            ':Etat_interne_externe' => $courrier['Etat_interne_externe'],
+            ':etat_courrier' => $courrier['etat_courrier'],
+            ':etat_plis_ferme' => $courrier['etat_plis_ferme'],
+            ':dateEnregistrement' => $courrier['dateEnregistrement'],
+            ':date_mise_circulation' => $courrier['date_mise_circulation'],
+            ':Reference' => $courrier['Reference'],
+            ':lien_courrier' => $courrier['lien_courrier'],
+            ':Matricule_initiateur' => $courrier['Matricule_initiateur'],
+            ':idFichierReponse' => isset($courrier['idFichierReponse']) ? $courrier['idFichierReponse'] : null,
+            ':etat_expedition' => null,
+            ':expediteur' => $courrier['expediteur'],
+            ':destinataire' => $courrier['destinataire'],
+            ':entite_dest' => $courrier['entite_dest'],
+            ':pole_destinataire' => $courrier['pole_dest'],  // Utilisation de la valeur ou null
+            ':categorie' => $courrier['categorie'],
+            ':numero_ordre' => $courrier['numero_ordre'],
+            ':nombre_fichiers_joins' => $courrier['nombre_fichiers_joins'],
+            ':date_derniere_modification' => $courrier['date_derniere_modification'],
+            ':signature_gouverneur' => $courrier['signature_gouverneur'],
+            ':date_suppression' => date('Y-m-d H:i:s'),
+            ':Matricule_agent' => $matricule,
+            ':objet_du_courrier' => $courrier['Objet_du_courrier']  // Utilisation de la valeur ou valeur par défaut
+        ];
+
+        // Insérer le courrier dans la table corbeille
+        $queryCorbeille = "INSERT INTO corbeille (idCorbeille, idCourrierDepart, idCourrierArrive, Type_document, Etat_interne_externe, 
+                           etat_courrier, etat_plis_ferme, dateEnregistrement, date_mise_circulation, Reference, lien_courrier, 
+                           objet_du_courrier, Matricule_initiateur, idFichierReponse, etat_expedition, expediteur, destinataire, 
+                           entite_dest, pole_destinataire, categorie, numero_ordre, nombre_fichiers_joins, 
+                           date_derniere_modification, signature_gouverneur, date_suppression, Matricule_agent)
+                           VALUES (:idCorbeille, :idCourrierDepart, :idCourrierArrive, :Type_document, :Etat_interne_externe, :etat_courrier,
+                                   :etat_plis_ferme, :dateEnregistrement, :date_mise_circulation, :Reference, :lien_courrier,
+                                   :objet_du_courrier, :Matricule_initiateur, :idFichierReponse, :etat_expedition, :expediteur,
+                                   :destinataire, :entite_dest, :pole_destinataire, :categorie, :numero_ordre, 
+                                   :nombre_fichiers_joins, :date_derniere_modification, :signature_gouverneur, 
+                                   :date_suppression, :Matricule_agent)";
+        $stmtCorbeille = $objet_connexion->prepare($queryCorbeille);
+        $stmtCorbeille->execute($dataCorbeille);
+
+        // Vérifier s'il existe des fichiers annexes associés à ce courrier
+        $queryFichierAnnexe = "SELECT * FROM fichier_annexe WHERE idCourrierArv = :idCourrier";
+        $stmtFichier = $objet_connexion->prepare($queryFichierAnnexe);
+        $stmtFichier->bindParam(':idCourrier', $courrier['idCourrier'], PDO::PARAM_INT);
+        $stmtFichier->execute();
+
+        while ($fichier = $stmtFichier->fetch(PDO::FETCH_ASSOC)) {
+            $idFichierAnnexeCorbeille = incrementerClePrimaireNumerique('corbeille_fichier_annexe');
+            $queryCorbeilleFichier = "INSERT INTO corbeille_fichier_annexe (idFichier_annexe_corbeille, idFichier, lien_fichier_annexe, idCourrierDep, idCourrierArv, idCorbeille)
+                                      VALUES (:idFichier_annexe_corbeille, :idFichier, :lien_fichier_annexe, :idCourrierDep, :idCourrierArv, :idCorbeille)";
+            $stmtCorbeilleFichier = $objet_connexion->prepare($queryCorbeilleFichier);
+            $stmtCorbeilleFichier->execute([
+                ':idFichier_annexe_corbeille' => $idFichierAnnexeCorbeille,
+                ':idFichier' => $fichier['idFichier'],
+                ':lien_fichier_annexe' => $fichier['lien_fichier_annexe'],
+                ':idCourrierDep' => $fichier['idCourrierDep'],
+                ':idCourrierArv' => $fichier['idCourrierArv'],
+                ':idCorbeille' => $idCorbeille
+            ]);
+        }
+
+        // Supprimer les références dans les autres tables
+        $tablesToDelete = [
+            'copie_courrier' => 'id_courrierArrive',
+            'fichier_annexe' => 'idCourrierArv',
+            'notification' => 'idCourrierArrive',
+            'fichierreponse' => 'idCourrierArrive',
+        ];
+
+        foreach ($tablesToDelete as $table => $column) {
+            $queryCheck = "SELECT COUNT(*) FROM $table WHERE $column = :idCourrier";
+            $stmtCheck = $objet_connexion->prepare($queryCheck);
+            $stmtCheck->bindParam(':idCourrier', $courrier['idCourrier'], PDO::PARAM_INT);
+            $stmtCheck->execute();
+            $count = $stmtCheck->fetchColumn();
+
+            if ($count > 0) {
+                $queryDelete = "DELETE FROM $table WHERE $column = :idCourrier";
+                $stmtDelete = $objet_connexion->prepare($queryDelete);
+                $stmtDelete->bindParam(':idCourrier', $courrier['idCourrier'], PDO::PARAM_INT);
+                $stmtDelete->execute();
+            }
+        }
+
+        // Supprimer le courrier de la table principale (courrierarrive)
+        $queryDeleteCourrier = "DELETE FROM courrierarrive WHERE idCourrier = :idCourrier";
+        $stmtDeleteCourrier = $objet_connexion->prepare($queryDeleteCourrier);
+        $stmtDeleteCourrier->bindParam(':idCourrier', $courrier['idCourrier'], PDO::PARAM_INT);
+        $stmtDeleteCourrier->execute();
+
+        // Commit de la transaction
+        $objet_connexion->commit();
+
+    } catch (Exception $e) {
+        // En cas d'erreur, annuler la transaction
+        $objet_connexion->rollBack();
+        echo "Erreur: " . $e->getMessage();
+    }
+}
+
+
 
 ?>
 

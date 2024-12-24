@@ -7,6 +7,7 @@ require('../../Traitement/Base_de_donnee/verificationDonneeBd.php');
 
 $idCourrier= $_GET['$idCourrier'];
 $typeCourrier= $_GET['$typeCourrier'];
+$numero_ordre = $_GET['$numero_ordre'];
 
 
 $matricule ='user04' ;
@@ -59,6 +60,7 @@ if (!$test) {
 if ($typeCourrier === "courrier départ") {
     supprimerCourrierDepart($idCourrier,$matricule);
     
+
     die( '<script>
 alert("Suppression effectuée.");
 setTimeout(function(){

@@ -42,6 +42,8 @@ $sortOrder= '';
 $origine = '';
 $priority = '';
 $typeCourrier = '';
+$expedition = '';
+$signature = '';
 
 
 
@@ -49,10 +51,14 @@ if (isset($_POST['form_type1'])) {
     $sortType = $_POST['sortType'] ?? '';
     $sortOrder= $_POST['sortOrder']?? '';
  
-}elseif (isset($_POST['form_type2'])) {
+}
+if (isset($_POST['form_type2'])) {
     $priority = $_POST['priority']?? '';
     $typeCourrier = $_POST['typeCourrier']?? '';
     $origine = $_POST['Origine']?? '';
+    $expedition = $_POST['expedition']?? '';
+    $signature = $_POST['signature']?? '';
+
 } 
   
 if (isset($_POST['form_type3'])) {
@@ -66,7 +72,7 @@ if (isset($_POST['form_type4'])) {
     
     }
 
-    $courriers = getCourriersBO($nom_entite,$searchKeyword,$startDate,$endDate, $sortType,$sortOrder,$origine,$priority,$typeCourrier);
+    $courriers = getCourriersBO($nom_entite,$searchKeyword,$startDate,$endDate, $sortType,$sortOrder,$origine,$priority,$typeCourrier,$expedition,$signature);
 
     if (isset($courriers['lien_courrier'])) {
         $nom_fichier = recupererNomFichiers($courriers); // Récupération du nom du fichier
@@ -86,6 +92,8 @@ $sortOrder= '';
 $origine = '';
 $priority = '';
 $typeCourrier = '';
+$expedition = '';
+$signature = '';
 
 
 
@@ -97,6 +105,8 @@ if (isset($_POST['form_type1'])) {
     $priority = $_POST['priority']?? '';
     $typeCourrier = $_POST['typeCourrier']?? '';
     $origine = $_POST['Origine']?? '';
+    $expedition = $_POST['expedition']?? '';
+    $signature = $_POST['signature']?? '';
 } 
   
 if (isset($_POST['form_type3'])) {
@@ -109,24 +119,13 @@ if (isset($_POST['form_type4'])) {
     
     }
 
-    $courriers = getCourriers($nom_entite,$searchKeyword,$startDate,$endDate, $sortType,$sortOrder,$origine,$priority,$typeCourrier);
+    $courriers = getCourriers($nom_entite,$searchKeyword,$startDate,$endDate, $sortType,$sortOrder,$origine,$priority,$typeCourrier,$expedition,$signature);
 
     
     if (isset($courriers['lien_courrier'])) {
         $nom_fichier = recupererNomFichiers($courriers); // Récupération du nom du fichier 
     }
 }
-
-
-
-
-
-
-
-
-
-
-
 
 
 

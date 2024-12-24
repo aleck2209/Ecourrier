@@ -12,6 +12,9 @@ require('../../Traitement/Base_de_donnee/verificationDonneeBd.php');
 
  // Exemple de matricule, à remplacer par la variable réelle.
 
+// On commence par désactiver l'affichage des erreurs PHP en production
+ini_set('display_errors', 0); // Désactive l'affichage des erreurs
+error_reporting(E_ALL); // Active l'enregistrement des erreurs pour le débogage (peut être modifié en production)
 
 
 // Vérification de l'ahabilitation 
@@ -38,6 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $fichiers_joints = $_FILES['fichier'];
    
 
+  
     //Convertion du format de la date récupérée du formulaire au formulaire accepté dans la base de données:
       // Formater la date en ajoutant les secondes
 
@@ -57,33 +61,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
  $matricule = 'user04';
 
-$sql1 = " select p.id_pole, p.nom_pole
-from pole p inner join utilisateur u on 
-p.id_pole = u.id_pole
-where u.Matricule = ?;";
+    $sql1 = " select p.id_pole, p.nom_pole
+    from pole p inner join utilisateur u on 
+    p.id_pole = u.id_pole
+    where u.Matricule = ?;";
 
-$sql2=" select e.id_entite, e.nom_entite
-from entite_banque e inner join utilisateur u on 
-e.id_entite = u.id_entite
-where u.Matricule = ?;";
-
-
-$infos_entite_utilisateur = recupererIdEntiteOuIdPolePourUnUtilisateur($sql2,$matricule);
-
-$infos_pole_utilisateur = recupererIdEntiteOuIdPolePourUnUtilisateur($sql1,$matricule);
+    $sql2=" select e.id_entite, e.nom_entite
+    from entite_banque e inner join utilisateur u on 
+    e.id_entite = u.id_entite
+    where u.Matricule = ?;";
 
 
+    $infos_entite_utilisateur = recupererIdEntiteOuIdPolePourUnUtilisateur($sql2,$matricule);
+
+    $infos_pole_utilisateur = recupererIdEntiteOuIdPolePourUnUtilisateur($sql1,$matricule);
 
 
 
-if (isset($infos_pole_utilisateur['id_pole'])){
-    $nom_entite = recupererNomEntiteParIdUtilisateur($sql1,$matricule);
-   
 
-}
-elseif ( (isset($infos_entite_utilisateur['id_entite']))) {
-    $nom_entite = recupererNomEntiteParIdUtilisateur($sql2,$matricule);
- }
+
+    if (isset($infos_pole_utilisateur['id_pole'])){
+        $nom_entite = recupererNomEntiteParIdUtilisateur($sql1,$matricule);
+    
+
+    }
+    elseif ( (isset($infos_entite_utilisateur['id_entite']))) {
+        $nom_entite = recupererNomEntiteParIdUtilisateur($sql2,$matricule);
+    }
 
 
 
@@ -165,9 +169,6 @@ setTimeout(function(){
     }
 
     
-    
-
-
     // Vérifier les données (simple exemple de validation)
     if (empty($objet) || empty($categorie) || empty($destinataire) || empty($etat_courrier)) {
         die("Tous les champs sont obligatoires.");
