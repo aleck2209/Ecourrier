@@ -11,7 +11,7 @@
         <div>
             <div class="logo">
                 <figcaption>
-                    <img src="../images/logo.png" alt="log de la BEAC">
+                    <img src="../../public/images/logo.png" alt="logo de la BEAC">
                 </figcaption>
                 <p>BEAC</p>
             </div>

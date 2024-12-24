@@ -723,7 +723,8 @@ input[type="reset"]:hover,
     width: 9%;
 }
 
-.dashboard-object {
+.dashboard-object,
+.basket-object {
     width: 18%;
 }
 
@@ -916,10 +917,6 @@ output[class="dashboard-file"] {
     background-color: transparent;
     padding: 0.3rem;
     width: 2rem;
-}
-
-.basket-object {
-    width: 20%;
 }
 
 /* FIN PAGE CORBEILLE  */
