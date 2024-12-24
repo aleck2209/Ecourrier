@@ -140,7 +140,7 @@
                                 <a href="../../public/page/historique-courrier.php?$idCourrier=<?=$courrier['idCourrier']?>&& $typeCourrier=<?=$courrier['type_courrier']?>">
                                     <input type="image" src="../images/historique.png" alt="" title="historique">
                                 </a>
-                                <a href="../../Traitement/Controle/suppressioCourrier.php?$idCourrier=<?=$courrier['idCourrier']?>&& $typeCourrier=<?=$courrier['type_courrier']?>" class="supprimer">
+                                <a href="../../Traitement/Controle/suppressioCourrier.php?$idCourrier=<?=$courrier['idCourrier']?>&& $typeCourrier=<?=$courrier['type_courrier']?>&& $numero_ordre=<?=$courrier['numero_ordre']?>" class="supprimer">
                                     <input type="image" src="../images/supprimer.png" alt="" title="supprimer">
                                 </a>
                             </div>

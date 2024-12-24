@@ -535,6 +535,16 @@ if ($nombre_fichiers_joins ===count($liens_fichiers_joins_arrives )) {
 
 }
 
+
+die( '<script>
+alert("Votre action a été effectuée avec succès.");
+setTimeout(function(){
+    window.location.href = "../../public/page/courrier-interne.php";
+}, 500); 
+</script>'
+);
+
+
 }
 
 
