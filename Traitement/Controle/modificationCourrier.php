@@ -12,6 +12,9 @@ require('../../Traitement/Base_de_donnee/verificationDonneeBd.php');
 
  // Exemple de matricule, à remplacer par la variable réelle.
 
+// On commence par désactiver l'affichage des erreurs PHP en production
+ini_set('display_errors', 0); // Désactive l'affichage des erreurs
+error_reporting(E_ALL); // Active l'enregistrement des erreurs pour le débogage (peut être modifié en production)
 
 
 // Vérification de l'ahabilitation 
