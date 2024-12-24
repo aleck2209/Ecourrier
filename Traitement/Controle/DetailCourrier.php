@@ -129,7 +129,7 @@ elseif ($typeCourrier ==="courrier départ") {
     $sql1 = "SELECT Type_document,Etat_interne_externe as origine_courrier,etat_courrier,
              etat_plis_ferme as plis_ferme,dateEnregistrement,date_mise_circulation,Reference,lien_courrier,Objet_du_courrier,Matricule,destinataire,
              nom_utilisateur as nom_enregistreur,prenom_utilisateur as prenom_enregistreur,nombre_fichiers_joins as nombre_de_fichiers_joins,
-             'courrier départ' AS type_courrier,expediteur,numero_ordre, categorie, date_derniere_modification , signature_gouverneur, etat_expedition,
+             'courrier départ' AS type_courrier,expediteur,numero_ordre, categorie, date_derniere_modification , signature_gouverneur, etat_expedition
              from courrierdepart inner join  utilisateur
              on  courrierdepart.Matricule_initiateur = utilisateur.Matricule
              where idCourrier =:idCourrier";

@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
 
- $matricule = 'user03';
+ $matricule = 'user04';
 
     $sql1 = " select p.id_pole, p.nom_pole
     from pole p inner join utilisateur u on 
