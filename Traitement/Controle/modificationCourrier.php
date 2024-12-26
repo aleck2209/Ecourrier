@@ -271,7 +271,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   
    
 
-
+    $lien = "";
  $message = ""; // Initialisation de la variable contenant les messages d'erreur
 
 
@@ -345,6 +345,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Obtenir les liens des fichiers joints    
     }
      if ($_FILES['fichier']['error'] ===1) {
+        $lien = "";
         $message= "Veuillez vérifier la taille et le format du fichier" ;
     }
 
@@ -485,6 +486,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $actionsModifiees .= ", Signature";
                     }
                 } else {
+                    $lien = "";
                     $message= "Vous n'êtes pas habilité à changer la case signature";
                 }
             }
