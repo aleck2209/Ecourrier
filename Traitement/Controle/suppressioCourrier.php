@@ -61,13 +61,14 @@ if ($typeCourrier === "courrier départ") {
     supprimerCourrierDepart($idCourrier,$matricule);
     supprimerCourrierArriveInterne($numero_ordre,$matricule);
 
-    die( '<script>
-alert("Suppression effectuée.");
-setTimeout(function(){
-    window.location.href = "../../public/page/tableau-bord.php";
-}, 500); 
-</script>'
-);
+ echo "Suppression effectuée avec succès";
+    //     die( '<script>
+// alert("Suppression effectuée.");
+// setTimeout(function(){
+//     window.location.href = "../../public/page/tableau-bord.php";
+// }, 500); 
+// </script>'
+// );
 } 
  
 elseif ($typeCourrier === "courrier arrivé") {

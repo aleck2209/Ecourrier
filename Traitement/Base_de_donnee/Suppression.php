@@ -509,6 +509,7 @@ function supprimerCourrierArriveInterne($numero_ordre, $matricule) {
             'fichier_annexe' => 'idCourrierArv',
             'notification' => 'idCourrierArrive',
             'fichierreponse' => 'idCourrierArrive',
+            'main_modification_courrier'=>'idCourrier'
         ];
 
         foreach ($tablesToDelete as $table => $column) {

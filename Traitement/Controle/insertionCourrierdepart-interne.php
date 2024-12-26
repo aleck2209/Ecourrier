@@ -9,6 +9,8 @@ require('../../Traitement/Verification/verifierValeurEnum.php');
 require('../../Traitement/Controle/gestionFichiesCourrierArrive.php');
 
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
 // On commence par désactiver l'affichage des erreurs PHP en production
 ini_set('display_errors', 0); // Désactive l'affichage des erreurs
 error_reporting(E_ALL); // Active l'enregistrement des erreurs pour le débogage (peut être modifié en production)
@@ -40,34 +42,35 @@ $identite_dest ;
 $idpole_dest;
 $idReponse = null;
 
-if ($test_type_courrier==='courrier départ') {
-    
-    echo $test_type_courrier.'<br>';
-    echo $destinataire.'<br>';
-    echo $expediteur_courrierArv;
-    // die;
-} elseif ($test_type_courrier==='courrier arrivé') {
-    echo $test_type_courrier.'<br>';
-    echo 'expéditeur : '.$expediteur_courrierArv.'<br>';
-    echo 'destinataire : '.$destinataire;
-    // die;
-}
+    if ($test_type_courrier==='courrier départ') {
+        
+        echo $test_type_courrier.'<br>';
+        echo $destinataire.'<br>';
+        echo $expediteur_courrierArv;
+        // die;
+    } elseif ($test_type_courrier==='courrier arrivé') {
+        echo $test_type_courrier.'<br>';
+        echo 'expéditeur : '.$expediteur_courrierArv.'<br>';
+        echo 'destinataire : '.$destinataire;
+        // die;
+    }
 
 
 
-//-----------------------------------------Test des valeurs de l'état interne externe et de l'état expédition
+    //-----------------------------------------Test des valeurs de l'état interne externe et de l'état expédition
 
-$etat_inter_exter = ($test_etat_interne_externe =="interne") ? "courrier interne": "courrier externe" ;
+    $etat_inter_exter = ($test_etat_interne_externe =="interne") ? "courrier interne": "courrier externe" ;
 
-$etatExpedition = null;
-//récupération du tableau des entite destinataires ayant le nom entré 
+    $etatExpedition = null;
+
+    //récupération du tableau des entite destinataires ayant le nom entré 
 
 
 
 
-//---------------------------------------Controle des nom destinataires----------------------------------
+    //---------------------------------------Controle des nom destinataires----------------------------------
 
-if ($test_type_courrier==='courrier départ') {
+    if ($test_type_courrier==='courrier départ') {
     if (!is_null($destinataire)) {
     $Liste_entite_destinataire = recupererLigneSpecifique('entite_banque','nom_entite',$destinataire);
     $Liste_pole_destinataire = recupererLigneSpecifique('pole','nom_pole',$destinataire);
@@ -93,21 +96,23 @@ if ($test_type_courrier==='courrier départ') {
     } 
     } else {
         // die('veuillez entrer un destinataire');
-        die('<script>
-                alert("Veuillez entrer un destinataire.");
-               setTimeout(function(){
-                    window.location.href = "../../public/page/courrier-interne.php";
-                }, 500); 
-          </script>');
+        $message = "Veuillez entrer un expéditeur.";
+        // die('<script>
+        //         alert("Veuillez entrer un destinataire.");
+        //        setTimeout(function(){
+        //             window.location.href = "../../public/page/courrier-interne.php";
+        //         }, 500); 
+        //   </script>');
         
     }
 
 
     
 
-}  elseif ($test_type_courrier==='courrier arrivé') {
+    }  
+    elseif ($test_type_courrier==='courrier arrivé') {
 
-    echo $test_type_courrier;
+    
     if (!is_null($expediteur_courrierArv)) {
         $Liste_entite_expediteur = recupererLigneSpecifique('entite_banque','nom_entite',$expediteur_courrierArv);
         $Liste_pole_expediteur = recupererLigneSpecifique('pole','nom_pole',$expediteur_courrierArv);
@@ -130,16 +135,18 @@ if ($test_type_courrier==='courrier départ') {
     }
     else {
         // die('veuillez entrer un destinataire');
-        die('<script>
-                alert("Veuillez entrer un destinataire.");
-               setTimeout(function(){
-                    window.location.href = "../../public/page/courrier-interne.php";
-                }, 500); 
-          </script>');
+       $message = "Veuillez entrer un expéditeur.";
+       
+        // die('<script>
+        //         alert("Veuillez entrer un destinataire.");
+        //        setTimeout(function(){
+        //             window.location.href = "../../public/page/courrier-interne.php";
+        //         }, 500); 
+        //   </script>');
         
     }
 
-}
+    }
  
 
 
@@ -258,7 +265,9 @@ if ( $test_type_courrier==='courrier départ') {
         
         // On compare le numéro d'ordre entré à celui qui est attendu en fonction de l'entité
         if ($numeroOrdrePrefix != $num_a_entrer) {
-            die("Le numéro d'ordre pour le pole  $nom_entite attendu est : $num_a_entrer");
+            $message="Le numéro d'ordre pour le pole  $nom_entite attendu est : $num_a_entrer";
+            
+            die($message);
         }
         
         
@@ -596,7 +605,7 @@ setTimeout(function(){
 );
 
 
-
+}
 
 
 
