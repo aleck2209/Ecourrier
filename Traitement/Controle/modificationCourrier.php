@@ -34,7 +34,7 @@ $date_mise_circulation = '';// date de mise en circulation du courrier
 $nom_fichier = "";// date mise en circulaton du currier
 $tableau_des_noms_des_fichiers_joints = [];
 
-$matricule ='user04' ;
+$matricule ='user01' ;
 
 $sql1 = " select p.id_pole, p.nom_pole
 from pole p inner join utilisateur u on 
@@ -269,53 +269,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
    
 
   
-    //Convertion du format de la date récupérée du formulaire au formulaire accepté dans la base de données:
-      // Formater la date en ajoutant les secondes
-
-        // Convertir la date au format base de données (YYYY-MM-DD HH:MM:SS)
-
-        // if (is_null($date_mise_circulation)) {
-        //     $date_mise_circulation = null;
-        // }else {
-        //     $date_mise_circulation = new DateTime($date_mise_circulation);
-        //     $date_mise_circulation = $date_mise_circulation->format('YYYY-MM-DD HH:MM:SS');
-        // }
-      
    
 
 
  $message = ""; // Initialisation de la variable contenant les messages d'erreur
 
-
- $matricule = 'user04';
-
-    $sql1 = " select p.id_pole, p.nom_pole
-    from pole p inner join utilisateur u on 
-    p.id_pole = u.id_pole
-    where u.Matricule = ?;";
-
-    $sql2=" select e.id_entite, e.nom_entite
-    from entite_banque e inner join utilisateur u on 
-    e.id_entite = u.id_entite
-    where u.Matricule = ?;";
-
-
-    $infos_entite_utilisateur = recupererIdEntiteOuIdPolePourUnUtilisateur($sql2,$matricule);
-
-    $infos_pole_utilisateur = recupererIdEntiteOuIdPolePourUnUtilisateur($sql1,$matricule);
-
-
-
-
-
-    if (isset($infos_pole_utilisateur['id_pole'])){
-        $nom_entite = recupererNomEntiteParIdUtilisateur($sql1,$matricule);
-    
-
-    }
-    elseif ( (isset($infos_entite_utilisateur['id_entite']))) {
-        $nom_entite = recupererNomEntiteParIdUtilisateur($sql2,$matricule);
-    }
 
 
 
@@ -330,7 +288,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!$test) {
     
     $message ="Vous n\'êtes pas habilité à modifier un courrier.";
-    echo $message;
+
     die;
 
     } 
@@ -410,7 +368,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $message="Vous n'êtes pas autorisé à modifier les courriers arrivés internes.<br>
             Envoyez une notification au près de l\'entité éméttrice de ce courrier <br>";
 
-            echo $message;
+            
             die;
 
 
@@ -533,7 +491,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $actionsModifiees .= ", Signature";
                     }
                 } else {
-                    echo "Vous n'êtes pas habilité à changer la case signature du gouverneur";
+                    $message= "Vous n'êtes pas habilité à changer la case signature";
                     exit;
                 }
             }
@@ -581,8 +539,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Vérifier s'il y a des actions modifiées à enregistrer
         if ($actionsModifiees !=" Mis à jour" &&  strlen($actionsModifiees) > 0) {
                 // Afficher le tableau des actions modifiées
-                print_r($actionsModifiees);
-
                 // Appel de la fonction pour mettre à jour le courrier départ
                 updateCourrier($sqlCourrierDepart, $paramsCourrierDepart);
 
@@ -595,7 +551,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
        
         else {
             $message ="Aucune modification apportée à ce courrier.";
-            echo $message;
+            
             die;
         }
 
@@ -661,7 +617,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } else{
                 // Si contient des données on récupère l'id et insère l'actio
                 $idCourrierArv = $ligneCourrierArrive[0]->idCourrier; 
-                // echo "L'idCourrier est : " . $idCourrier;
+               
                 insertHistorique("mis à jour du courrier",$idCourrierArv,$nom_entite,"courrier arrivé",$matricule);
 
             }
@@ -669,8 +625,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         }
 
-        $message = "courrier départ mis à jour.";
-        echo $message;
+        $message = "courrier départ mis à jour avec succès.";
+       
 
         die ;
 
@@ -845,7 +801,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     }
 
             
-                                    $message ="courrier arrivé extere mis à jour avec succès.";
+                                    $message ="courrier arrivé extere mis à jour.";
 
                                     die ;       
 
@@ -862,8 +818,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
 }
-
-
 
 
 
