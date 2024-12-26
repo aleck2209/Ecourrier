@@ -76,12 +76,14 @@ function alertSave() {
         isFormDirty = true
     });
 
+
     // GESTION DES CLICS SUR LES LIENS INTERNES DE APPLICATION
     navigationLinks.forEach(link => {
         link.addEventListener('click', (e) => {
             if(isFormDirty) {
                 e.preventDefault(); //EMPECHE LA NAVIGATION IMMEDIATE
                 redirectUrl = e.target.href; //CAPTURE URL IMMEDIATE
+                console.log(redirectUrl)
                 alertBox.classList.remove('alert-hidden');
             }
         });

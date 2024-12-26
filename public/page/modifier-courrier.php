@@ -12,7 +12,6 @@
         //   require_once('../../Traitement/Controle/DetailCourrier.php');
         require("../../Traitement/Controle/modificationCourrier.php");
 
-
         // APPEL DE LA SIDE-BAR
         require('../include/side-bar.php');
     ?>
@@ -25,14 +24,6 @@
             include('../include/header.php');
         ?>
         <!-- FIN DU HEADER -->
-
-
-                <!-- DEBUT DES TRAITEMENTS -->
-                <?php
-        // APPEL DE LA PAGE DES TRAITEMENTS
-        ?>
-        <!-- FIN DES TRAITEMENTS -->
-
 
         <main class="main">
             <section class="page-content-update-mail">
@@ -102,13 +93,17 @@
     </div>
 
     <?php
+        // APPEL DE LA PAGE MESSAGE
+        require('../../public/include/message.php');
+
         // APPEL DE L'ALERTE QUAND ON SORT SANS ENREGISTRER
-        require('../include/alerte.php');
+        require('../../public/include/alerte.php');
     ?>
     <!-- FIN DE LA PAGE MODIFIER COURRIER  -->
      <!-- DEBUT SCRIPT JS -->
-    <script src="../js/afficher-header.js"></script>
+    <script src="../../public/js/afficher-header.js"></script>
     <script src="../../public/js/gestion-modifier.js"></script>
+    <script src="../../public/js/message.js"></script>
     <!-- FIN SCRIPT JS -->
 </body>
 </html>
