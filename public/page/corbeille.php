@@ -8,6 +8,9 @@
 </head>
 <body>
     <?php
+        // APPEL DE LA PAGE DE TRAITEMENT PHP
+        require('../../Traitement/Controle/CorbeilleCourrier.php');
+
         // APPEL DE LA SIDE-BAR
         require('../include/side-bar.php');
     ?>
@@ -34,26 +37,26 @@
                     <p class="basket-status">Statut</p>
                     <p class="basket-action">Opérations</p>
                 </div>
-                <?php  ?>
+                <?php foreach($tableau_courriers_de_la_corbeille_entite_ou_pole as $courrier) { ?>
                     <div class="element-basket-mail">
-                        <output name="" class="basket-number"></output>
-                        <output name="" class="basket-object"></output>
+                        <output name="" class="basket-number"><?php echo $courrier['numero_ordre'] ?></output>
+                        <output name="" class="basket-object"><?php echo $courrier['objet_du_courrier'] ?></output>
                         <output name="" class="basket-file">
-                            <a href="" target="_blank" class="lienCourrier">
+                            <a href="<?php echo $courrier['lien_courrier'] ?>" target="_blank" class="lienCourrier">
                                 <img src="../../public/images/pdf.png" alt="">
                             </a>
                         </output>
-                        <output name="" class="basket-expediteur"></output>
-                        <output name="" class="basket-destinataire"></output>
-                        <output name="" class="basket-date"></output>
-                        <output name="" class="basket-status"></output>
+                        <output name="" class="basket-expediteur"><?php echo $courrier['expediteur'] ?></output>
+                        <output name="" class="basket-destinataire"><?php echo $courrier['destinataire'] ?></output>
+                        <output name="" class="basket-date"><?php echo $courrier['date_suppression'] ?></output>
+                        <output name="" class="basket-status"><?php echo $courrier['etat_courrier'] ?></output>
                         <div class="basket-action">
                             <a href="">
                                 <input type="image" src="../images/details.png" alt="" title="détails">
                             </a>
                         </div>
                     </div>
-                <?php  ?>
+                <?php } ?>
             </section>
         </main>
     </div>

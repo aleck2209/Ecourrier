@@ -27,7 +27,7 @@
             ?>
             <!-- FIN DE LA BARRE DE NAVIGATION -->
             <section class="page-content-save-mail" id="page-save-mail">
-                <h2>Informations Courrier</h2>
+                <h2>Enregistrer Courrier</h2>
                 <!-- DEBUT DU FORMULAIRE -->
                 <form action="../../Traitement/Controle/insertionCourrierdepart-interne.php" method="post" class="form-save-mail" id="form-save-mail" enctype="multipart/form-data">
                     <input type="hidden" name="etat_interne_externe" value="interne">

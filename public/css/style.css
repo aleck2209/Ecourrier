@@ -564,8 +564,7 @@ input[type="reset"]:hover,
 .title-list-profil,
 .title-list-user,
 .title-dashboard-mail,
-.title-historical-mail,
-.title-basket-mail {
+.title-historical-mail {
     align-items: center;
     color: var(--DARK);
     display: flex;
@@ -583,8 +582,7 @@ input[type="reset"]:hover,
 .element-list-profil,
 .element-list-user,
 .element-dashboard-mail,
-.element-historical-mail,
-.element-basket-mail {
+.element-historical-mail {
     align-items: center;
     color: var(--BLACK);
     display: flex;
@@ -692,34 +690,26 @@ input[type="reset"]:hover,
 }
 
 .title-dashboard-mail,
-.element-dashboard-mail,
-.title-basket-mail,
-.element-basket-mail {
+.element-dashboard-mail {
     gap: 1rem;
 }
 
 .dashboard-action,
-.dashboard-number,
-.basket-number {
+.dashboard-number {
     width: 10%;
 }
 
 .dashboard-file,
-.dashboard-status,
-.basket-file,
-.basket-statut {
+.dashboard-status {
     width: 4%;
 }
 
 .dashboard-expediteur,
-.dashboard-destinataire,
-.basket-expediteur,
-.basket-destinataire {
+.dashboard-destinataire {
     width: 7%;
 }
 
-.dashboard-date,
-.basket-date {
+.dashboard-date {
     width: 9%;
 }
 
@@ -908,9 +898,32 @@ output[class="dashboard-file"] {
 
 /* DEBUT PAGE CORBEILLE */
 .title-basket-mail {
+    align-items: center;
+    color: var(--DARK);
+    display: flex;
+    font-family: var(--FF-ROBOTO);
+    font-size: var(--FS-TITLE);
+    font-weight: var(--FW-FIELD);
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
     margin-top: 1.5rem;
 }
 
+.element-basket-mail {
+    align-items: center;
+    color: var(--BLACK);
+    display: flex;
+    font-family: var(--FF-ROBOTO);
+    font-size: var(--FS-FIELD);
+    font-weight: var(--FW-FIELD);
+    justify-content: space-between;
+    padding: var(--PG-TOP-BT-NAV) 0; 
+}
+
+.title-basket-mail,
+.element-basket-mail {
+    gap: 2rem;
+}
 
 .basket-action input[type="image"] {
     background-color: transparent;
@@ -918,8 +931,36 @@ output[class="dashboard-file"] {
     width: 2rem;
 }
 
-.basket-object {
-    width: 20%;
+.basket-number {
+    width: 10%;
 }
+
+.basket-object {
+    width: 18%;
+}
+
+.basket-file {
+    width: 5%;
+}
+
+.basket-expediteur,
+.basket-destinataire {
+    width: 7%;
+}
+
+.basket-date {
+    width: 15%;
+}
+
+.basket-status {
+    width: 4%;
+}
+
+.basket-action {
+    display: flex;
+    justify-content: flex-end;
+    width: 7%;
+}
+
 
 /* FIN PAGE CORBEILLE  */
