@@ -753,7 +753,8 @@ output[class="dashboard-file"] {
     z-index: 9999;
 }
 
-.alert-hidden {
+.alert-hidden,
+.message-hidden {
     display: none;
 }
 

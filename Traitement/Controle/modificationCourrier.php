@@ -287,9 +287,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (!$test) {
     
-    $message ="Vous n\'êtes pas habilité à modifier un courrier.";
-
-    die;
+    $message ="Vous n'êtes pas habilité à modifier un courrier.";
 
     } 
 
@@ -348,14 +346,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
      if ($_FILES['fichier']['error'] ===1) {
         $message= "Veuillez vérifier la taille et le format du fichier" ;
-        die;
     }
 
     
     // Vérifier les données (simple exemple de validation)
     if (empty($objet) || empty($categorie) || empty($destinataire) || empty($etat_courrier)) {
         $message = "Tous les champs sont obligatoires.";
-        die;
 
     }
 
@@ -366,10 +362,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         
             $message="Vous n'êtes pas autorisé à modifier les courriers arrivés internes.<br>
-            Envoyez une notification au près de l\'entité éméttrice de ce courrier <br>";
-
-            
-            die;
+            Envoyez une notification au près de l'entité éméttrice de ce courrier <br>";
 
 
     }
@@ -492,7 +485,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     }
                 } else {
                     $message= "Vous n'êtes pas habilité à changer la case signature";
-                    exit;
                 }
             }
 
@@ -551,8 +543,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
        
         else {
             $message ="Aucune modification apportée à ce courrier.";
-            
-            die;
         }
 
 
@@ -626,9 +616,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         $message = "courrier départ mis à jour avec succès.";
-       
-
-        die ;
 
            
     }
@@ -639,9 +626,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Vérifier que l'utilisateur est du bureau d'ordre avant de modifier un courrier arrivé
          if ($nom_entite === "BO" ) {
                 if (!$verification) {
-                    $message = "Vous n\'avez pas reçu la main pour mettre à jour ce courrier.";   
-                    
-                    die;
+                    $message = "Vous n'avez pas reçu la main pour mettre à jour ce courrier.";   
                 }
 
                 // Requête SQL pour mettre à jour le courrier arrivé externe
@@ -744,7 +729,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         }
                     } else {
                         $message= "Vous n'êtes pas habilité à changer la case signature ";
-                        exit;
                     }
                 }
                 
@@ -796,22 +780,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     $message ="Aucune modification apportée à ce courrier.";
 
-                die ;
-
                                     }
 
             
-                                    $message ="courrier arrivé extere mis à jour.";
-
-                                    die ;       
+                                    $message ="courrier arrivé extere mis à jour.";     
 
             } 
         
             else {
 
-                $message ="Vous n\'êtes pas habilité à mettre à jour un courrier arrivé externe ";
-
-                die ;
+                $message ="Vous n'êtes pas habilité à mettre à jour un courrier arrivé externe ";
 
                  }
         
