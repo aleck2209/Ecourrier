@@ -286,7 +286,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
     if (!$test) {
-    
+        $lien = "../../public/page/tableau-bord";
     $message ="Vous n'êtes pas habilité à modifier un courrier.";
 
     } 
@@ -351,6 +351,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     // Vérifier les données (simple exemple de validation)
     if (empty($objet) || empty($categorie) || empty($destinataire) || empty($etat_courrier)) {
+        $lien = "";
         $message = "Tous les champs sont obligatoires.";
 
     }
@@ -360,7 +361,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Vérification pour le courrier arrivé interne
     if ($typeCourrier === "courrier arrivé" && $origine_courrier ==="courrier interne") {
 
-        
+        $lien = "../../public/page/tableau-bord";
             $message="Vous n'êtes pas autorisé à modifier les courriers arrivés internes.<br>
             Envoyez une notification au près de l'entité éméttrice de ce courrier <br>";
 
@@ -542,6 +543,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
        
         else {
+            $lien = "";
             $message ="Aucune modification apportée à ce courrier.";
         }
 
@@ -614,7 +616,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
         }
-
+        
+        $lien = "../../public/page/tableau-bord";
         $message = "courrier départ mis à jour avec succès.";
 
            
@@ -626,6 +629,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Vérifier que l'utilisateur est du bureau d'ordre avant de modifier un courrier arrivé
          if ($nom_entite === "BO" ) {
                 if (!$verification) {
+                    $lien = "";
                     $message = "Vous n'avez pas reçu la main pour mettre à jour ce courrier.";   
                 }
 
@@ -728,6 +732,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             $actionsModifiees .= ", Signature";
                         }
                     } else {
+                        $lien = "";
                         $message= "Vous n'êtes pas habilité à changer la case signature ";
                     }
                 }
@@ -777,18 +782,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
                 
                 else {
-
+                    $lien = "";
                     $message ="Aucune modification apportée à ce courrier.";
 
                                     }
 
-            
+                                    $lien = "../../public/page/tableau-bord";
                                     $message ="courrier arrivé extere mis à jour.";     
 
             } 
         
             else {
-
+                $lien = "";
                 $message ="Vous n'êtes pas habilité à mettre à jour un courrier arrivé externe ";
 
                  }
