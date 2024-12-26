@@ -420,9 +420,9 @@ function supprimerCourrierArriveInterne($numero_ordre, $matricule) {
         $objet_connexion->beginTransaction();
 
         // Préparer la requête pour récupérer l'idCourrier à partir du numero_ordre
-        $query = "SELECT idCourrier, * FROM courrierarrive WHERE numero_ordre = :numero_ordre";
+        $query = "SELECT * FROM courrierarrive WHERE numero_ordre = :numero_ordre";
         $stmt = $objet_connexion->prepare($query);
-        $stmt->bindParam(':numero_ordre', $numero_ordre, PDO::PARAM_INT);
+        $stmt->bindParam(':numero_ordre', $numero_ordre, PDO::PARAM_STR);
         $stmt->execute();
         
         $courrier = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -534,7 +534,7 @@ function supprimerCourrierArriveInterne($numero_ordre, $matricule) {
 
         // Commit de la transaction
         $objet_connexion->commit();
-
+        
     } catch (Exception $e) {
         // En cas d'erreur, annuler la transaction
         $objet_connexion->rollBack();

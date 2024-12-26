@@ -9,7 +9,9 @@
 <body>
     <?php
         // APPEL DE LA PAGE D'AFFICHAGE DES DETAILS DU COURRIER
-        require('../../Traitement/Controle/DetailCourrier.php');
+        //   require_once('../../Traitement/Controle/DetailCourrier.php');
+        require("../../Traitement/Controle/modificationCourrier.php");
+
 
         // APPEL DE LA SIDE-BAR
         require('../include/side-bar.php');
@@ -23,10 +25,19 @@
             include('../include/header.php');
         ?>
         <!-- FIN DU HEADER -->
+
+
+                <!-- DEBUT DES TRAITEMENTS -->
+                <?php
+        // APPEL DE LA PAGE DES TRAITEMENTS
+        ?>
+        <!-- FIN DES TRAITEMENTS -->
+
+
         <main class="main">
             <section class="page-content-update-mail">
                 <h2>Modifier courrier</h2>
-                <form action="../../Traitement/Controle/modificationCourrier.php" method="post" enctype="multipart/form-data" class="form-update-mail">
+                <form action="" method="post" enctype="multipart/form-data" class="form-update-mail">
                     <input type="hidden" name="idCourrier" value="<?php echo $idCourrier; ?>">
                     <input type="hidden" name="typeCourrier" value="<?php echo $typeCourrier; ?>">
                     <input type="hidden" name="numero_ordre" value="<?php echo ($T1[0]['numero_ordre']); ?>">

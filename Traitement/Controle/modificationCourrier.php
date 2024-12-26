@@ -21,7 +21,234 @@ error_reporting(E_ALL); // Active l'enregistrement des erreurs pour le débogage
 
 
 
-// Vérifier que les données ont été envoyées via POST
+// Début des détails sur le courrier à modifier
+
+
+
+
+$idCourrier= $_GET['$idCourrier'];
+$typeCourrier= $_GET['$typeCourrier'];
+$noms_copies = ""; // noms des destinataires de copies
+$tableau_lien = []; //tableaux des liens de fichiers
+$date_mise_circulation = '';// date de mise en circulation du courrier
+$nom_fichier = "";// date mise en circulaton du currier
+$tableau_des_noms_des_fichiers_joints = [];
+
+$matricule ='user04' ;
+
+$sql1 = " select p.id_pole, p.nom_pole
+from pole p inner join utilisateur u on 
+p.id_pole = u.id_pole
+where u.Matricule = ?;";
+
+$sql2=" select e.id_entite, e.nom_entite
+from entite_banque e inner join utilisateur u on 
+e.id_entite = u.id_entite
+where u.Matricule = ?;";
+
+
+// Récupération du nom de l'entité ou du pole à laquelle appartient un utilisateur 
+$infos_entite_utilisateur = recupererIdEntiteOuIdPolePourUnUtilisateur($sql2,$matricule);
+
+$infos_pole_utilisateur = recupererIdEntiteOuIdPolePourUnUtilisateur($sql1,$matricule);
+
+if (isset($infos_pole_utilisateur['id_pole'])){
+
+    $nom_entite = recupererNomEntiteParIdUtilisateur($sql1,$matricule);
+}
+
+elseif (isset($infos_entite_utilisateur['id_entite'])){
+
+    $nom_entite = recupererNomEntiteParIdUtilisateur($sql2,$matricule);
+
+}
+
+
+// Récupération des détails pour un courrier arrivé
+if ($typeCourrier ==="courrier arrivé") {
+
+    $sql1 = " SELECT Type_document,Etat_interne_externe as origine_courrier,etat_courrier,
+              etat_plis_ferme as plis_ferme,dateEnregistrement,date_mise_circulation,Reference,lien_courrier,Objet_du_courrier,
+              numero_ordre,categorie,nombre_fichiers_joins as nombre_de_fichiers_joins,expediteur,destinataire,Matricule,
+              nom_utilisateur as nom_enregistreur,prenom_utilisateur as prenom_enregistreur, categorie, date_derniere_modification,signature_gouverneur,
+              'courrier arrivé' AS type_courrier
+              from courrierarrive inner join utilisateur
+              on  courrierarrive.Matricule_initiateur = utilisateur.Matricule
+              where idCourrier =:idCourrier";
+    $T1 = getInfosForCourrier($sql1,$idCourrier);
+
+
+    //Récupérer la date de mise en circulation 
+    if (isset($T1[0]['date_mise_circulation'])) {
+        $date_mise_circulation = new DateTime($T1[0]['date_mise_circulation']);
+        $date_mise_circulation = $date_mise_circulation->format('Y-m-d\TH:i');
+    }
+
+
+    //récupérer le nom du fichier
+
+    if (isset($T1[0]['lien_courrier'])) {
+        $nom_fichier = recupererNomFichiers($T1[0]['lien_courrier']);
+    }
+
+
+    $sql2= "SELECT nom_destinataire
+            FROM copie_courrier
+            WHERE id_courrierArrive = :idCourrier;";
+
+    $T2 = getInfosForCourrier($sql2,$idCourrier);
+
+    $noms_destinataires = "";
+
+    // Parcours du tableau pour extraire les noms
+    foreach ($T2 as $destinataire) {
+        
+        // Ajout du nom à la chaîne, en vérifiant si la chaîne n'est pas vide pour éviter une virgule en début de chaîne
+        $noms_copies .= ($noms_copies != "" ? ", " : "") . $destinataire['nom_destinataire'];
+    }
+
+    echo $noms_copies;
+
+    $sql3= "SELECT lien_fichier_annexe
+            FROM fichier_annexe
+            WHERE idCourrierArv = :idCourrier";
+
+    $T3 = getInfosForCourrier($sql3,$idCourrier);
+
+  
+
+    //Récupération du tableau contenant les liens des fichiers courriers 
+    if (count($T3)>0) {
+        foreach ($T3 as $lien) {
+            // Ajout du lien dans le tableau des liens
+            $tableau_lien []= $lien['lien_fichier_annexe'];
+        }
+    }
+    
+      // Récupération des noms des fichiers 
+      if (count($tableau_lien)>0) {
+        foreach ($tableau_lien as $lien_fichier_annexe) {
+            $tableau_des_noms_des_fichiers_joints[]= recupererNomFichiers($lien_fichier_annexe);
+        }
+    }
+
+
+
+
+    $sql4 = "SELECT lienFichierReponse, dateReponse
+    FROM fichierreponse
+    WHERE idCourrierDepart = :idCourrier;";
+
+    $T4 = getInfosForCourrier($sql4,$idCourrier);
+
+}
+
+
+
+
+// Récupération des détails pour un courrier départ 
+
+elseif ($typeCourrier ==="courrier départ") {
+
+
+    $sql1 = "SELECT Type_document,Etat_interne_externe as origine_courrier,etat_courrier,
+             etat_plis_ferme as plis_ferme,dateEnregistrement,date_mise_circulation,Reference,lien_courrier,Objet_du_courrier,Matricule,destinataire,
+             nom_utilisateur as nom_enregistreur,prenom_utilisateur as prenom_enregistreur,nombre_fichiers_joins as nombre_de_fichiers_joins,
+             'courrier départ' AS type_courrier,expediteur,numero_ordre, categorie, date_derniere_modification , signature_gouverneur, etat_expedition
+             from courrierdepart inner join  utilisateur
+             on  courrierdepart.Matricule_initiateur = utilisateur.Matricule
+             where idCourrier =:idCourrier";
+    
+    $T1 = getInfosForCourrier($sql1,$idCourrier);
+
+
+    //Récupérer la date de mise en circulation 
+    if (isset($T1[0]['date_mise_circulation'])) {
+        $date_mise_circulation = new DateTime($T1[0]['date_mise_circulation']);
+        $date_mise_circulation = $date_mise_circulation->format('Y-m-d\TH:i');
+    }
+
+    
+     //récupérer le nom du fichier
+    if (isset($T1[0]['lien_courrier'])) {
+        $nom_fichier = recupererNomFichiers($T1[0]['lien_courrier']);
+    }
+
+
+    $sql2= "SELECT nom_destinataire
+            FROM copie_courrier
+            WHERE id_courrierDepart = :idCourrier";
+
+    $T2 = getInfosForCourrier($sql2,$idCourrier);
+
+
+
+    // Parcours du tableau pour extraire les noms
+    foreach ($T2 as $copie) {
+        
+        // Ajout du nom à la chaîne, en vérifiant si la chaîne n'est pas vide pour éviter une virgule en début de chaîne
+        $noms_copies .= ($noms_copies != "" ? ", " : "") . $copie['nom_destinataire'];
+    }
+    $sql3= "SELECT lien_fichier_annexe
+            FROM fichier_annexe
+            WHERE idCourrierDep = :idCourrier";
+
+    $T3 = getInfosForCourrier($sql3,$idCourrier);
+
+
+    foreach ($T3 as $lien) {
+        
+        // Ajout du nom à la chaîne, en vérifiant si la chaîne n'est pas vide pour éviter une virgule en début de chaîne
+        $tableau_lien []= $lien['lien_fichier_annexe'];
+    }
+   
+    if (count($tableau_lien)>0) {
+        foreach ($tableau_lien as $lien_fichier_annexe) {
+            $tableau_des_noms_des_fichiers_joints[]= recupererNomFichiers($lien_fichier_annexe);
+        }
+    }
+    
+    $sql4 = "SELECT lienFichierReponse, dateReponse
+    FROM fichierreponse
+    WHERE idCourrierDepart = :idCourrier;";
+
+    $T4 = getInfosForCourrier($sql4,$idCourrier);
+
+}
+
+
+
+// Fin des détails sur le courrier à modifier
+    
+    
+    
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Début modification du courrier 
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -57,6 +284,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
    
 
 
+ $message = ""; // Initialisation de la variable contenant les messages d'erreur
 
 
  $matricule = 'user04';
@@ -93,23 +321,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
  $habilitation = "modifier courrier";
 
-// Vérification de l'ahabilitation 
-$test = verifierHabilitationUtilisateur($matricule,$habilitation);
+    // Vérification de l'ahabilitation 
+    $test = verifierHabilitationUtilisateur($matricule,$habilitation);
 
 
 
 
-if (!$test) {
+    if (!$test) {
+    
+    $message ="Vous n\'êtes pas habilité à modifier un courrier.";
+    echo $message;
+    die;
 
-    die( '<script>
-alert("Vous n\'êtes pas habilité à modifier un courrier.");
-setTimeout(function(){
-    window.location.href = "../../public/page/tableau-bord.php";
-}, 500); 
-</script>'
-);
-
-} 
+    } 
 
 
 
@@ -165,39 +389,31 @@ setTimeout(function(){
         // Obtenir les liens des fichiers joints    
     }
      if ($_FILES['fichier']['error'] ===1) {
-        echo ' Veuillez vérifier la taille et le format du fichier ';
+        $message= "Veuillez vérifier la taille et le format du fichier" ;
+        die;
     }
 
     
     // Vérifier les données (simple exemple de validation)
     if (empty($objet) || empty($categorie) || empty($destinataire) || empty($etat_courrier)) {
-        die("Tous les champs sont obligatoires.");
+        $message = "Tous les champs sont obligatoires.";
+        die;
+
     }
 
    
-
-
 
     // Vérification pour le courrier arrivé interne
     if ($typeCourrier === "courrier arrivé" && $origine_courrier ==="courrier interne") {
 
         
-            echo "Vous n'êtes pas autorisé à modifier les courriers arrivés internes. <br>";
-            echo "Envoyez une notification au près de l\'entité éméttrice de ce courrier <br>";
-            
-            die( '<script>
-        alert("Vous n\'êtes pas autorisé à modifier les courriers arrivés internes. <br>
-                Envoyez une notification au près de l\'entité éméttrice de ce courrier <br>
-        ");
-        setTimeout(function(){
-            window.location.href = "../../public/page/tableau-bord.php";
-        }, 500); 
-        </script>'
-        );
+            $message="Vous n'êtes pas autorisé à modifier les courriers arrivés internes.<br>
+            Envoyez une notification au près de l\'entité éméttrice de ce courrier <br>";
+
+            echo $message;
+            die;
 
 
-            exit; // Bloquer la modification des courriers arrivés internes
-       
     }
 
 
@@ -374,14 +590,13 @@ setTimeout(function(){
                     insertHistorique($actionsModifiees,$idCourrier,$nom_entite,$typeCourrier,$matricule); 
         }
         
+        
+        
+       
         else {
-            die( '<script>
-        alert("Aucune modification apportée à ce courrier.");
-        setTimeout(function(){
-            window.location.href = "../../public/page/tableau-bord.php";
-        }, 500); 
-        </script>'
-        );
+            $message ="Aucune modification apportée à ce courrier.";
+            echo $message;
+            die;
         }
 
 
@@ -446,7 +661,7 @@ setTimeout(function(){
             } else{
                 // Si contient des données on récupère l'id et insère l'actio
                 $idCourrierArv = $ligneCourrierArrive[0]->idCourrier; 
-                echo "L'idCourrier est : " . $idCourrier;
+                // echo "L'idCourrier est : " . $idCourrier;
                 insertHistorique("mis à jour du courrier",$idCourrierArv,$nom_entite,"courrier arrivé",$matricule);
 
             }
@@ -454,14 +669,10 @@ setTimeout(function(){
 
         }
 
-        die( '<script>
-        alert("courrier départ mis à jour.");
-        setTimeout(function(){
-            window.location.href = "../../public/page/tableau-bord.php";
-        }, 500); 
-        </script>'
-        );
-    
+        $message = "courrier départ mis à jour.";
+        echo $message;
+
+        die ;
 
            
     }
@@ -472,146 +683,143 @@ setTimeout(function(){
         // Vérifier que l'utilisateur est du bureau d'ordre avant de modifier un courrier arrivé
          if ($nom_entite === "BO" ) {
                 if (!$verification) {
-                    die( '<script>
-                    alert("Vous n\'avez pas reçu la main pour mettre à jour ce courrier.");
-                    setTimeout(function(){
-                        window.location.href = "../../public/page/tableau-bord.php";
-                    }, 500); 
-                    </script>'
-                    );
+                    $message = "Vous n\'avez pas reçu la main pour mettre à jour ce courrier.";   
+                    
+                    die;
                 }
-            // Requête SQL pour mettre à jour le courrier arrivé externe
-            $sqlCourrierArriveExterne = "UPDATE courrierarrive 
-                                         SET Objet_du_courrier = :objet,
-                                             destinataire = :destinataire,
-                                             etat_courrier = :etat_courrier,
-                                             Type_document = :Type_document,
+
+                // Requête SQL pour mettre à jour le courrier arrivé externe
+                $sqlCourrierArriveExterne = "UPDATE courrierarrive 
+                                            SET Objet_du_courrier = :objet,
+                                                destinataire = :destinataire,
+                                                etat_courrier = :etat_courrier,
+                                                Type_document = :Type_document,
                                              categorie = :categorie, 
                                              date_derniere_modification = NOW(),
                                              signature_gouverneur = :signature_gouverneur,
                                              numero_ordre = :numero_ordre";
 
-            // Si un fichier a été fourni, on ajoute la mise à jour du lien du fichier
-            if ($liencourrier) {
-                $sqlCourrierArriveExterne .= ", lien_courrier = :lien_fichier";
-            }
-
-            if ($reference) {
-                $sqlCourrierArriveExterne .= ", Reference = :Reference";
-            }
-
-            // Terminer la requête SQL
-            $sqlCourrierArriveExterne .= " WHERE idCourrier = :idCourrier";
-
-            // Paramètres pour la mise à jour du courrier arrivé externe
-            $paramsCourrierArriveExterne = [
-                ':objet' => $objet,
-            ':destinataire' => $destinataire,
-            ':etat_courrier' => $etat_courrier,
-            ':numero_ordre' => $numero_ordre,
-            ':idCourrier' => $idCourrier,
-            ':Type_document' => $typeDocument,
-            ':categorie' => $categorie,
-            ':signature_gouverneur' => $signature_gouverneur
-            ];
-
-            // Si un fichier a été fourni, on ajoute son lien aux paramètres
-            if ($liencourrier) {
-                $paramsCourrierArriveExterne[':lien_fichier'] = $liencourrier;
-            }
-            // Si une référence a été fournie, on l'ajoute  aux paramètres
-            if ($reference) {
-                $paramsCourrierArriveExterne[':Reference'] = $reference;
-            }
-
-
-            $objet_base = trim($Tableau_Infos_ancien_courrier[0]["Objet_du_courrier"]);
-            $objet_formulaire = trim($objet);
-            $objet_base = preg_replace('/\s+/', ' ', $objet_base);  // Remplace les espaces multiples par un seul espace
-            $objet_formulaire = preg_replace('/\s+/', ' ', $objet_formulaire);  // Idem pour l'objet du formulaire
-            
-            // Comparaison après nettoyage
-            if ($objet_base !== $objet_formulaire) {
-                if (empty($actionsModifiees)) {
-                    $actionsModifiees .= "Objet";
-                } else {
-                    $actionsModifiees .= ", Objet";
+                // Si un fichier a été fourni, on ajoute la mise à jour du lien du fichier
+                if ($liencourrier) {
+                    $sqlCourrierArriveExterne .= ", lien_courrier = :lien_fichier";
                 }
-            }
-            
-            if (preg_replace('/\s+/', ' ', trim($Tableau_Infos_ancien_courrier[0]["destinataire"])) !== preg_replace('/\s+/', ' ', trim($destinataire))) {
-                if (empty($actionsModifiees)) {
-                    $actionsModifiees .= "Destinataire";
-                } else {
-                    $actionsModifiees .= ", Destinataire";
+
+                if ($reference) {
+                    $sqlCourrierArriveExterne .= ", Reference = :Reference";
                 }
-            } 
-            
-            if (preg_replace('/\s+/', ' ', trim($Tableau_Infos_ancien_courrier[0]["etat_courrier"])) !== preg_replace('/\s+/', ' ', trim($etat_courrier))) {
-                if (empty($actionsModifiees)) {
-                    $actionsModifiees .= "État du courrier";
-                } else {
-                    $actionsModifiees .= ", État du courrier";
+
+                // Terminer la requête SQL
+                $sqlCourrierArriveExterne .= " WHERE idCourrier = :idCourrier";
+
+                // Paramètres pour la mise à jour du courrier arrivé externe
+                $paramsCourrierArriveExterne = [
+                    ':objet' => $objet,
+                ':destinataire' => $destinataire,
+                ':etat_courrier' => $etat_courrier,
+                ':numero_ordre' => $numero_ordre,
+                ':idCourrier' => $idCourrier,
+                ':Type_document' => $typeDocument,
+                ':categorie' => $categorie,
+                ':signature_gouverneur' => $signature_gouverneur
+                ];
+
+                // Si un fichier a été fourni, on ajoute son lien aux paramètres
+                if ($liencourrier) {
+                    $paramsCourrierArriveExterne[':lien_fichier'] = $liencourrier;
                 }
-            }   
-            
-            if (preg_replace('/\s+/', ' ', trim($Tableau_Infos_ancien_courrier[0]["Type_document"])) !== preg_replace('/\s+/', ' ', trim($typeDocument))) {
-                if (empty($actionsModifiees)) {
-                    $actionsModifiees .= "Type de document";
-                } else {
-                    $actionsModifiees .= ", Type de document";
+                // Si une référence a été fournie, on l'ajoute  aux paramètres
+                if ($reference) {
+                    $paramsCourrierArriveExterne[':Reference'] = $reference;
                 }
-            }
-            
-            if (preg_replace('/\s+/', ' ', trim($Tableau_Infos_ancien_courrier[0]["categorie"])) !== preg_replace('/\s+/', ' ', trim($categorie))) {
-                if (empty($actionsModifiees)) {
-                    $actionsModifiees .= "Catégorie";
-                } else {
-                    $actionsModifiees .= ", Catégorie";
-                }
-            }
-            
-            if (preg_replace('/\s+/', ' ', trim($Tableau_Infos_ancien_courrier[0]["signature_gouverneur"])) !== preg_replace('/\s+/', ' ', trim($signature_gouverneur))) {
-                if ($nom_entite === "Sécrétariat") {
+
+
+                $objet_base = trim($Tableau_Infos_ancien_courrier[0]["Objet_du_courrier"]);
+                $objet_formulaire = trim($objet);
+                $objet_base = preg_replace('/\s+/', ' ', $objet_base);  // Remplace les espaces multiples par un seul espace
+                $objet_formulaire = preg_replace('/\s+/', ' ', $objet_formulaire);  // Idem pour l'objet du formulaire
+                
+                // Comparaison après nettoyage
+                if ($objet_base !== $objet_formulaire) {
                     if (empty($actionsModifiees)) {
-                        $actionsModifiees .= "Signature";
+                        $actionsModifiees .= "Objet";
                     } else {
-                        $actionsModifiees .= ", Signature";
+                        $actionsModifiees .= ", Objet";
                     }
-                } else {
-                    echo "Vous n'êtes pas habilité à changer la case signature du gouverneur";
-                    exit;
                 }
-            }
+                
+                if (preg_replace('/\s+/', ' ', trim($Tableau_Infos_ancien_courrier[0]["destinataire"])) !== preg_replace('/\s+/', ' ', trim($destinataire))) {
+                    if (empty($actionsModifiees)) {
+                        $actionsModifiees .= "Destinataire";
+                    } else {
+                        $actionsModifiees .= ", Destinataire";
+                    }
+                } 
             
-            if (preg_replace('/\s+/', ' ', trim($Tableau_Infos_ancien_courrier[0]["numero_ordre"])) !== preg_replace('/\s+/', ' ', trim($numero_ordre))) {
-                if (empty($actionsModifiees)) {
-                    $actionsModifiees .= "Numéro d'ordre";
-                } else {
-                    $actionsModifiees .= ", Numéro d'ordre";
-                }
-            }
+                if (preg_replace('/\s+/', ' ', trim($Tableau_Infos_ancien_courrier[0]["etat_courrier"])) !== preg_replace('/\s+/', ' ', trim($etat_courrier))) {
+                    if (empty($actionsModifiees)) {
+                        $actionsModifiees .= "État du courrier";
+                    } else {
+                        $actionsModifiees .= ", État du courrier";
+                    }
+                }   
             
-                // Vérification si le fichier a changé
-            if ((preg_replace('/\s+/', ' ', trim($Tableau_Infos_ancien_courrier[0]["lien_courrier"])) !== preg_replace('/\s+/', ' ', trim($liencourrier))) && $liencourrier !== null) {
-                if (empty($actionsModifiees)) {
-                    $actionsModifiees .= "Fichier du courrier";
-                } else {
-                    $actionsModifiees .= ", Fichier du courrier";
+                if (preg_replace('/\s+/', ' ', trim($Tableau_Infos_ancien_courrier[0]["Type_document"])) !== preg_replace('/\s+/', ' ', trim($typeDocument))) {
+                    if (empty($actionsModifiees)) {
+                        $actionsModifiees .= "Type de document";
+                    } else {
+                        $actionsModifiees .= ", Type de document";
+                    }
                 }
-            }
+                
+                if (preg_replace('/\s+/', ' ', trim($Tableau_Infos_ancien_courrier[0]["categorie"])) !== preg_replace('/\s+/', ' ', trim($categorie))) {
+                    if (empty($actionsModifiees)) {
+                        $actionsModifiees .= "Catégorie";
+                    } else {
+                        $actionsModifiees .= ", Catégorie";
+                    }
+                }
+            
+                if (preg_replace('/\s+/', ' ', trim($Tableau_Infos_ancien_courrier[0]["signature_gouverneur"])) !== preg_replace('/\s+/', ' ', trim($signature_gouverneur))) {
+                    if ($nom_entite === "Sécrétariat") {
+                        if (empty($actionsModifiees)) {
+                            $actionsModifiees .= "Signature";
+                        } else {
+                            $actionsModifiees .= ", Signature";
+                        }
+                    } else {
+                        $message= "Vous n'êtes pas habilité à changer la case signature ";
+                        exit;
+                    }
+                }
+                
+                if (preg_replace('/\s+/', ' ', trim($Tableau_Infos_ancien_courrier[0]["numero_ordre"])) !== preg_replace('/\s+/', ' ', trim($numero_ordre))) {
+                    if (empty($actionsModifiees)) {
+                        $actionsModifiees .= "Numéro d'ordre";
+                    } else {
+                        $actionsModifiees .= ", Numéro d'ordre";
+                    }
+                }
+            
+                    // Vérification si le fichier a changé
+                if ((preg_replace('/\s+/', ' ', trim($Tableau_Infos_ancien_courrier[0]["lien_courrier"])) !== preg_replace('/\s+/', ' ', trim($liencourrier))) && $liencourrier !== null) {
+                    if (empty($actionsModifiees)) {
+                        $actionsModifiees .= "Fichier du courrier";
+                    } else {
+                        $actionsModifiees .= ", Fichier du courrier";
+                    }
+                }
             
 
 
                     
-            // Vérification si la référence a changé
-            if ((preg_replace('/\s+/', ' ', trim($Tableau_Infos_ancien_courrier[0]["Reference"])) !== preg_replace('/\s+/', ' ', trim($reference))) && $reference !== null) {
-                if (empty($actionsModifiees)) {
-                    $actionsModifiees .= "Référence du courrier";
-                } else {
-                    $actionsModifiees .= ", Référence du courrier";
+                // Vérification si la référence a changé
+                if ((preg_replace('/\s+/', ' ', trim($Tableau_Infos_ancien_courrier[0]["Reference"])) !== preg_replace('/\s+/', ' ', trim($reference))) && $reference !== null) {
+                    if (empty($actionsModifiees)) {
+                        $actionsModifiees .= "Référence du courrier";
+                    } else {
+                        $actionsModifiees .= ", Référence du courrier";
+                    }
                 }
-            }
             
             
         
@@ -629,43 +837,36 @@ setTimeout(function(){
                 }
                 
                 else {
-                die( '<script>
-                        alert("Aucune modification apportée à ce courrier.");
-                        setTimeout(function(){
-                            window.location.href = "../../public/page/tableau-bord.php";
-                        }, 500); 
-                        </script>');
+
+                    $message ="Aucune modification apportée à ce courrier.";
+
+                die ;
+
                                     }
 
             
+                                    $message ="courrier arrivé extere mis à jour avec succès.";
 
-            die( '<script>
-            alert("courrier arrivé extere mis à jour.");
-            setTimeout(function(){
-                window.location.href = "../../public/page/tableau-bord.php";
-            }, 500); 
-            </script>'
-            );       
+                                    die ;       
 
             } 
-    
-    
-    
-    
+        
             else {
-                die( '<script>
-                alert("Vous n\'êtes pas habilité à mettre à jour un courrier arrivé externe ");
-                setTimeout(function(){
-                    window.location.href = "../../public/page/tableau-bord.php";
-                }, 500); 
-                </script>'
-                ); }
+
+                $message ="Vous n\'êtes pas habilité à mettre à jour un courrier arrivé externe ";
+
+                die ;
+
+                 }
         
         }
 
-
-
 }
+
+
+
+
+
 
 
 

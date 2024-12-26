@@ -286,8 +286,8 @@ function getCourriers($nom_entite, $searchKeyword = '', $startDate = '', $endDat
                objet_du_courrier,
                Etat_interne_externe,  -- Pas d'alias 'cd' ou 'ca'
                lien_courrier, 
-               destinataire,
                expediteur,
+               destinataire,
                dateEnregistrement, 
                etat_courrier,
                'courrier arrivé' AS type_courrier

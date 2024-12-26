@@ -59,7 +59,7 @@ if (!$test) {
 
 if ($typeCourrier === "courrier départ") {
     supprimerCourrierDepart($idCourrier,$matricule);
-    
+    supprimerCourrierArriveInterne($numero_ordre,$matricule);
 
     die( '<script>
 alert("Suppression effectuée.");
@@ -71,16 +71,15 @@ setTimeout(function(){
 } 
  
 elseif ($typeCourrier === "courrier arrivé") {
-    supprimerCourrierArrive($idCourrier,$matricule);
+    // supprimerCourrierArrive($idCourrier,$matricule);
 
     die( '<script>
- alert("Suppression effectuée.");
+ alert("Vous ne pouvez pas supprimer un courrier arrivé interne");
  setTimeout(function(){
      window.location.href = "../../public/page/tableau-bord.php";
  }, 500); 
  </script>'
  );
-
  }
 
  

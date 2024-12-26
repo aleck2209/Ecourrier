@@ -513,7 +513,12 @@ if ($nombre_fichiers_joins ===count($liens_fichiers_joins)) {
 
 //--------------------------------------------insertion automatique du courrier arrivé de ce destinataire----------------------------
 
-if ($expediteur != $destinataire) {
+if ($expediteur !== $destinataire) {
+
+    $expediteur = $nom_entite;
+
+    // echo " expediteur : $expediteur  ddestinataire: $destinataire";
+
     $etatCourrier = 'reçu';
 $idcourrierArrive = insererCourrierArriveV2($numeroOrdre,$TypeDoc,$etat_inter_exter,
 $etat_plis_ferme,$categorie,$dateEnreg,null,$reference,

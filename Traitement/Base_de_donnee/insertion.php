@@ -385,7 +385,7 @@ function insertHistorique($action, $idCourrier, $entiteQuiEnregistre,$typeCourri
         $stmt->execute();
 
         // Affichage d'un message de succès
-        echo "L'action a été enregistrée avec succès.";
+        // echo "L'action a été enregistrée avec succès.";
     } catch (PDOException $e) {
         // Gestion des erreurs de la base de données
         echo "Erreur de connexion ou d'insertion: " . $e->getMessage();
