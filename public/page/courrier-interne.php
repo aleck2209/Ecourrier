@@ -8,8 +8,10 @@
 </head>
 <body>
     <?php
-        // APPEL DE LA SIDE-BAR
+        // TRAITEMENT DE L'ENREGISTREMENT DU COURRIER
         require('../../Traitement/Controle/insertionCourrierdepart-interne.php');
+
+        // APPEL DE LA SIDE-BAR
         require('../include/side-bar.php');
     ?>
 

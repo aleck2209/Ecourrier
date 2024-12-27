@@ -280,12 +280,17 @@ select {
 }
             /* DEBUT BTN*/
 input[type="submit"],
-input[type="reset"],
-.alert-btn button {
+input[type="reset"] {
     border: var(--BORDER-BTN);
     font-family: var(--FF-INTER);
     font-weight: var(--FW-BTN);
     width: var(--WD-BTN);
+}
+
+.alert-btn button {
+    border: var(--BORDER-BTN);
+    font-family: var(--FF-INTER);
+    font-weight: var(--FW-BTN);
 }
 
 input[type="submit"],
@@ -962,6 +967,4 @@ output[class="dashboard-file"] {
     justify-content: flex-end;
     width: 7%;
 }
-
-
 /* FIN PAGE CORBEILLE  */
