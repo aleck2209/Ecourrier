@@ -10,7 +10,7 @@ $typeCourrier= $_GET['$typeCourrier'];
 $numero_ordre = $_GET['$numero_ordre'];
 
 
-$matricule ='user04' ;
+$matricule ='user01' ;
 
 $sql1 = " select p.id_pole, p.nom_pole
 from pole p inner join utilisateur u on 

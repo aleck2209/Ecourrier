@@ -23,6 +23,9 @@ $infos_entite_utilisateur = recupererIdEntiteOuIdPolePourUnUtilisateur($sql2,$ma
 
 $infos_pole_utilisateur = recupererIdEntiteOuIdPolePourUnUtilisateur($sql1,$matricule);
 
+// Initialisation des tableaux
+$tableau_courriers_de_la_Corbeille_matricule = [];
+$tableau_courriers_de_la_corbeille_entite_ou_pole = [];
 
 
 if (isset($infos_pole_utilisateur['id_pole'])){
@@ -38,15 +41,22 @@ $test2 = verifierHabilitationUtilisateur($matricule,$habilitation2);
 
 
 if ($test2) {
+   
     $tableau_courriers_de_la_Corbeille_matricule = recupererContenuCorbeilleParMatricule($matricule);
+
+    // Si la requête retourne un tableau vide, on s'assure que le tableau est vide
+    if (empty($tableau_courriers_de_la_Corbeille_matricule)) {
+        $tableau_courriers_de_la_Corbeille_matricule = [];
+    }
 
 }
  elseif ($test1) {
     $tableau_courriers_de_la_corbeille_entite_ou_pole = recupererContenuCorbeilleParEntiteOuPole($nom_entite);
+    if (empty($tableau_courriers_de_la_corbeille_entite_ou_pole)) {
+        $tableau_courriers_de_la_corbeille_entite_ou_pole = [];
+    }
 
 }
-
-
 
 
 ?>
