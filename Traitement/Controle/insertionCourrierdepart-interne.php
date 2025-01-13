@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $reference =verifierValeurNulle(trim($_POST['Reference']));
                 $fichier = $_FILES['fichier'];
                 $objet = verifierValeurNulle(trim($_POST['Objet_du_courrier']));
-                $matricule ='user04' ;
+                $matricule ='user01' ;
                 $etatExpedition =  NULL ;
                 $expediteur_courrierArv = verifierValeurNulle(trim($_POST['expediteur_courrierArv'])) ;
                 $destinataire  = verifierValeurNulle($_POST['destinataire']) ;
@@ -1244,41 +1244,393 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
                     elseif ($test_type_courrier==='courrier arrivé') {
+                        
+
+                        if (isset($infos_pole_utilisateur['id_pole'])){
+                            
+                            $nom_entite = recupererNomEntiteParIdUtilisateur($sql1,$matricule);
+                            $destinataire = $nom_entite;
+
+                        } elseif (isset($infos_entite_utilisateur['id_entite'])) {
+                            $nom_entite = recupererNomEntiteParIdUtilisateur($sql2,$matricule);
+                            $destinataire = $nom_entite;
+
+
+                        }
+
+
+
+
+
+
+                        if (strlen($objet)==0) {
+                            $lien = "";
+                            $message = "erreur  Objet non renseigné ";
+                           
+                        } else {
+                            
+                            if (strlen($numeroOrdre)==0) {
+                                $lien = "";
+                                $message = "Vous n'avez pas renseigné un numéro d'ordre pour votre courrier";
+                                
+                            } else {
+                                
+                                if (strlen($expediteur_courrierArv)==0) {
+                                    $lien = "";
+                                    $message = "Veuillez entrer un expéditeur.";
+                                    
+                                } else {
+                                    if (strlen($dateEnreg)==0) {
+                                        
+                                        $lien = "";
+                                        $message = "Vous n'avez pas renseigné une date d'enregistrement d'ordre pour votre courrier";
+                                    } else {
+                                        if ($etat_plis_ferme=="non" && strlen($TypeDoc)==0 ) {
+                                            $lien = "";
+                                            $message = "Entrer un type de document valide ";
+                                          
+
+                                        } elseif ($etat_plis_ferme=="non" && strlen($_FILES['fichier']['name'])==0 ) {
+                                            $lien = "";
+                                            $message = "Veuillez entrer un fichier ";
+                                            
+                                           
+                                        } 
+                                        
+                                        
+                                        
+                                        
+                                        if ($etat_plis_ferme=="non" && strlen($_FILES['fichier']['name'])!=0) {
+                                            $liendossier = creerListeDossiersCourrierDepart($etat_inter_exter,$destinataire);
+                                                    $liencourrier = deposerFichierDansDossier($liendossier,$fichier);
+                                                    $nom_balise_fichiers_join ="fichiers_joints"; //Cette variable récupère la valeur de l'attribut name spécifié dans la balise html qui envoi les fichiers annexes
+                                                    
+                                                    $chemin_fichiers_joins = $liendossier."/FichierAnnexes";//Cette variable repésente le lien du dossier où on doit stocker les fichiers annexes
+                                    
+                                                    $liens_fichiers_joins = get_uploaded_files_paths($chemin_fichiers_joins,$nom_balise_fichiers_join);
+                                    
+                                                    // print_r($liens_fichiers_joins);
+                                    
+                                                    $liens_fichiers_joins_arrives = get_uploaded_files_pathsarrive($chemin_fichiers_joins,$nom_balise_fichiers_join);
+                                    
+                                                    if (isset($fichier)) {
+                                                    $formatCourrier = pathinfo($fichier['name'],PATHINFO_FILENAME); # code...
+                                                    }   
+                                                    else{
+                                                    $formatCourrier = null;
+                                                    } 
+
+                                                    try {
+                                                        // Récupérer et nettoyer le champ 'nombre_joins'
+                                                        $nombre_fichiers_joins = trim($_POST['nombre_joins']);
+                                    
+                                                        // Cas où 'nombre_joins' est vide et aucun fichier n'est joint
+                                                        if (empty($nombre_fichiers_joins) && count($liens_fichiers_joins) == 0) {
+                                                            // Aucun fichier joint et pas de nombre renseigné => Le programme continue normalement.
+                                                            $nombre_fichiers_joins = 0;
+
+                                                            
+                                                        }
+                                                        // Cas où 'nombre_joins' est renseigné
+                                                        elseif (!empty($nombre_fichiers_joins)) {
+                                                            // Vérifier que 'nombre_joins' est un entier
+
+                                                            if (!ctype_digit($nombre_fichiers_joins)) {
+                                                                $lien = "";
+                                                               $message =  "Le nombre de fichiers joints est impérativement un nombre entier positif, veuillez entrer un nombre entier.";
+                                                              
+                                                               $test_nombre_fichiers_joins = "pas Possible"; // Cette variable permet de savoir si on peut enregistrer si 
+
+                                                            
+                                                            }
+                                    
+                                                            // Convertir en entier
+                                                            $nombre_fichiers_joins = (int)$nombre_fichiers_joins;
+                                                            
+                                                            // Si le nombre renseigné ne correspond pas au nombre de fichiers joints
+                                                            if ($nombre_fichiers_joins != count($liens_fichiers_joins)) {
+                                                                $lien = "";
+                                                                $test_nombre_fichiers_joins = "pas Possible";
+                                                                $message = "Le nombre de fichiers joints renseigné ($nombre_fichiers_joins) ne correspond pas au nombre de fichiers sélectionnés (" . count($liens_fichiers_joins) . "). Veuillez entrer le bon nombre de fichiers.";
+                                                                
+                                                              
+                                                            }
+                                                        }
+                                                        // Cas où 'nombre_joins' n'est pas renseigné mais des fichiers sont joints
+                                                        elseif (empty($nombre_fichiers_joins) && count($liens_fichiers_joins) > 0) {
+                                                            $lien = "";
+                                                            $message = "Le nombre de fichiers joints doit être précisé, veuillez entrer un nombre.";
+                                                         
+                                                            $test_nombre_fichiers_joins = "pas Possible";
+                                                        }
+                                                        // Cas où 'nombre_joins' est renseigné mais aucun fichier n'est joint
+                                                        elseif ($nombre_fichiers_joins > 0 && count($liens_fichiers_joins) == 0) {
+                                                            $lien = "";
+                                                            $message = "Vous avez précisé un nombre de fichiers joints, mais aucun fichier n'a été sélectionné.";
+                                                           
+                                                            $test_nombre_fichiers_joins = "pas Possible";
+                                                        }
+                                    
+                                                        // Si les deux sont renseignés et sont égaux, ou si aucun des deux n'est renseigné (et pas de fichiers joints), le programme continue normalement
+                                    
+                                                    } catch (Exception $e) {
+                                                        die("Une erreur s'est produite : " . $e->getMessage());
+                                                    }
+                                                    
+
+                                                    if (strlen($liste_copie_courrier)!=0) {
+                                                        $TableauNomDestinataireCopie = explode(", ",$liste_copie_courrier) ;
+                                                       
+                                                        //On vérifie que les noms des copies existent bien dans la base de données
+                                                        if (count($TableauNomDestinataireCopie)>0) {
+
+                                                            foreach ($TableauNomDestinataireCopie as $nom_copie) {
+
+                                                            $Liste_des_entites_en_copies = recupererLigneSpecifique('entite_banque','nom_entite',$nom_copie);
+                                                            $Liste_des_poles_en_copie = recupererLigneSpecifique('pole','nom_pole',$nom_copie);
+                                
+                                                        if (isset($Liste_des_entites_en_copies)) {
+                                                            $objet_entite_banque_copie = $Liste_des_entites_en_copies[0];
+                                                            $identite_copie = $objet_entite_banque_copie->id_entite;
+                                                        } else {
+                                                            $identite_copie = null;
+                                                        }
+                                                        
+                                    
+                                                        if (isset($Liste_des_poles_en_copie)) {
+                                                            $objet_pole_copie = $Liste_des_poles_en_copie[0];
+                                                            $idpole_copie = $objet_pole_copie->id_pole;
+                                                        }else {
+                                                            $idpole_copie = null;
+                                                        } 
+
+                                                        if (is_null($identite_copie) && is_null($idpole_copie)) {
+                                                            $lien = "";
+                                                            $test_copie_courrier = "pas possible";
+                                                            $message="erreur  le destinataire '. $nom_copie .' mentionné en copie n\'est pas reconnu comme une entité de la banque";
+                                                            var_dump($message);  
+
+                                                        } 
+                                                        
+                                                        
+
+                                                            }
+
+                                                            
+                                                            
+
+                                                        }
+
+                                                    }
+
+                                                    
+                                                                // Enregistrement de courrier 
+
+                                                                if ($test_nombre_fichiers_joins ==="Possible" && $test_copie_courrier ==="Possible" ) {
+                                                                    # code...
+                                                                    $etatCourrier = 'reçu';
+                                                                    $idcourrierArrive = insererCourrierArriveV2($numeroOrdre,$TypeDoc,$etat_inter_exter,
+                                                                    $etat_plis_ferme,$categorie,$dateEnreg,null,$reference,
+                                                                    $liencourrier,$objet,$matricule,$idReponse,$expediteur_courrierArv,$destinataire,$identite_dest,$idpole_dest,
+                                                                    $nombre_fichiers_joins,$etatCourrier
+                                                                    );
+                                                    
+                                                    
+                                                                    //Mise à jour de l'historique de ce courrier
+                                                                    insertHistorique("enregistrement du courrier",$idcourrierArrive,$nom_entite,"courrier arrivé",$matricule);
+                                                                    //--------------------------------------------insertion automatique du courrier arrivé de ce destinataire----------------------------
+                                                    
+                                                                    if ($nombre_fichiers_joins ===count($liens_fichiers_joins_arrives )) {
+                                                                        foreach ($liens_fichiers_joins_arrives  as $lien) {
+                                                                            insererFichierJoin($lien,null,$idcourrierArrive);
+                                                                        }
+                                                                        
+                                                                    }
+                                                                    
+
+
+                                                                                        
+                                                                                                    $lien = "../../public/page/tableau-bord";
+                                                                                                    $message = "Courrier enregistré avec succès";
+                                                                                                    
+                                                                                                    
+
+
+
+
+                                                                }
+                                                    
+
+
+                                            
+                                            
+                                        } 
+                                        elseif ($etat_plis_ferme === "oui" ){
+                                            $formatCourrier = null;
+                                                   
+
+                                            $liendossier = creerListeDossiersCourrierDepart($etat_inter_exter,$destinataire);
+                                            $liencourrier = deposerFichierDansDossier($liendossier,$fichier);
+                                            $nom_balise_fichiers_join ="fichiers_joints"; //Cette variable récupère la valeur de l'attribut name spécifié dans la balise html qui envoi les fichiers annexes
+                                            
+                                            $chemin_fichiers_joins = $liendossier."/FichierAnnexes";//Cette variable repésente le lien du dossier où on doit stocker les fichiers annexes
+                            
+                                            $liens_fichiers_joins = get_uploaded_files_paths($chemin_fichiers_joins,$nom_balise_fichiers_join);
+                            
+                                            // print_r($liens_fichiers_joins);
+                            
+                                            $liens_fichiers_joins_arrives = get_uploaded_files_pathsarrive($chemin_fichiers_joins,$nom_balise_fichiers_join);
+                            
+                                            if (isset($fichier)) {
+                                            $formatCourrier = pathinfo($fichier['name'],PATHINFO_FILENAME); # code...
+                                            }   
+                                            else{
+                                            $formatCourrier = null;
+                                            } 
+
+                                            try {
+                                                // Récupérer et nettoyer le champ 'nombre_joins'
+                                                $nombre_fichiers_joins = trim($_POST['nombre_joins']);
+                            
+                                                // Cas où 'nombre_joins' est vide et aucun fichier n'est joint
+                                                if (empty($nombre_fichiers_joins) && count($liens_fichiers_joins) == 0) {
+                                                    // Aucun fichier joint et pas de nombre renseigné => Le programme continue normalement.
+                                                    $nombre_fichiers_joins = 0;
+
+                                                    
+                                                }
+                                                // Cas où 'nombre_joins' est renseigné
+                                                elseif (!empty($nombre_fichiers_joins)) {
+                                                    // Vérifier que 'nombre_joins' est un entier
+
+                                                    if (!ctype_digit($nombre_fichiers_joins)) {
+                                                        $lien = "";
+                                                       $message =  "Le nombre de fichiers joints est impérativement un nombre entier positif, veuillez entrer un nombre entier.";
+                                                      
+                                                       $test_nombre_fichiers_joins = "pas Possible"; // Cette variable permet de savoir si on peut enregistrer si 
+
+                                                    
+                                                    }
+                            
+                                                    // Convertir en entier
+                                                    $nombre_fichiers_joins = (int)$nombre_fichiers_joins;
+                                                    
+                                                    // Si le nombre renseigné ne correspond pas au nombre de fichiers joints
+                                                    if ($nombre_fichiers_joins != count($liens_fichiers_joins)) {
+                                                        $lien = "";
+                                                        $test_nombre_fichiers_joins = "pas Possible";
+                                                        $message = "Le nombre de fichiers joints renseigné ($nombre_fichiers_joins) ne correspond pas au nombre de fichiers sélectionnés (" . count($liens_fichiers_joins) . "). Veuillez entrer le bon nombre de fichiers.";
+                                                        
+                                                      
+                                                    }
+                                                }
+                                                // Cas où 'nombre_joins' n'est pas renseigné mais des fichiers sont joints
+                                                elseif (empty($nombre_fichiers_joins) && count($liens_fichiers_joins) > 0) {
+                                                    $lien = "";
+                                                    $message = "Le nombre de fichiers joints doit être précisé, veuillez entrer un nombre.";
+                                                 
+                                                    $test_nombre_fichiers_joins = "pas Possible";
+                                                }
+                                                // Cas où 'nombre_joins' est renseigné mais aucun fichier n'est joint
+                                                elseif ($nombre_fichiers_joins > 0 && count($liens_fichiers_joins) == 0) {
+                                                    $lien = "";
+                                                    $message = "Vous avez précisé un nombre de fichiers joints, mais aucun fichier n'a été sélectionné.";
+                                                   
+                                                    $test_nombre_fichiers_joins = "pas Possible";
+                                                }
+                            
+                                                // Si les deux sont renseignés et sont égaux, ou si aucun des deux n'est renseigné (et pas de fichiers joints), le programme continue normalement
+                            
+                                            } catch (Exception $e) {
+                                                die("Une erreur s'est produite : " . $e->getMessage());
+                                            }
+
+                                            
+
+                                            if (strlen($liste_copie_courrier)!=0) {
+                                                $TableauNomDestinataireCopie = explode(", ",$liste_copie_courrier) ;
+                                               
+                                                //On vérifie que les noms des copies existent bien dans la base de données
+                                                if (count($TableauNomDestinataireCopie)>0) {
+
+                                                    foreach ($TableauNomDestinataireCopie as $nom_copie) {
+
+                                                    $Liste_des_entites_en_copies = recupererLigneSpecifique('entite_banque','nom_entite',$nom_copie);
+                                                    $Liste_des_poles_en_copie = recupererLigneSpecifique('pole','nom_pole',$nom_copie);
+                        
+                                                if (isset($Liste_des_entites_en_copies)) {
+                                                    $objet_entite_banque_copie = $Liste_des_entites_en_copies[0];
+                                                    $identite_copie = $objet_entite_banque_copie->id_entite;
+                                                } else {
+                                                    $identite_copie = null;
+                                                }
+                                                
+                            
+                                                if (isset($Liste_des_poles_en_copie)) {
+                                                    $objet_pole_copie = $Liste_des_poles_en_copie[0];
+                                                    $idpole_copie = $objet_pole_copie->id_pole;
+                                                }else {
+                                                    $idpole_copie = null;
+                                                } 
+
+                                                if (is_null($identite_copie) && is_null($idpole_copie)) {
+                                                    $lien = "";
+                                                    $test_copie_courrier = "pas possible";
+                                                    $message="erreur  le destinataire '. $nom_copie .' mentionné en copie n\'est pas reconnu comme une entité de la banque";
+                                                    
+
+                                                } 
+                                                
+                                                
+
+                                                    }
+
+                                                    
+                                                    
+
+                                                }
+
+                                            }
+                                                    # code...
+                                                    $etatCourrier = 'reçu';
+                                                    $idcourrierArrive = insererCourrierArriveV2($numeroOrdre,$TypeDoc,$etat_inter_exter,
+                                                    $etat_plis_ferme,$categorie,$dateEnreg,null,$reference,
+                                                    $liencourrier,$objet,$matricule,$idReponse,$expediteur_courrierArv,$destinataire,$identite_dest,$idpole_dest,
+                                                    $nombre_fichiers_joins,$etatCourrier
+                                                    );
+                                    
+                                    
+                                                    //Mise à jour de l'historique de ce courrier
+                                                    insertHistorique("enregistrement du courrier",$idcourrierArrive,$nom_entite,"courrier arrivé",$matricule);
+                                                    //--------------------------------------------insertion automatique du courrier arrivé de ce destinataire----------------------------
+                                    
+                                                    if ($nombre_fichiers_joins ===count($liens_fichiers_joins_arrives )) {
+                                                        foreach ($liens_fichiers_joins_arrives  as $lien) {
+                                                            insererFichierJoin($lien,null,$idcourrierArrive);
+                                                        }
+                                                        
+                                                    }
+                                                    
+
+
+                                                                        
+                                                                                    $lien = "../../public/page/tableau-bord";
+                                                                                    $message = "Courrier enregistré avec succès";
+                                                    
+
+                                        }
+                                        
+
+                                    }
+
+            
+                                }
+                            }
+                        }
+
 
                     
-                    if (!is_null($expediteur_courrierArv)) {
-                        $Liste_entite_expediteur = recupererLigneSpecifique('entite_banque','nom_entite',$expediteur_courrierArv);
-                        $Liste_pole_expediteur = recupererLigneSpecifique('pole','nom_pole',$expediteur_courrierArv);
-                        
-                            // Récupération de l'id du destinataire du courrier 
-                    if (isset($Liste_entite_expediteur)) {
-                        $objet_entite_banque = $Liste_entite_expediteur[0];
-                        $identite_expediteur = $objet_entite_banque->id_entite;
-                    } else {
-                        $identite_expediteur = null;
-                    }
-                    
-                    if (isset($Liste_pole_expediteur)) {
-                        $objet_pole_expediteur = $Liste_pole_expediteur[0];
-                        $idpole_expediteur = $objet_pole_expediteur->id_pole;
-                    }else {
-                        $idpole_expediteur = null;
-                    } 
-                    
-                    }
-                    else {
-                        // die('veuillez entrer un destinataire');
-                    $message = "Veuillez entrer un expéditeur.";
-                    echo $message;
-                    
-                        // die('<script>
-                        //         alert("Veuillez entrer un destinataire.");
-                        //        setTimeout(function(){
-                        //             window.location.href = "../../public/page/courrier-interne.php";
-                        //         }, 500); 
-                        //   </script>');
-                        
-                    }
+                   
 
                     }
                 
@@ -1492,27 +1844,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 
                 elseif ($test_type_courrier==='courrier arrivé') {
                     
-                    if (is_null($expediteur_courrierArv)) {
+                    // if (is_null($expediteur_courrierArv)) {
                         
-                        die("Vous n'avez pas saisi d'expiditeur");
+                    //     die("Vous n'avez pas saisi d'expiditeur");
                         
-                    }
-                    else{
-                        if ($etat_inter_exter==="courrier interne") {
-                            if (is_null($identite_expediteur) && is_null($idpole_expediteur)) {
-                                # Si on entre ici cela veut dire qu'il n'a pas entrer un destinataire interne à la banque
+                    // }
+                    // else{
+                    //     if ($etat_inter_exter==="courrier interne") {
+                    //         if (is_null($identite_expediteur) && is_null($idpole_expediteur)) {
+                    //             # Si on entre ici cela veut dire qu'il n'a pas entrer un destinataire interne à la banque
 
-                                echo 'Je suis bien entré ';
-                                die('<script>alert("erreur  l\'expéditeur n\'est pas une reconnu comme une entité de la banque")</script>');
-                            }
+                               
+                    //             die('<script>alert("erreur  l\'expéditeur n\'est pas une reconnu comme une entité de la banque")</script>');
+                    //         }
                             
-                        }elseif ($etat_inter_exter==="courrier externe") {
-                            if (!is_null($identite_expediteur) || !is_null($idpole_expediteur)) {
-                                die("Vous avez défini une entité interieure à la banque comme destinataire d'un courrier externe ");
-                            }
-                        }
+                    //     }elseif ($etat_inter_exter==="courrier externe") {
+                    //         if (!is_null($identite_expediteur) || !is_null($idpole_expediteur)) {
+                    //             die("Vous avez défini une entité interieure à la banque comme destinataire d'un courrier externe ");
+                    //         }
+                    //     }
                         
-                    }
+                    // }
 
                 }
 
@@ -1539,45 +1891,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 //---------------------------------------Controle du nombre de fichiers joins par rapport----------------------------
 
-                try {
-                    // Récupérer et nettoyer le champ 'nombre_joins'
-                    $nombre_fichiers_joins = trim($_POST['nombre_joins']);
+                // try {
+                //     // Récupérer et nettoyer le champ 'nombre_joins'
+                //     $nombre_fichiers_joins = trim($_POST['nombre_joins']);
 
-                    // Cas où 'nombre_joins' est vide et aucun fichier n'est joint
-                    if (empty($nombre_fichiers_joins) && count($liens_fichiers_joins) == 0) {
-                        // Aucun fichier joint et pas de nombre renseigné => Le programme continue normalement.
-                        $nombre_fichiers_joins = 0;
+                //     // Cas où 'nombre_joins' est vide et aucun fichier n'est joint
+                //     if (empty($nombre_fichiers_joins) && count($liens_fichiers_joins) == 0) {
+                //         // Aucun fichier joint et pas de nombre renseigné => Le programme continue normalement.
+                //         $nombre_fichiers_joins = 0;
                         
-                    }
-                    // Cas où 'nombre_joins' est renseigné
-                    elseif (!empty($nombre_fichiers_joins)) {
-                        // Vérifier que 'nombre_joins' est un entier
-                        if (!ctype_digit($nombre_fichiers_joins)) {
-                            die("Le nombre de fichiers joints est impérativement un nombre entier positif, veuillez entrer un nombre entier.");
-                        }
+                //     }
+                //     // Cas où 'nombre_joins' est renseigné
+                //     elseif (!empty($nombre_fichiers_joins)) {
+                //         // Vérifier que 'nombre_joins' est un entier
+                //         if (!ctype_digit($nombre_fichiers_joins)) {
+                //             die("Le nombre de fichiers joints est impérativement un nombre entier positif, veuillez entrer un nombre entier.");
+                //         }
 
-                        // Convertir en entier
-                        $nombre_fichiers_joins = (int)$nombre_fichiers_joins;
+                //         // Convertir en entier
+                //         $nombre_fichiers_joins = (int)$nombre_fichiers_joins;
                         
-                        // Si le nombre renseigné ne correspond pas au nombre de fichiers joints
-                        if ($nombre_fichiers_joins != count($liens_fichiers_joins)) {
-                            die("Le nombre de fichiers joints renseigné ($nombre_fichiers_joins) ne correspond pas au nombre de fichiers sélectionnés (" . count($liens_fichiers_joins) . "). Veuillez entrer le bon nombre de fichiers.");
-                        }
-                    }
-                    // Cas où 'nombre_joins' n'est pas renseigné mais des fichiers sont joints
-                    elseif (empty($nombre_fichiers_joins) && count($liens_fichiers_joins) > 0) {
-                        die("Le nombre de fichiers joints doit être précisé, veuillez entrer un nombre.");
-                    }
-                    // Cas où 'nombre_joins' est renseigné mais aucun fichier n'est joint
-                    elseif ($nombre_fichiers_joins > 0 && count($liens_fichiers_joins) == 0) {
-                        die("Vous avez précisé un nombre de fichiers joints, mais aucun fichier n'a été sélectionné.");
-                    }
+                //         // Si le nombre renseigné ne correspond pas au nombre de fichiers joints
+                //         if ($nombre_fichiers_joins != count($liens_fichiers_joins)) {
+                //             die("Le nombre de fichiers joints renseigné ($nombre_fichiers_joins) ne correspond pas au nombre de fichiers sélectionnés (" . count($liens_fichiers_joins) . "). Veuillez entrer le bon nombre de fichiers.");
+                //         }
+                //     }
+                //     // Cas où 'nombre_joins' n'est pas renseigné mais des fichiers sont joints
+                //     elseif (empty($nombre_fichiers_joins) && count($liens_fichiers_joins) > 0) {
+                //         die("Le nombre de fichiers joints doit être précisé, veuillez entrer un nombre.");
+                //     }
+                //     // Cas où 'nombre_joins' est renseigné mais aucun fichier n'est joint
+                //     elseif ($nombre_fichiers_joins > 0 && count($liens_fichiers_joins) == 0) {
+                //         die("Vous avez précisé un nombre de fichiers joints, mais aucun fichier n'a été sélectionné.");
+                //     }
 
-                    // Si les deux sont renseignés et sont égaux, ou si aucun des deux n'est renseigné (et pas de fichiers joints), le programme continue normalement
+                //     // Si les deux sont renseignés et sont égaux, ou si aucun des deux n'est renseigné (et pas de fichiers joints), le programme continue normalement
 
-                } catch (Exception $e) {
-                    die("Une erreur s'est produite : " . $e->getMessage());
-                }
+                // } catch (Exception $e) {
+                //     die("Une erreur s'est produite : " . $e->getMessage());
+                // }
 
 
                 // if (is_null($_POST['Objet_du_courrier'])) {
@@ -1592,12 +1944,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 // if (strlen($dateEnreg)==0) {
                 //     die("Vous n'avez pas renseigné une date d'enregistrement d'ordre pour votre courrier");
                 // }
-                if (strlen($TypeDoc)==0 && $etat_plis_ferme==="non") {
-                    die("Vous n'avez pas renseigné un type de document pour votre courrier");
-                }
-                if (!isset($fichier) && $etat_plis_ferme==="non" ) {
-                    die("vous n'avez pas choisi de fichier");
-                }
+                // if (strlen($TypeDoc)==0 && $etat_plis_ferme==="non") {
+                //     die("Vous n'avez pas renseigné un type de document pour votre courrier");
+                // }
+                // if (!isset($fichier) && $etat_plis_ferme==="non" ) {
+                //     die("vous n'avez pas choisi de fichier");
+                // }
 
 
 
