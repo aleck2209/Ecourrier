@@ -128,7 +128,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                         
                                         // On compare le numéro d'ordre entré à celui qui est attendu en fonction de l'entité
                                         if ($numeroOrdrePrefix != $num_a_entrer) {
-                                            $lien = ""; 
+                                         
                                             $message="Le numéro d'ordre pour le pole  $nom_entite attendu est : $num_a_entrer";
                                                 
                                         } 
@@ -307,7 +307,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                                                     if (is_null($identite_copie) && is_null($idpole_copie)) {
                                                                         $lien = "";
                                                                         $message="erreur  le destinataire '. $nom_copie .' mentionné en copie n\'est pas reconnu comme une entité de la banque";
-                                                                        echo $message;
+                                                                        
                                                                     }
                                                                     
 
@@ -407,9 +407,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                                    
 
                                                     if (strlen($destinataire)==0) {
+                                                        $lien = ""; ;
                                                         $message = "Veuillez entrer un destinataire.";
-                                                        echo $message;
-                                                        var_dump($message);
+                                                      
                                 
                                                     }
                                                     elseif (strlen($destinataire) != 0  ) {
@@ -492,16 +492,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                                                 elseif (empty($nombre_fichiers_joins) && count($liens_fichiers_joins) > 0) {
                                                                     $lien = "";
                                                                     $message = "Le nombre de fichiers joints doit être précisé, veuillez entrer un nombre.";
-                                                                    echo $message;
-                                                                    var_dump($message);
+                                                                    
                                                                     $test_nombre_fichiers_joins = "pas Possible";
                                                                 }
                                                                 // Cas où 'nombre_joins' est renseigné mais aucun fichier n'est joint
                                                                 elseif ($nombre_fichiers_joins > 0 && count($liens_fichiers_joins) == 0) {
                                                                     $lien = "";
                                                                     $message = "Vous avez précisé un nombre de fichiers joints, mais aucun fichier n'a été sélectionné.";
-                                                                    echo $message;
-                                                                    var_dump($message);
+                                                                   
                                                                     $test_nombre_fichiers_joins = "pas Possible";
                                                                 }
                                             
@@ -547,8 +545,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                                                     $lien = "";
                                                                     $test_copie_courrier = "pas possible";
                                                                     $message="erreur  le destinataire '. $nom_copie .' mentionné en copie n\'est pas reconnu comme une entité de la banque";
-                                                                    echo $message;
-                                                                    var_dump($message);
+                                                                    
 
                                                                 } 
                                                                 
@@ -680,8 +677,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                             if ($numeroOrdrePrefix != $num_a_entrer) {
                                                 $lien = "";
                                                 $message = "Le numéro d'ordre pour l'entité $nom_entite attendu est : $num_a_entrer";
-                                                echo $message;
-                                                var_dump($message);
+                                            
                                             } else {
                                                 
                                             if (strlen($dateEnreg)==0) {
@@ -1230,174 +1226,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                             }
                                 
                                         }
-        
-
-
-
-
-
-
-
-                                    
-                                    elseif (strlen($destinataire) != 0  ) {
-                
-                                     
-                
-                                        $Liste_entite_destinataire = recupererLigneSpecifique('entite_banque','nom_entite',$destinataire);
-                                        $Liste_pole_destinataire = recupererLigneSpecifique('pole','nom_pole',$destinataire);
-                                        
-                                        
-                
-                
-                
-                                        //on récupère le nom et le format du fichier dans un tableau
-                                        
-                                        
-                                        // Récupération de l'id du destinataire du courrier 
-                                        if (isset($Liste_entite_destinataire)) {
-                                            $objet_entite_banque = $Liste_entite_destinataire[0];
-                                            $identite_dest = $objet_entite_banque->id_entite;
-                                        } else {
-                                            $identite_dest = null;
-                                        }
-                                        
-                                        
-                                        if (isset($Liste_pole_destinataire)) {
-                                            $objet_pole_dest = $Liste_pole_destinataire[0];
-                                            $idpole_dest = $objet_pole_dest->id_pole;
-                                        }else {
-                                            $idpole_dest = null;
-                                        } 
-                
-                
-                
-                                       
-                
-                                         
-                                            // if (is_null($identite_dest) && is_null($idpole_dest)) {
-                                            //     # Si on entre ici cela veut dire qu'il n'a pas entrer un destinataire interne à la banque
-                                            //     // $message = "erreur  le destinataire n\'est pas une reconnu comme une entité de la banque";
-                                            //     // echo $message;
-                                            // } 
-                                             {
-                                                    // -------------------------- Gestion des copies des courrier ---------------------------
-                                        
-                                        if (strlen($liste_copie_courrier)!=0) {
-                                            $TableauNomDestinataireCopie = explode(",",$liste_copie_courrier) ;
-                        
-                                            //On vérifie que les noms des copies existent bien dans la base de données
-                        
-                                            if (count($TableauNomDestinataireCopie)>0) {
-                                            foreach ($TableauNomDestinataireCopie as $nom_copie) {
-                                                $Liste_des_entites_en_copies = recupererLigneSpecifique('entite_banque','nom_entite',$nom_copie);
-                                                $Liste_des_poles_en_copie = recupererLigneSpecifique('pole','nom_pole',$nom_copie);
-                                            
-                                                if (isset($Liste_des_entites_en_copies)) {
-                                                    $objet_entite_banque_copie = $Liste_des_entites_en_copies[0];
-                                                    $identite_copie = $objet_entite_banque_copie->id_entite;
-                                                } else {
-                                                    $identite_copie = null;
-                                                }
-                                                
-                                                
-                                                if (isset($Liste_des_poles_en_copie)) {
-                                                    $objet_pole_copie = $Liste_des_poles_en_copie[0];
-                                                    $idpole_copie = $objet_pole_copie->id_pole;
-                                                }else {
-                                                    $idpole_copie = null;
-                                                } 
-                                            
-                
-                
-                                                
-                                                if (is_null($identite_copie) && is_null($idpole_copie)) {
-                                                    $message="erreur  le destinataire '. $nom_copie .' mentionné en copie n\'est pas reconnu comme une entité de la banque";
-                                                    echo $message;
-                                                }
-                                                
-                
-                                                
-                                                // ici tout est bon au niveau des destinataire de ce courrier 
-                                                else { 
-                
-                                                     //------------------------------------------Gestion des fichiers de courriers --------------------------------------------------------
-                                                    
-                                                     if ($etat_plis_ferme==="non") {
-                
-                                                        if (strlen($_FILES['fichier']['name'])==0) {
-                                                        $message= "Vous n'avez pas choisi un fichier";
-                                                        echo $message;
-                                                        } 
-                                            
-                                                        // Ici tout est correcte pour le fichier
-                                                
-                                                    else {
-                
-                                                $liendossier = creerListeDossiersCourrierDepart($etat_inter_exter,$destinataire);
-                                                $liencourrier = deposerFichierDansDossier($liendossier,$fichier);
-                                                $nom_balise_fichiers_join ="fichiers_joints"; //Cette variable récupère la valeur de l'attribut name spécifié dans la balise html qui envoi les fichiers annexes
-                                                
-                                                $chemin_fichiers_joins = $liendossier."/FichierAnnexes";//Cette variable repésente le lien du dossier où on doit stocker les fichiers annexes
-                                
-                                                $liens_fichiers_joins = get_uploaded_files_paths($chemin_fichiers_joins,$nom_balise_fichiers_join);
-                                
-                                                // print_r($liens_fichiers_joins);
-                                
-                                                $liens_fichiers_joins_arrives = get_uploaded_files_pathsarrive($chemin_fichiers_joins,$nom_balise_fichiers_join);
-                                
-                                                if (isset($fichier)) {
-                                                $formatCourrier = pathinfo($fichier['name'],PATHINFO_FILENAME); # code...
-                                                }   
-                                                else{
-                                                $formatCourrier = null;
-                                                }
-                
-                
-                                              
-                
-                                            
-                                            }                            
-                            
-                                            }
-                
-                                            else  {
-                                                $liendossier = '';
-                                                $liencourrier = "";
-                                            }
-                                                    
-                                                }
-                
-                                            }
-                                        }
-                                        }
-                                
-                                        
-                                        
-                
-                                            }
-                
-                
-                                       
-                
-                
-                
-                
-                
-                
-                
-                                           
-                
-                
-                
-                
-                
-                
-                
-                                                
-                                                
-                                                
-                                            
-                                    } 
+         
                                 }
 
 
@@ -1410,7 +1239,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     
                     
                     
-
                 }  
 
 
