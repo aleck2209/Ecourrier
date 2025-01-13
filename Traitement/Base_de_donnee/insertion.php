@@ -111,7 +111,7 @@ function insererUneCopieCourrier($nomDest,$lienCourrier,$idCourrerdep,$idCourrie
     $resulats->execute();
     $test = true;
     echo "enregistrement copie réussi...";
-    echo $idCourrerdep;
+    // echo $idCourrerdep;
     return $test;
     } catch (PDOException $e) {
         die('erreur de connexion'.$e->getMessage());
@@ -311,7 +311,7 @@ $tableauAssociatif = [
 ];
 
 // Afficher le tableau associatif
-print_r($tableauAssociatif);
+// print_r($tableauAssociatif);
 $resulats->execute();
 echo'Excécution réussie';
 $test = true;
