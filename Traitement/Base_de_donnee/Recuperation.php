@@ -1955,17 +1955,18 @@ function recupererHistoriqueCopieCourrier($idCourrier,$nom_entite){
     COALESCE(cd.categorie, ca.categorie) AS categorie,
     COALESCE(cd.date_derniere_modification, ca.date_derniere_modification) AS date_derniere_modification,
     COALESCE(cd.signature_gouverneur, ca.signature_gouverneur) AS signature_gouverneur
-FROM
+    FROM
     copie_courrier cc
     LEFT JOIN courrierdepart cd ON cc.id_courrierDepart = cd.idCourrier
     LEFT JOIN courrierarrive ca ON cc.id_courrierArrive = ca.idCourrier
     INNER JOIN utilisateur u ON COALESCE(cd.Matricule_initiateur, ca.Matricule_initiateur) = u.Matricule
-WHERE
+    WHERE
     COALESCE(cd.idCourrier, ca.idCourrier) =:idCourrier and cc.nom_destinataire = :nom_entite ;";
 
   $infos_courrier = recupererInfosCopieCourrier($sql,$idCourrier,$nom_entite) ;
 
     
+
 
    $type_courrier_origine = $infos_courrier[0]['type_courrier'];
 

@@ -5,12 +5,14 @@ require('../../Traitement/Base_de_donnee/Recuperation.php');
 require('../../Traitement/Base_de_donnee/Suppression.php');
 require('../../Traitement/Base_de_donnee/verificationDonneeBd.php');
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST'){
+
 $idCourrier= $_GET['$idCourrier'];
 $typeCourrier= $_GET['$typeCourrier'];
 $numero_ordre = $_GET['$numero_ordre'];
 
 
-$matricule ='user04' ;
+$matricule ='user01' ;
 
 $sql1 = " select p.id_pole, p.nom_pole
 from pole p inner join utilisateur u on 
@@ -24,14 +26,12 @@ where u.Matricule = ?;";
 
 $habilitation = "supprimer courrier";
 
-// Vérification de l'ahabilitation 
-$test = verifierHabilitationUtilisateur($matricule,$habilitation);
-
-
 // Récupération du nom de l'entité ou du pole à laquelle appartient un utilisateur 
 $infos_entite_utilisateur = recupererIdEntiteOuIdPolePourUnUtilisateur($sql2,$matricule);
 
 $infos_pole_utilisateur = recupererIdEntiteOuIdPolePourUnUtilisateur($sql1,$matricule);
+
+
 
 if (isset($infos_pole_utilisateur['id_pole'])){
     
@@ -45,43 +45,44 @@ elseif (isset($infos_entite_utilisateur['id_entite'])){
 }
 
 
+// Vérification de l'ahabilitation 
+$test = verifierHabilitationUtilisateur($matricule,$habilitation);
+ $lien = "";
+ $message= "" ;
 
-if (!$test) {
-    die( '<script>
-    alert("Vous n\'êtes pas habilité à supprimer un courrier.");
-    setTimeout(function(){
-        window.location.href = "../../public/page/tableau-bord.php";
-    }, 500); 
-    </script>'
-    );
+ if (!$test) {
+    $lien = "../../public/page/tableau-bord";
+    $message= "Vous n\'êtes pas habilité à supprimer un courrier.";
+    var_dump($message);
+
+    
+} else {
+    if ($typeCourrier === "courrier départ") {
+        supprimerCourrierDepart($idCourrier,$matricule);
+        supprimerCourrierArriveInterne($numero_ordre,$matricule);
+        
+     $lien = "../../public/page/tableau-bord";
+     $message = "Suppression effectuée avec succès";
+    }
+    elseif ($typeCourrier === "courrier arrivé") {
+        
+        // supprimerCourrierArrive($idCourrier,$matricule);
+        $lien = "../../public/page/tableau-bord";
+        $message = " Vous n'avez pas d'habilitation pour supprimer ce courrier ";
+        
+     
+    }
 }
 
 
-if ($typeCourrier === "courrier départ") {
-    supprimerCourrierDepart($idCourrier,$matricule);
-    supprimerCourrierArriveInterne($numero_ordre,$matricule);
 
- echo "Suppression effectuée avec succès";
-    //     die( '<script>
-// alert("Suppression effectuée.");
-// setTimeout(function(){
-//     window.location.href = "../../public/page/tableau-bord.php";
-// }, 500); 
-// </script>'
-// );
-} 
+}
+
+
+
  
-elseif ($typeCourrier === "courrier arrivé") {
-    // supprimerCourrierArrive($idCourrier,$matricule);
+ 
 
-    die( '<script>
- alert("Vous ne pouvez pas supprimer un courrier arrivé interne");
- setTimeout(function(){
-     window.location.href = "../../public/page/tableau-bord.php";
- }, 500); 
- </script>'
- );
- }
 
  
 
