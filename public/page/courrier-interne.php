@@ -124,17 +124,18 @@
     </div>
 
     <?php
-        // APPEL DE L'ALERTE QU'ON SORT SANS ENREGISTRER
-        require('../include/alerte.php');
-
         // APPEL DE LA PAGE MESSAGE
-        require('../include/message.php');
+        require('../../public/include/message.php');
+        
+        // APPEL DE L'ALERTE QU'ON SORT SANS ENREGISTRER
+        require('../../public/include/alerte.php');
     ?>
     <!-- FIN PAGE ENREGISTRER COURRIER -->
     <!-- DEBUT SCRIPT JS -->
-    <script src="../js/afficher-nav.js"></script>
-    <script src="../js/afficher-header.js"></script>
-    <script src="../js/gestion-form-interne.js"></script>
+    <script src="../../public/js/message.js"></script>
+    <script src="../../public/js/afficher-nav.js"></script>
+    <script src="../../public/js/afficher-header.js"></script>
+    <script src="../../public/js/gestion-form-interne.js"></script>
     <!-- FIN SCRIPT JS -->  
 </body>
 </html>

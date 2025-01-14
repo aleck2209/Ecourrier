@@ -201,6 +201,7 @@
     ?>
 
     <!-- DEBUT SCRIPT JS -->
+     <script src="../../public/js/message.js"></script>
     <script src="../js/afficher-nav.js"></script>
     <script src="../js/afficher-header.js"></script>
     <script src="../js/gestion-form-externe.js"></script>
