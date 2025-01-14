@@ -53,7 +53,7 @@
                         </div>
                         <div class="field">
                             <label for="numeroOrdre">Numéro d'ordre <span>*</span></label>
-                            <input type="text" name="numero_ordre" id="numeroOrdre" required>
+                            <input type="text" name="numero_ordre" id="numeroOrdre" pattern="^\d{1,4}(?:\/[A-Z]{1,10})+\/\d{4}$" required>
                         </div>
                         <div class="field">
                             <label for="dateEnregistrement">Date d'enregistrement <span>*</span></label>
