@@ -193,8 +193,11 @@
     </div>
     <!-- FIN PAGE ENREGISTRER COURRIER -->
     <?php
-        // APPEL DE LA SIDE-BAR
+        // APPEL DE L'ALERTE QU'ON SORT SANS ENREGISTRER
         require('../include/alerte.php');
+
+        // APPEL DE LA PAGE MESSAGE
+        require('../include/message.php');
     ?>
 
     <!-- DEBUT SCRIPT JS -->
