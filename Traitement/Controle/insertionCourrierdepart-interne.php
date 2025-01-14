@@ -142,13 +142,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                         if ($annee_numero_ordre !== $annee_actuelle) {
                                             $lien="";
                                             $message="L'année entrée dans le numéro d'ordre n'est pas d'actualité ";
-                                            var_dump($message);
+                                            
+                                            
 
-                                        } 
-                                        elseif ($numeroOrdrePrefix != $num_a_entrer) {
+                                        }  
+                                            else {
+
+                                            
+
+
+                                        if ($numeroOrdrePrefix != $num_a_entrer) {
                                             $lien="";
                                             $message="Le numéro d'ordre pour le pole  $nom_entite attendu est : $num_a_entrer";
-                                            var_dump($message);
+                                            
+                                            
+                                            
                                         } 
                                             else {
                                             
@@ -162,11 +170,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                                 if ($etat_plis_ferme=="non" && strlen($TypeDoc)==0 ) {
                                                     $lien = "";
                                                     $message = "Entrer un type de document valide ";
+                                                   
                                                   
 
                                                 } elseif ($etat_plis_ferme=="non" && strlen($_FILES['fichier']['name'])==0 ) {
                                                     $lien = ""; 
                                                     $message = " Veuillez entrer un fichier ";
+                                                    
                                               
 
                                                 } elseif ($etat_plis_ferme=="non" && strlen($_FILES['fichier']['name'])!=0 ) {
@@ -193,6 +203,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                                     if (strlen($destinataire)==0) {
                                                         $lien = "";
                                                         $message = "Veuillez entrer un destinataire.";
+                                                        
                                                        
                                 
                                                     } elseif (strlen($destinataire) != 0  ) {
@@ -234,9 +245,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                                                 # Si on entre ici cela veut dire qu'il n'a pas entrer un destinataire interne à la banque
                                                                 $lien = "";
                                                                 $message = "erreur  le destinataire n\'est pas une reconnu comme une entité de la banque";
-                                                            
+                                                                
                                                             } else {
 
+                                                                if ($destinataire === $nom_entite) {
+                                                                    $lien = "";
+                                                                    $message = " vous avez entré le pole initiateur comme destinataire";
+                                                                    
+                                                                
+    
+                                                                } else {
+
+                                                                
 
                                                                 try {
                                                                     // Récupérer et nettoyer le champ 'nombre_joins'
@@ -257,7 +277,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                                                             $lien = "";
                                                                             $message =  "Le nombre de fichiers joints est impérativement un nombre entier positif, veuillez entrer un nombre entier.";
                                                                           
-                                                                           $test_nombre_fichiers_joins = "pas Possible"; // Cette variable permet de savoir si on peut enregistrer si 
+                                                                           $test_nombre_fichiers_joins = "pas Possible"; 
+                                                                           // Cette variable permet de savoir si on peut enregistrer si 
     
                                                                         
                                                                         }
@@ -270,7 +291,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                                                             $test_nombre_fichiers_joins = "pas Possible";
                                                                             $lien = "";
                                                                             $message = "Le nombre de fichiers joints renseigné ($nombre_fichiers_joins) ne correspond pas au nombre de fichiers sélectionnés (" . count($liens_fichiers_joins) . "). Veuillez entrer le bon nombre de fichiers.";
-                                                                          
+                                                                        
                                                                         }
                                                                     }
                                                                     // Cas où 'nombre_joins' n'est pas renseigné mais des fichiers sont joints
@@ -323,10 +344,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                                                     } 
 
                                                                     if (is_null($identite_copie) && is_null($idpole_copie)) {
+                                                                        $test_copie_courrier ="pas Possible";
                                                                         $lien = "";
-                                                                        $message="erreur  le destinataire '. $nom_copie .' mentionné en copie n\'est pas reconnu comme une entité de la banque";
-                                                                        
-                                                                    }
+                                                                       
+                                                                        break;
+                                                                    } 
+                                                        
                                                                     
 
                                                                         }
@@ -407,6 +430,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                                                 
                                                                 
                                                                                                                                 } 
+                                                                                                                            }
 
                                                             }
                                     
@@ -466,8 +490,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                                         
                                                         else {
 
+                                                               if ($destinataire === $nom_entite) {
+                                                                $lien = "";
+                                                                $message = " vous avez entré votre entité comme destinataire";
                                                                 
+                                                               } 
+                                                                 else {
 
+
+                                                                 
 
 
                                                             try {
@@ -657,7 +688,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                                                
 
 
-
+                                                                                            }
 
 
                                                          }
@@ -676,7 +707,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                                             }
 
-
+                                        }
 
                                         }
                                         
@@ -695,13 +726,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                             if ($annee_numero_ordre !== $annee_actuelle) {
                                                 $lien="";
                                                 $message="L'année entrée dans le numéro d'ordre n'est pas d'actualité ";
-                                              
+                                                
     
                                             }
+                                              else {
+
+
+                                              
                                             
-                                            elseif ($numeroOrdrePrefix != $num_a_entrer) {
+                                              if ($numeroOrdrePrefix != $num_a_entrer) {
                                                 $lien = "";
                                                 $message = "Le numéro d'ordre pour l'entité $nom_entite attendu est : $num_a_entrer";
+                                                ;
                                              
                                             } 
                                             
@@ -720,7 +756,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                                 } elseif ($etat_plis_ferme=="non" && strlen($_FILES['fichier']['name'])==0 ) {
                                                     $lien = "";
                                                     $message = "Veuillez entrer un fichier ";
-                                                    var_dump($message);
+                                                    
                                                    
                                                 } 
 
@@ -1003,8 +1039,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                                     if (strlen($destinataire)==0) {
                                                         $lien = "";
                                                         $message = "Veuillez entrer un destinataire.";
-                                                        echo $message;
-                                                        var_dump($message);
+                                                        
                                 
                                                     }
                                                     elseif (strlen($destinataire) != 0  ) {
@@ -1252,6 +1287,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                             }
 
                                             }
+                                        }
                                 
                                         }
          
@@ -1436,7 +1472,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                                             $lien = "";
                                                             $test_copie_courrier = "pas possible";
                                                             $message="erreur  le destinataire '. $nom_copie .' mentionné en copie n\'est pas reconnu comme une entité de la banque";
-                                                            var_dump($message);  
+                                                             
 
                                                         } 
                                                         

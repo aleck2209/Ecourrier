@@ -110,7 +110,6 @@ function insererUneCopieCourrier($nomDest,$lienCourrier,$idCourrerdep,$idCourrie
     $resulats->bindValue(7,$lienCourrier);
     $resulats->execute();
     $test = true;
-    echo "enregistrement copie réussi...";
     // echo $idCourrerdep;
     return $test;
     } catch (PDOException $e) {
@@ -137,7 +136,7 @@ function insererFichierJoin($lienFichier,$idCourrierdep,$idCourrierArv){
           $resulats->bindValue(3,$idCourrierdep);
           $resulats->bindValue(4,$idCourrierArv);
           $resulats->execute();
-          echo "enregistrement réussi...";
+         
     } catch (PDOException $e) {
         die('erreur de connexion'.$e->getMessage());
     }
@@ -223,7 +222,7 @@ $nbre_fichiers_joins){
     // Afficher le tableau associatif
     // print_r($tableauAssociatif);
     $resulats->execute();
-    echo'Excécution réussie';
+   
     $test = true;
     
     return $idCourrier;
