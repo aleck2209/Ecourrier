@@ -3,7 +3,7 @@ require('../../Traitement/Base_de_donnee/insertion.php');
 require('../../Traitement/Base_de_donnee/verificationDonneeBd.php');
 
 
-$matricule = 'user01';
+$matricule = 'user04';
 $sql1 = " select p.id_pole, p.nom_pole
 from pole p inner join utilisateur u on 
 p.id_pole = u.id_pole

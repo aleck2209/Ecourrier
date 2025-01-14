@@ -12,7 +12,7 @@ $typeCourrier= $_GET['$typeCourrier'];
 $numero_ordre = $_GET['$numero_ordre'];
 
 
-$matricule ='user01' ;
+$matricule ='user04' ;
 
 $sql1 = " select p.id_pole, p.nom_pole
 from pole p inner join utilisateur u on 
@@ -54,7 +54,13 @@ $test = verifierHabilitationUtilisateur($matricule,$habilitation);
     $lien = "../../public/page/tableau-bord";
     $message= "Vous n\'êtes pas habilité à supprimer un courrier.";
    
-
+    die( '<script>
+                alert("Vous n\'êtes pas habilité à supprimer un courrier.");
+                setTimeout(function(){
+                    window.location.href = "../../public/page/tableau-bord";
+                }, 500); 
+                </script>'
+                );
     
 } else {
     if ($typeCourrier === "courrier départ") {
@@ -63,14 +69,29 @@ $test = verifierHabilitationUtilisateur($matricule,$habilitation);
         
      $lien = "../../public/page/tableau-bord";
      $message = "Suppression effectuée avec succès";
+     die( '<script>
+                alert("Suppression effectuée avec succès .");
+                setTimeout(function(){
+                    window.location.href = "../../public/page/tableau-bord";
+                }, 500); 
+                </script>'
+                );
      
     }
     elseif ($typeCourrier === "courrier arrivé") {
         
         // supprimerCourrierArrive($idCourrier,$matricule);
         $lien = "../../public/page/tableau-bord";
-        $message = " Vous n'avez pas d'habilitation pour supprimer ce courrier ";
+        $message = " Vous n'avez pas d'habilitation pour supprimer ce courrier arrivé ";
         
+        
+                die( '<script>
+                alert(" Vous n\'avez pas d\'habilitation pour supprimer ce courrier arrivé.");
+                setTimeout(function(){
+                    window.location.href = "../../public/page/tableau-bord";
+                }, 500); 
+                </script>'
+                );
         
      
     }
@@ -84,6 +105,14 @@ $test = verifierHabilitationUtilisateur($matricule,$habilitation);
 
  
  
+
+                // die( '<script>
+                // alert("Votre action a été effectuée avec succès.");
+                // setTimeout(function(){
+                //     window.location.href = "../../public/page/courrier-interne.php";
+                // }, 500); 
+                // </script>'
+                // );
 
 
  

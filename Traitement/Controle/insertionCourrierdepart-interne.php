@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $reference =verifierValeurNulle(trim($_POST['Reference']));
                 $fichier = $_FILES['fichier'];
                 $objet = verifierValeurNulle(trim($_POST['Objet_du_courrier']));
-                $matricule ='user01' ;
+                $matricule ='user04' ;
                 $etatExpedition =  NULL ;
                 $expediteur_courrierArv = verifierValeurNulle(trim($_POST['expediteur_courrierArv'])) ;
                 $destinataire  = verifierValeurNulle($_POST['destinataire']) ;
@@ -133,7 +133,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                         $expediteur = $nom_entite;
                                         
                                         #On récupère le numéro d'ordre qu'on doit entré en fonction de l'entité
-                                        $num_a_entrer = verifierNumeoOrdreParPole($nom_entite);
+                                        $num_a_entrer = verifierProchainNumeroOrdreParPoleEtAnnee($nom_entite,$annee_numero_ordre);
                                         $numeroOrdrePrefix = explode('/', $numeroOrdre)[0];  // On récupère juste la partie avant le "/"
                                         
                                         // On compare le numéro d'ordre entré à celui qui est attendu en fonction de l'entité
@@ -720,7 +720,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                             $expediteur = $nom_entite;
                                         
                                             #On récupère le numéro d'ordre qu'on doit entré en fonction de l'entité
-                                            $num_a_entrer = verifierNumeoOrdreParEntiteV2($nom_entite);
+                                            $num_a_entrer = verifierProchainNumeroOrdreParEntiteEtAnnee($nom_entite,$annee_numero_ordre);
                                             $numeroOrdrePrefix = explode('/', $numeroOrdre)[0];  // On récupère juste la partie avant le "/"
                                             
                                             // On compare le numéro d'ordre entré à celui qui est attendu en fonction de l'entité
