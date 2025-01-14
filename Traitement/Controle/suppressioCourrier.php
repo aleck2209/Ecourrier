@@ -5,7 +5,7 @@ require('../../Traitement/Base_de_donnee/Recuperation.php');
 require('../../Traitement/Base_de_donnee/Suppression.php');
 require('../../Traitement/Base_de_donnee/verificationDonneeBd.php');
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST'){
+if ($_SERVER['REQUEST_METHOD'] === 'GET'){
 
 $idCourrier= $_GET['$idCourrier'];
 $typeCourrier= $_GET['$typeCourrier'];
@@ -53,7 +53,7 @@ $test = verifierHabilitationUtilisateur($matricule,$habilitation);
  if (!$test) {
     $lien = "../../public/page/tableau-bord";
     $message= "Vous n\'êtes pas habilité à supprimer un courrier.";
-    var_dump($message);
+   
 
     
 } else {
@@ -63,12 +63,14 @@ $test = verifierHabilitationUtilisateur($matricule,$habilitation);
         
      $lien = "../../public/page/tableau-bord";
      $message = "Suppression effectuée avec succès";
+     
     }
     elseif ($typeCourrier === "courrier arrivé") {
         
         // supprimerCourrierArrive($idCourrier,$matricule);
         $lien = "../../public/page/tableau-bord";
         $message = " Vous n'avez pas d'habilitation pour supprimer ce courrier ";
+        
         
      
     }
