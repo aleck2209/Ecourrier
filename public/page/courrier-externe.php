@@ -8,11 +8,18 @@
 </head>
 <body>
     <?php
+         // VARIABLE BUREAU D'ORDRE
+         $bureauOrdre = "BO";
+         if ($bureauOrdre === "BO") {
+            require('../../Traitement/Controle/insertionCourrierArrive-externe.php');
+         }else {
+            require('../../Traitement/Controle/insertionCourrierdepart-externe.php');
+         }
+
         // APPEL DE LA SIDE-BAR
         require('../include/side-bar.php');
 
-        // VARIABLE BUREAU D'ORDRE
-        $bureauOrdre = "BO";
+       
     ?>
 
     <!-- DEBUT DE LA PAGE ENREGISTRER COURRIER -->

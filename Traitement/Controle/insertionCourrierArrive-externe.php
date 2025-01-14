@@ -6,6 +6,10 @@ require('../../Traitement/Verification/VerifierNumeroOrdreParEntite.php');
 require('../../Traitement/Verification/verifierFormat.php');
 require('../../Traitement/Verification/verifierValeurEnum.php');
 
+$lien = "";
+$message = ""; // Mis à jour de la variable message d'erreur
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST'){
 // On commence par désactiver l'affichage des erreurs PHP en production
 ini_set('display_errors', 0); // Désactive l'affichage des erreurs
 error_reporting(E_ALL); // Active l'enregistrement des erreurs pour le débogage (peut être modifié en production)
@@ -278,6 +282,7 @@ setTimeout(function(){
 );
 
 
+}
 ?>
 
 

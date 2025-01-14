@@ -8,7 +8,9 @@ require('../../Traitement/Verification/verifierFormat.php');
 require('../../Traitement/Verification/verifierValeurEnum.php');
 require('../../Traitement/Controle/gestionFichiesCourrierArrive.php');
 
-
+$lien = "";
+$message = "";
+if ($_SERVER['REQUEST_METHOD'] === 'POST'){
 // On commence par désactiver l'affichage des erreurs PHP en production
 ini_set('display_errors', 0); // Désactive l'affichage des erreurs
 error_reporting(E_ALL); // Active l'enregistrement des erreurs pour le débogage (peut être modifié en production)
@@ -43,7 +45,8 @@ $etat_inter_exter = ($test_etat_interne_externe =="externe") ? "courrier externe
 $etatExpedition = null;
 //récupération du tableau des entite destinataires ayant le nom entré 
 
-
+$lien = "";
+$message = ""; // Mis à jour de la variable message d'erreur
 
 
 
@@ -368,7 +371,7 @@ setTimeout(function(){
 );
 
 
-
+}
 
 
 
