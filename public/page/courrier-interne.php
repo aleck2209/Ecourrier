@@ -124,8 +124,11 @@
     </div>
 
     <?php
-        // APPEL DE L'ALERTE
+        // APPEL DE L'ALERTE QU'ON SORT SANS ENREGISTRER
         require('../include/alerte.php');
+
+        // APPEL DE LA PAGE MESSAGE
+        require('../include/message.php');
     ?>
     <!-- FIN PAGE ENREGISTRER COURRIER -->
     <!-- DEBUT SCRIPT JS -->

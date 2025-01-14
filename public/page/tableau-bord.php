@@ -37,17 +37,17 @@
                         <h3 for="motCle">Mot clé</h3>
                             <div class="fields-key-word">
                                 <input type="search" name="searchKeyword" id="motCle" placeholder="Objet, Destinataire...">
-                                <input type="image" src="../images/recherche.png" alt="bouton rechercher" class="form-search-key-word__btn-search">
+                                <input type="image" src="../images/recherche.png" alt="bouton rechercher" class="form-search-key-word__btn-search" onclick="searchKeyWord()">
                             </div>
                         </form>
                         <form action="" method="post" class="form-search-date">
                         <input type="hidden" name="form_type3">
                             <h3>Période de recherche</h3>
                             <div class="fields-date">
-                                <input type="date" name="startDate">
+                                <input type="date" name="startDate" id="startDate">
                                 <span>&nbsp;À&nbsp;</span>
-                                <input type="date" name="endDate">
-                                <input type="image" src="../images/recherche.png" alt="bouton rechercher" class="form-search-date__btn-search">
+                                <input type="date" name="endDate" id="endDate">
+                                <input type="image" src="../images/recherche.png" alt="bouton rechercher" class="form-search-date__btn-search" onclick="searchDate()">
                             </div>
                         </form>
                     </div>
@@ -56,13 +56,13 @@
                             <h3>Option de tri</h3>
                             <input type="hidden" name="form_type1" value="form1">
                             <div class="fields-sort">
-                                <select name="sortType" onchange="submitSort()">
+                                <select name="sortType" id="sortType" onchange="submitSort()">
                                     <option value="">[type de tri]</option>
                                     <option value="date">Date</option> 
                                     <option value="objet">Objet</option>
                                     <option value="Numéro">Numéro</option>
                                 </select>
-                                <select name="sortOrder">
+                                <select name="sortOrder" id="sortOrder">
                                     <option value="decroissant">Décroissant</option>
                                     <option value="croissant">Croissant</option>   
                                 </select>
