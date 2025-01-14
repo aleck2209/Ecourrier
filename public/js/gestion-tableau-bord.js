@@ -2,7 +2,15 @@ document.addEventListener('DOMContentLoaded', alertDelete(), displayFile(), copi
 
 // SOUMISSION DES FORMULAIRES DE TRIE
 function submitSort() {
+    localStorage.clear();
+
     const form = document.getElementById('form-sort');
+    const selectSortType = document.getElementById('sortType');
+    const selectSortOrder = document.getElementById('sortOrder');
+
+    localStorage.setItem('sortType', selectSortType.value);
+    localStorage.setItem('sortOrder', selectSortOrder.value);
+
     form.submit();
 }
 
@@ -52,17 +60,49 @@ function displayFile() {
 
 
 // DEBUT PERSISTANCE DES FILTRES
+// FONCTION POUR RESTAURER LES INPUT DE RECHERCHE
 function restoreFilterValue() {
+    const inputKeyWord = document.getElementById('motCle');
+    const inputStartDate = document.getElementById('startDate');
+    const inputEndDate = document.getElementById('endDate');
+
+    const selectSortType = document.getElementById('sortType');
+    const selectSortOrder = document.getElementById('sortOrder');
+
+    const storedKeyWord = localStorage.getItem('keyWord');
+    const storedStartDate = localStorage.getItem('startDate');
+    const storedEndDate = localStorage.getItem('endDate');
+    const storedSortType = localStorage.getItem('sortType');
+    const storedSortOrder = localStorage.getItem('sortOrder');
+
+    // RESTAURATION DES DONNEES POUR LES FILTRES
     document.querySelectorAll('#form-filter select').forEach(select => {
         const storedValue = localStorage.getItem(select.name);
         if (storedValue) {
             select.value = storedValue;
         }
     });
+
+    // RESTAURATION DES DONNEES POUR LA RECHERCHE AVEC MOT CLES
+    if (storedKeyWord) {
+        inputKeyWord.value = storedKeyWord;
+    }
+
+    // RESTAURATION DES DONNEES POUR LA RECHERCHE AVEC UN INTERVALLE DE DATES
+    if (storedEndDate && storedStartDate) {
+        inputStartDate.value = storedStartDate;
+        inputEndDate.value = storedEndDate;
+    }
+
+    if (storedSortOrder && storedSortType) {
+        selectSortOrder.value = storedSortOrder;
+        selectSortType.value = storedSortType;
+    }
 }
 
 function handleSelectChange(event) {
-    
+    localStorage.clear();
+
     const changedSelect = event.target;
 
     localStorage.setItem(changedSelect.name, changedSelect.value);
@@ -93,8 +133,38 @@ function allDisplay() {
         e.preventDefault();
         selects.forEach(select => {
             select.value = ""
-            localStorage.removeItem(select.name);
+            localStorage.clear();
         });
+        form.submit();
+    })
+}
+
+function searchKeyWord() {
+    const input = document.getElementById('motCle');
+    const form = document.querySelector('.form-search-key-word');
+
+    localStorage.clear();
+
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        localStorage.setItem('keyWord', input.value)
+
+        form.submit();
+    })
+}
+
+function searchDate() {
+    const inputStartDate = document.getElementById('startDate');
+    const inputEndDate = document.getElementById('endDate');
+    const form = document.querySelector('.form-search-date');
+    
+    localStorage.clear();
+
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        localStorage.setItem('startDate', inputStartDate.value);
+        localStorage.setItem('endDate', inputEndDate.value);
+
         form.submit();
     })
 }
@@ -111,5 +181,4 @@ function copieCase() {
             btnSupprimer.style.display = 'none'
         }
     })
-    
-}
+}    
