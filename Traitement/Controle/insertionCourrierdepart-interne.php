@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $reference =verifierValeurNulle(trim($_POST['Reference']));
                 $fichier = $_FILES['fichier'];
                 $objet = verifierValeurNulle(trim($_POST['Objet_du_courrier']));
-                $matricule ='user04' ;
+                $matricule ='user01' ;
                 $etatExpedition =  NULL ;
                 $expediteur_courrierArv = verifierValeurNulle(trim($_POST['expediteur_courrierArv'])) ;
                 $destinataire  = verifierValeurNulle($_POST['destinataire']) ;
@@ -142,7 +142,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                         if ($annee_numero_ordre !== $annee_actuelle) {
                                             $lien="";
                                             $message="L'année entrée dans le numéro d'ordre n'est pas d'actualité ";
-                                            
+                                            var_dump($message);
                                             
 
                                         }  
@@ -154,7 +154,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                         if ($numeroOrdrePrefix != $num_a_entrer) {
                                             $lien="";
                                             $message="Le numéro d'ordre pour le pole  $nom_entite attendu est : $num_a_entrer";
-                                            
+                                            var_dump($message);
                                             
                                             
                                         } 
@@ -165,6 +165,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                             if (strlen($dateEnreg)==0) {
                                                 $lien = "";
                                                 $message = "Vous n'avez pas renseigné une date d'enregistrement d'ordre pour votre courrier";
+                                                var_dump($message);
                                             } else {
                                                 
                                                 if ($etat_plis_ferme=="non" && strlen($TypeDoc)==0 ) {
@@ -726,7 +727,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                             if ($annee_numero_ordre !== $annee_actuelle) {
                                                 $lien="";
                                                 $message="L'année entrée dans le numéro d'ordre n'est pas d'actualité ";
-                                                
+                                                var_dump($message);
     
                                             }
                                               else {
@@ -737,7 +738,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                               if ($numeroOrdrePrefix != $num_a_entrer) {
                                                 $lien = "";
                                                 $message = "Le numéro d'ordre pour l'entité $nom_entite attendu est : $num_a_entrer";
-                                                ;
+                                                
+                                                var_dump($message);
                                              
                                             } 
                                             

@@ -41,6 +41,8 @@ function verifierNumeoOrdreParEntite($entite){
 
 
 
+
+
 function verifierNumeoOrdreParEntiteV2($entite) {
     if (isset($entite)) {
         // Requête SQL pour récupérer les numéros d'ordre, les entités, et les dates d'enregistrement
@@ -60,54 +62,56 @@ function verifierNumeoOrdreParEntiteV2($entite) {
         $max = 0;
         $annee_actuelle = date("Y");
         $dernier_numero_ordre_annee = null; // Pour stocker l'année du dernier numéro d'ordre
+        $max_numero_ordre = 0;  // Pour suivre le plus grand numéro d'ordre de l'année en cours
 
         // Parcours des enregistrements pour trouver les numéros d'ordre pour l'entité donnée
-        for ($i = 0; $i < count($tableaudesenregistrements); $i++) {
+        foreach ($tableaudesenregistrements as $enregistrement) {
             // Si l'entité dans la ligne correspond à l'entité passée en paramètre
-            if ($tableaudesenregistrements[$i][0] === $entite) {
+            if ($enregistrement[0] === $entite) {
                 // Récupérer le numéro d'ordre et la date d'enregistrement
-                $numero_ordre = $tableaudesenregistrements[$i][1];
-                $date_enregistrement = $tableaudesenregistrements[$i][2];
+                $numero_ordre = $enregistrement[1];
+                $date_enregistrement = $enregistrement[2];
 
                 // Extraire l'année du numéro d'ordre (dernière partie après le dernier '/')
                 $numero_ordre_complet = explode('/', $numero_ordre);
-                $annee_numero_ordre = (int)$numero_ordre_complet[count($numero_ordre_complet) - 1];
 
-                // Si c'est le premier numéro d'ordre, on enregistre l'année du dernier numéro d'ordre
+                // Vérifier que le numéro d'ordre est valide (au moins 2 parties)
+                if (count($numero_ordre_complet) >= 2) {
+                    $annee_numero_ordre = (int)$numero_ordre_complet[count($numero_ordre_complet) - 1];  // Année
+                } else {
+                    $annee_numero_ordre = 0;  // Si la structure du numéro est incorrecte, on met l'année à 0
+                }
+
+                // Si l'année actuelle est différente de l'année du dernier numéro d'ordre enregistré
+                if ($annee_numero_ordre == $annee_actuelle) {
+                    // Récupérer le plus grand numéro d'ordre pour l'année actuelle
+                    $numero_ordre_extrait = (int)$numero_ordre_complet[0];  // Numéro d'ordre proprement dit
+                    if ($numero_ordre_extrait > $max_numero_ordre) {
+                        $max_numero_ordre = $numero_ordre_extrait;
+                    }
+                }
+
+                // Mettre à jour l'année du dernier numéro d'ordre
                 $dernier_numero_ordre_annee = $annee_numero_ordre;
-
-                // Extraire la partie avant l'année (le numéro d'ordre proprement dit)
-                $numero_ordre_extrait = (int)$numero_ordre_complet[0];
-
-                // Ajouter à la liste des numéros d'ordre
-                $liste_numero_ordre[] = $numero_ordre_extrait;
             }
         }
 
-        // Vérifier si l'année actuelle est supérieure à l'année du dernier courrier enregistré pour cette entité
+        // Si l'année actuelle est supérieure à l'année du dernier courrier enregistré pour cette entité
         if ($dernier_numero_ordre_annee !== null && $annee_actuelle > $dernier_numero_ordre_annee) {
-            // Si l'année actuelle est plus grande, réinitialiser le numéro d'ordre à 1
+            // Réinitialiser le numéro d'ordre à 1 si l'année a changé
             $max = 1;
         } else {
-            // Si des numéros d'ordre existent pour cette entité, déterminer le plus grand
-            if (count($liste_numero_ordre) > 0) {
-                $max = max($liste_numero_ordre); // Trouver le plus grand numéro d'ordre
-            }
-
-            // Si aucun numéro d'ordre existant, commencer à 1
-            if ($max == 0) {
-                $max = 1;
-            } else {
-                // Incrémenter le max de 1 pour le prochain numéro
-                $max++;
-            }
+            // Si l'année est la même, incrémenter le max_numero_ordre pour donner le prochain numéro
+            $max = $max_numero_ordre + 1;
         }
 
         // Retourner uniquement le numéro d'ordre à entrer (sans l'année)
-        return $max; // Par exemple : 4
-    } 
+        return $max; // Exemple : 1 pour une nouvelle année, ou un numéro incrémenté pour l'année actuelle
+    } else {
+        // Si l'entité n'est pas trouvée ou mal définie
+        die('Entité non trouvée et numéro d\'ordre non trouvé');
+    }
 }
-
 
 
 
