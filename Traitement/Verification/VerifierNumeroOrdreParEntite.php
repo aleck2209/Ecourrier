@@ -41,24 +41,16 @@ function verifierNumeoOrdreParEntite($entite){
 
 
 
-
-
-
-
-
-
-
-
-
-
 function verifierNumeoOrdreParEntiteV2($entite) {
     if (isset($entite)) {
-        // Requête SQL pour récupérer les numéros d'ordre et les entités
-        $requeteRecuperation = "SELECT e.nom_entite, cd.numero_ordre
+        // Requête SQL pour récupérer les numéros d'ordre, les entités, et les dates d'enregistrement
+        $requeteRecuperation = "SELECT e.nom_entite, cd.numero_ordre, cd.dateEnregistrement
                                 FROM entite_banque e 
                                 INNER JOIN utilisateur u ON e.id_entite = u.id_entite
                                 INNER JOIN courrierdepart cd ON cd.Matricule_initiateur = u.Matricule
-                                GROUP BY cd.numero_ordre, e.nom_entite;";
+                                WHERE e.nom_entite = '$entite' 
+                                GROUP BY cd.numero_ordre, e.nom_entite, cd.dateEnregistrement
+                                ORDER BY cd.dateEnregistrement DESC";  // Trier par date d'enregistrement décroissante
 
         // Appel de la fonction pour récupérer les enregistrements sous forme de tableau
         $tableaudesenregistrements = recupererContenuParRequeteDansTableauNumeique($requeteRecuperation);
@@ -66,41 +58,58 @@ function verifierNumeoOrdreParEntiteV2($entite) {
         // Liste des numéros d'ordre extraits
         $liste_numero_ordre = [];
         $max = 0;
+        $annee_actuelle = date("Y");
+        $dernier_numero_ordre_annee = null; // Pour stocker l'année du dernier numéro d'ordre
 
         // Parcours des enregistrements pour trouver les numéros d'ordre pour l'entité donnée
         for ($i = 0; $i < count($tableaudesenregistrements); $i++) {
             // Si l'entité dans la ligne correspond à l'entité passée en paramètre
             if ($tableaudesenregistrements[$i][0] === $entite) {
-                // Récupérer le numéro d'ordre
+                // Récupérer le numéro d'ordre et la date d'enregistrement
                 $numero_ordre = $tableaudesenregistrements[$i][1];
-                
-                // Extraire la première partie du numéro d'ordre avant le '/'
-                $numero_ordre_extrait = (int)explode('/', $numero_ordre)[0];
-                
+                $date_enregistrement = $tableaudesenregistrements[$i][2];
+
+                // Extraire l'année du numéro d'ordre (dernière partie après le dernier '/')
+                $numero_ordre_complet = explode('/', $numero_ordre);
+                $annee_numero_ordre = (int)$numero_ordre_complet[count($numero_ordre_complet) - 1];
+
+                // Si c'est le premier numéro d'ordre, on enregistre l'année du dernier numéro d'ordre
+                $dernier_numero_ordre_annee = $annee_numero_ordre;
+
+                // Extraire la partie avant l'année (le numéro d'ordre proprement dit)
+                $numero_ordre_extrait = (int)$numero_ordre_complet[0];
+
                 // Ajouter à la liste des numéros d'ordre
                 $liste_numero_ordre[] = $numero_ordre_extrait;
             }
         }
 
-        // Si des numéros d'ordre existent pour cette entité, déterminer le plus grand
-        if (count($liste_numero_ordre) > 0) {
-            $max = max($liste_numero_ordre); // Trouver le plus grand numéro d'ordre
-        }
-
-        // Si aucun numéro d'ordre existant, commencer à 1
-        if ($max == 0) {
+        // Vérifier si l'année actuelle est supérieure à l'année du dernier courrier enregistré pour cette entité
+        if ($dernier_numero_ordre_annee !== null && $annee_actuelle > $dernier_numero_ordre_annee) {
+            // Si l'année actuelle est plus grande, réinitialiser le numéro d'ordre à 1
             $max = 1;
         } else {
-            // Incrémenter le max de 1 pour le prochain numéro
-            $max++;
+            // Si des numéros d'ordre existent pour cette entité, déterminer le plus grand
+            if (count($liste_numero_ordre) > 0) {
+                $max = max($liste_numero_ordre); // Trouver le plus grand numéro d'ordre
+            }
+
+            // Si aucun numéro d'ordre existant, commencer à 1
+            if ($max == 0) {
+                $max = 1;
+            } else {
+                // Incrémenter le max de 1 pour le prochain numéro
+                $max++;
+            }
         }
 
         // Retourner uniquement le numéro d'ordre à entrer (sans l'année)
         return $max; // Par exemple : 4
-    } else {
-        die('Entité non trouvée et numéro d\'ordre non trouvé');
-    }
+    } 
 }
+
+
+
 
 
 
@@ -110,11 +119,14 @@ function verifierNumeoOrdreParEntiteV2($entite) {
 function verifierNumeoOrdreParPole($entite) {
     if (isset($entite)) {
         // Requête SQL pour récupérer les numéros d'ordre et les entités
-        $requeteRecuperation = "SELECT p.nom_pole, cd.numero_ordre
+        $requeteRecuperation = "SELECT p.nom_pole, cd.numero_ordre, cd.dateEnregistrement
                                 FROM pole p
                                 INNER JOIN utilisateur u ON p.id_pole = u.id_pole
                                 INNER JOIN courrierdepart cd ON cd.Matricule_initiateur = u.Matricule
-                                GROUP BY cd.numero_ordre, p.nom_pole;";
+                                WHERE p.nom_pole = '$entite' 
+                                GROUP BY cd.numero_ordre, p.nom_pole, cd.dateEnregistrement
+                                ORDER BY cd.dateEnregistrement DESC;";
+                                
 
         // Appel de la fonction pour récupérer les enregistrements sous forme de tableau
         $tableaudesenregistrements = recupererContenuParRequeteDansTableauNumeique($requeteRecuperation);
@@ -122,40 +134,54 @@ function verifierNumeoOrdreParPole($entite) {
         // Liste des numéros d'ordre extraits
         $liste_numero_ordre = [];
         $max = 0;
+        $annee_actuelle = date("Y");
+        $dernier_numero_ordre_annee = null; // Pour stocker l'année du dernier numéro d'ordre
 
         // Parcours des enregistrements pour trouver les numéros d'ordre pour l'entité donnée
         for ($i = 0; $i < count($tableaudesenregistrements); $i++) {
             // Si l'entité dans la ligne correspond à l'entité passée en paramètre
             if ($tableaudesenregistrements[$i][0] === $entite) {
-                // Récupérer le numéro d'ordre
+                // Récupérer le numéro d'ordre et la date d'enregistrement
                 $numero_ordre = $tableaudesenregistrements[$i][1];
-                
-                // Extraire la première partie du numéro d'ordre avant le '/'
-                $numero_ordre_extrait = (int)explode('/', $numero_ordre)[0];
-                
+                $date_enregistrement = $tableaudesenregistrements[$i][2];
+
+                // Extraire l'année du numéro d'ordre (dernière partie après le dernier '/')
+                $numero_ordre_complet = explode('/', $numero_ordre);
+                $annee_numero_ordre = (int)$numero_ordre_complet[count($numero_ordre_complet) - 1];
+
+                // Si c'est le premier numéro d'ordre, on enregistre l'année du dernier numéro d'ordre
+                $dernier_numero_ordre_annee = $annee_numero_ordre;
+
+                // Extraire la partie avant l'année (le numéro d'ordre proprement dit)
+                $numero_ordre_extrait = (int)$numero_ordre_complet[0];
+
                 // Ajouter à la liste des numéros d'ordre
                 $liste_numero_ordre[] = $numero_ordre_extrait;
             }
         }
 
-        // Si des numéros d'ordre existent pour cette entité, déterminer le plus grand
-        if (count($liste_numero_ordre) > 0) {
-            $max = max($liste_numero_ordre); // Trouver le plus grand numéro d'ordre
-        }
-
-        // Si aucun numéro d'ordre existant, commencer à 1
-        if ($max == 0) {
+        // Vérifier si l'année actuelle est supérieure à l'année du dernier courrier enregistré pour cette entité
+        if ($dernier_numero_ordre_annee !== null && $annee_actuelle > $dernier_numero_ordre_annee) {
+            // Si l'année actuelle est plus grande, réinitialiser le numéro d'ordre à 1
             $max = 1;
         } else {
-            // Incrémenter le max de 1 pour le prochain numéro
-            $max++;
+            // Si des numéros d'ordre existent pour cette entité, déterminer le plus grand
+            if (count($liste_numero_ordre) > 0) {
+                $max = max($liste_numero_ordre); // Trouver le plus grand numéro d'ordre
+            }
+
+            // Si aucun numéro d'ordre existant, commencer à 1
+            if ($max == 0) {
+                $max = 1;
+            } else {
+                // Incrémenter le max de 1 pour le prochain numéro
+                $max++;
+            }
         }
 
         // Retourner uniquement le numéro d'ordre à entrer (sans l'année)
         return $max; // Par exemple : 4
-    } else {
-        die('Entité non trouvée et numéro d\'ordre non trouvé');
-    }
+    } 
 }
 
 

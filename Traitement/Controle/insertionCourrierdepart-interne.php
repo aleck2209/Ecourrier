@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $reference =verifierValeurNulle(trim($_POST['Reference']));
                 $fichier = $_FILES['fichier'];
                 $objet = verifierValeurNulle(trim($_POST['Objet_du_courrier']));
-                $matricule ='user01' ;
+                $matricule ='user04' ;
                 $etatExpedition =  NULL ;
                 $expediteur_courrierArv = verifierValeurNulle(trim($_POST['expediteur_courrierArv'])) ;
                 $destinataire  = verifierValeurNulle($_POST['destinataire']) ;
@@ -69,10 +69,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     //récupération du tableau des entite destinataires ayant le nom entré 
                    $test_nombre_fichiers_joins = "Possible"; // Cette variable nous permet de savoir quand enregistrer un courrier 
                    $test_copie_courrier = "Possible"; // Cette variable permet de savoir quand enregistrer un courrier en fonction des copies
-                    //---------------------------------------Contrôle des mtricules ---------------------------------
+                    
+                    // Récupérer l'année actuelle
+                    
+                    $annee_actuelle = date("Y");
+
+                    $numero_ordre_parts = explode('/', $numeroOrdre);
+                    $annee_numero_ordre = $numero_ordre_parts[count($numero_ordre_parts) - 1]; 
+                     // Dernière partie : l'année
+
+                   
+                   //---------------------------------------Contrôle des mtricules ---------------------------------
 
 
-                        $sql1 = " select p.id_pole, p.nom_pole
+                    $sql1 = " select p.id_pole, p.nom_pole
                     from pole p inner join utilisateur u on 
                     p.id_pole = u.id_pole
                     where u.Matricule = ?;";
@@ -127,10 +137,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                         $numeroOrdrePrefix = explode('/', $numeroOrdre)[0];  // On récupère juste la partie avant le "/"
                                         
                                         // On compare le numéro d'ordre entré à celui qui est attendu en fonction de l'entité
-                                        if ($numeroOrdrePrefix != $num_a_entrer) {
-                                         
+
+                                        
+                                        if ($annee_numero_ordre !== $annee_actuelle) {
+                                            $lien="";
+                                            $message="L'année entrée dans le numéro d'ordre n'est pas d'actualité ";
+                                            var_dump($message);
+
+                                        } 
+                                        elseif ($numeroOrdrePrefix != $num_a_entrer) {
+                                            $lien="";
                                             $message="Le numéro d'ordre pour le pole  $nom_entite attendu est : $num_a_entrer";
-                                                
+                                            var_dump($message);
                                         } 
                                             else {
                                             
@@ -674,11 +692,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                             $numeroOrdrePrefix = explode('/', $numeroOrdre)[0];  // On récupère juste la partie avant le "/"
                                             
                                             // On compare le numéro d'ordre entré à celui qui est attendu en fonction de l'entité
-                                            if ($numeroOrdrePrefix != $num_a_entrer) {
+                                            if ($annee_numero_ordre !== $annee_actuelle) {
+                                                $lien="";
+                                                $message="L'année entrée dans le numéro d'ordre n'est pas d'actualité ";
+                                              
+    
+                                            }
+                                            
+                                            elseif ($numeroOrdrePrefix != $num_a_entrer) {
                                                 $lien = "";
                                                 $message = "Le numéro d'ordre pour l'entité $nom_entite attendu est : $num_a_entrer";
+                                             
+                                            } 
                                             
-                                            } else {
+                                            else {
                                                 
                                             if (strlen($dateEnreg)==0) {
                                                 $lien = "";
@@ -693,6 +720,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                                 } elseif ($etat_plis_ferme=="non" && strlen($_FILES['fichier']['name'])==0 ) {
                                                     $lien = "";
                                                     $message = "Veuillez entrer un fichier ";
+                                                    var_dump($message);
                                                    
                                                 } 
 
