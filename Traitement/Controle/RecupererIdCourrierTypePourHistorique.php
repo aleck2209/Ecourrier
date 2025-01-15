@@ -1,12 +1,16 @@
 
 <?php
 
+// Démarrer la session
+session_start();
+
+
 require('../../Traitement/Base_de_donnee/Recuperation.php');
 
 $idCourrier= $_GET['$idCourrier'];
 $typeCourrier= $_GET['$typeCourrier'];
 
-$matricule ='user01' ;
+$matricule = $_SESSION['matricule']  ;
 
 $sql1 = " select p.id_pole, p.nom_pole
 from pole p inner join utilisateur u on 

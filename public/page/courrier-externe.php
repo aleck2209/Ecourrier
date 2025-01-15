@@ -1,3 +1,11 @@
+
+<?php
+// Démarrer la session
+session_start();
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,8 +15,9 @@
     <title>Cas d'un fichier</title>
 </head>
 <body>
+    
     <?php
-         // VARIABLE BUREAU D'ORDRE
+         // VARIABLE BUREAU D'ORDRE        
          $bureauOrdre = "BO";
          if ($bureauOrdre === "BO") {
             require('../../Traitement/Controle/insertionCourrierArrive-externe.php');

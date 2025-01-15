@@ -1,6 +1,9 @@
 
 <?php
 
+// Démarrer la session
+session_start();
+
 require('../../Traitement/Base_de_donnee/Recuperation.php');
 require('../../Traitement/Base_de_donnee/Suppression.php');
 require('../../Traitement/Base_de_donnee/verificationDonneeBd.php');
@@ -12,7 +15,7 @@ $typeCourrier= $_GET['$typeCourrier'];
 $numero_ordre = $_GET['$numero_ordre'];
 
 
-$matricule ='user04' ;
+$matricule = $_SESSION['matricule']  ;
 
 $sql1 = " select p.id_pole, p.nom_pole
 from pole p inner join utilisateur u on 
@@ -82,11 +85,11 @@ $test = verifierHabilitationUtilisateur($matricule,$habilitation);
         
         // supprimerCourrierArrive($idCourrier,$matricule);
         $lien = "../../public/page/tableau-bord";
-        $message = " Vous n'avez pas d'habilitation pour supprimer ce courrier arrivé ";
+        $message = " Vous n'avez pas d'habilitation pour supprimer ce courrier ";
         
         
                 die( '<script>
-                alert(" Vous n\'avez pas d\'habilitation pour supprimer ce courrier arrivé.");
+                alert(" Vous n\'avez pas d\'habilitation pour supprimer ce courrier arivé.");
                 setTimeout(function(){
                     window.location.href = "../../public/page/tableau-bord";
                 }, 500); 

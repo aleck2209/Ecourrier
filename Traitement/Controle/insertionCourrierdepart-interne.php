@@ -1,4 +1,9 @@
 <?php
+// Démarrer la session
+session_start();
+
+
+
 require('../../Traitement/Base_de_donnee/insertion.php');
 require('../../Traitement/Verification/verifierValeursNullesCourrier.php');
 require('../../Traitement/Controle/gestionFichierCourrierDepart.php');
@@ -26,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $reference =verifierValeurNulle(trim($_POST['Reference']));
                 $fichier = $_FILES['fichier'];
                 $objet = verifierValeurNulle(trim($_POST['Objet_du_courrier']));
-                $matricule ='user04' ;
+                $matricule = $_SESSION['matricule']  ;
                 $etatExpedition =  NULL ;
                 $expediteur_courrierArv = verifierValeurNulle(trim($_POST['expediteur_courrierArv'])) ;
                 $destinataire  = verifierValeurNulle($_POST['destinataire']) ;
@@ -421,11 +426,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                                                                                                                                                         }
                                                                                                                                                                         
                                                                                                                                                                     }
+                                                                                                                                                                 
                                                                 
                                                                                                                                                                     }
+
                                                                                                                                                                     $lien = "../../public/page/tableau-bord";
                                                                                                                                                                     $message = "Courrier enregistré avec succès";
-                                                                                                                                                                   
+                                                                                                                                                                  
+                                                                                                                                                                  
                                                                 
                                                                 
                                                                 
@@ -445,7 +453,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                                                     
                                                       
-                                                    
+                                                    $liencourrier = null;
                                                     $formatCourrier = null;
                                                    
 

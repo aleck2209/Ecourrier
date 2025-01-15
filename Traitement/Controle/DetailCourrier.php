@@ -1,4 +1,6 @@
 <?php
+// Démarrer la session
+session_start();
 require('../../Traitement/Base_de_donnee/Recuperation.php');
 
 $idCourrier= $_GET['$idCourrier'];
@@ -9,7 +11,7 @@ $date_mise_circulation = '';// date de mise en circulation du courrier
 $nom_fichier = "";// date mise en circulaton du currier
 $tableau_des_noms_des_fichiers_joints = [];
 
-$matricule ='user01' ;
+$matricule = $_SESSION['matricule']  ;
 
 $sql1 = " select p.id_pole, p.nom_pole
 from pole p inner join utilisateur u on 

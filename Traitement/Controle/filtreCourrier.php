@@ -1,7 +1,15 @@
 <?php
+
+// Démarrer la session
+session_start();
+
+
 require('../../Traitement/Base_de_donnee/Recuperation.php');
 
 $matricule = 'user04';
+
+$_SESSION['matricule'] = $matricule;
+
 $sql1 = " select p.id_pole, p.nom_pole
 from pole p inner join utilisateur u on 
 p.id_pole = u.id_pole
@@ -27,7 +35,7 @@ elseif ( (isset($infos_entite_utilisateur['id_entite']))) {
     $nom_entite = recupererNomEntiteParIdUtilisateur($sql2,$matricule);
  }
 
-
+ $_SESSION['entite']  = $nom_entite;
 
 
 $nom_fichier = ""; // Nom du fichier 

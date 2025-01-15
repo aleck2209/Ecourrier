@@ -2010,8 +2010,6 @@ function recupererContenuCorbeilleParMatricule($matricule){
     -- Ajout du type de courrier
     CASE
         WHEN cor.idCourrierDepart IS NOT NULL THEN 'courrier départ'
-        WHEN cor.idCourrierArrive IS NOT NULL THEN 'courrier arrivé'
-        ELSE 'inconnu' -- Optionnel, si aucune correspondance, vous pouvez aussi mettre NULL
     END AS type_courrier
 FROM 
     corbeille cor
@@ -2064,7 +2062,6 @@ function recupererContenuCorbeilleParEntiteOuPole($entite_pole){
     cor.Matricule_initiateur,
     ut.nom_utilisateur AS nom_enregistreur,
     ut.prenom_utilisateur AS prenom_enregistreur,
-    cor.categorie,
     cor.date_derniere_modification,
     cor.signature_gouverneur,
     cor.date_suppression,
@@ -2072,17 +2069,9 @@ function recupererContenuCorbeilleParEntiteOuPole($entite_pole){
     u.nom_utilisateur AS nom_agent,
     u.prenom_utilisateur AS prenom_agent,
     -- Ajout du type de courrier
-    CASE
-        WHEN cor.idCourrierDepart IS NOT NULL THEN 'courrier départ'
-        WHEN cor.idCourrierArrive IS NOT NULL THEN 'courrier arrivé'
-        ELSE 'inconnu' -- Optionnel, si aucune correspondance, vous pouvez aussi mettre NULL
-    END AS type_courrier,
+    'courrier départ' AS type_courrier,  -- Puisque tous les courriers sont 
     -- Ajout du nom de l'entité ou du pôle de l'utilisateur
-    CASE
-        WHEN u.id_pole IS NOT NULL THEN p.nom_pole
-        WHEN u.id_entite IS NOT NULL THEN e.nom_entite
-        ELSE 'Inconnu' -- Optionnel, si aucune correspondance
-    END AS entite_ou_pole
+    COALESCE(p.nom_pole, e.nom_entite, 'Inconnu') AS entite_ou_pole  -- Utilisation de COALESCE pour simplifier
 FROM 
     corbeille cor
 INNER JOIN 
@@ -2090,12 +2079,12 @@ INNER JOIN
 INNER JOIN 
     utilisateur u ON u.matricule = cor.Matricule_agent
 LEFT JOIN 
-    pole p ON u.id_pole = p.id_pole -- Lien entre utilisateur et pôle
+    pole p ON u.id_pole = p.id_pole 
 LEFT JOIN 
-    entite_banque e ON u.id_entite = e.id_entite -- Lien entre utilisateur et entité
+    entite_banque e ON u.id_entite = e.id_entite
 WHERE 
-    (p.nom_pole = :entite_pole OR e.nom_entite = :entite_pole);  --
-
+    cor.idCourrierDepart IS NOT NULL  -- Filtrage pour ne garder que les 
+    AND (p.nom_pole = :entite_pole OR e.nom_entite = :entite_pole);
 " ;
 // Connexion à la base de données
 $objet_connexion = connectToDb('localhost', 'ecourrierdb2', 'Dba', 'EcourrierDba');

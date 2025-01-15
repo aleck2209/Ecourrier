@@ -1,3 +1,8 @@
+<?php
+// Inclure le fichier de traitement
+require('Traitement/Controle/Authentification.php');
+?>
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
